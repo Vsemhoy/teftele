@@ -31,7 +31,7 @@
         @isset($topMenu)
             @foreach ($topMenu as $item)
             <li>
-                <a href="{{$item->route}}">{{$item->name}}</a>
+                <a href="{{ route($item->route) }}">{{$item->name}}</a>
                 @if (@filled($item->itemList))
                         <div class="uk-navbar-dropdown">
                             <ul class="uk-nav uk-navbar-dropdown-nav">

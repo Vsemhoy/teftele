@@ -1,10 +1,10 @@
 <?php
 use App\Http\Controllers\Template\TemplateController;
-use App\Http\Controllers\PublicPageController AS PPC;
+use App\Http\Controllers\PublicPageController;
 // Template switcher view
 $template = new TemplateController();
-$controller = new PPC;
-$topMenu = PPC::getAllTopMenuItems();
+$controller = new PublicPageController;
+$topMenu = $controller->getAllTopMenuItems();
 
 ?>
 

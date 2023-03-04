@@ -1,6 +1,6 @@
 <?php
 use Illuminate\Support\Facades\Route;
-use App\Http\Components\com_taskflow\ComDefinitions;
+use App\Http\Components\com_demo\ComDefinitions;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 
@@ -12,7 +12,7 @@ Route::prefix(ComDefinitions::$com_name)->group(function(){
         //return view('welcome');
         
         return view(ComDefinitions::getViewPath() . '.index');
-    })->name(ComDefinitions::$com_name );
+    })->name(ComDefinitions::$com_name);
 
     Route::get('/index', function () {
         //return view('welcome');
@@ -20,10 +20,10 @@ Route::prefix(ComDefinitions::$com_name)->group(function(){
         return view(ComDefinitions::getViewPath() . '.index');
     })->name(ComDefinitions::$com_name . ".index");
 
-    Route::get('/calendar', function () {
+    Route::get('/test', function () {
         //return view('welcome');
-        return view(ComDefinitions::getViewPath()  . '.calendar');
-    })->name(ComDefinitions::$com_name . ".calendar");
+        return view(ComDefinitions::getViewPath()  . '.test');
+    })->name(ComDefinitions::$com_name . ".test");
     
     
     Route::get('/boards', function () {
