@@ -30,13 +30,13 @@
     <ul class="uk-navbar-nav uk-visible@m">
         @isset($topMenu)
             @foreach ($topMenu as $item)
-            <li>
+            <li class="<?php echo ($item->is_active ? "uk-active" : "") ;?>">
                 <a href="{{ route($item->route) }}">{{$item->name}}</a>
                 @if (@filled($item->itemList))
                         <div class="uk-navbar-dropdown">
                             <ul class="uk-nav uk-navbar-dropdown-nav">
                                 @foreach ($item->itemList as $subnav)
-                                <li class="<?php $subnav->is_active ? "uk-active" : "" ;?>"><a href="{{ route($subnav->route) }}">{{ $subnav->name }}</a></li>
+                                <li class="<?php echo ($subnav->is_active ? "uk-active" : "") ;?>"><a href="{{ route($subnav->route) }}">{{ $subnav->name }}</a></li>
                                 @endforeach
                             </ul>
                         </div>
@@ -45,7 +45,7 @@
                 
             @endforeach
         @endisset
-      <li class="uk-active"><a href="#">Home</a></li>
+      <li ><a href="#">Home</a></li>
       <li><a href="#">Contact</a></li>
     </ul>
   </div>

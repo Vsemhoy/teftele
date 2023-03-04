@@ -123,13 +123,18 @@ class PublicPageController extends BaseController
         $c = 0;
         foreach ($this->menuItemList AS $item)
         {
+            if ($item->route == Route::currentRouteName()){
+                $item->is_active = true;
+            } else {
+                $item->is_active = false;
+            }
             if ($c != 0 && $item->level == 0){
                 array_push($topItems, $menu);
             }
             if ($item->level == 0){
-                $menu = new TopMenuItemModel($item->name, $item->route);
+                $menu = new TopMenuItemModel($item->name, $item->route, $item->is_active, $item->icon);
             } else if ($item->level == 1){
-                $menu->addItem($item->name, $item->route);
+                $menu->addItem($item->name, $item->route, $item->is_active, $item->icon)  ;
             }
      
             $c++;
