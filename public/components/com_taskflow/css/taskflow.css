@@ -95,6 +95,9 @@
   .row-today > div {
     
   }
+  .tf-watch {
+    border-color: red;
+  }
   .row-weekend {
     background: #0000001c;
   }
