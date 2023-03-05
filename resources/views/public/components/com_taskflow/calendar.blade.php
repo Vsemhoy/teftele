@@ -49,7 +49,7 @@
     </div>
    
 
-<div id="tf_modal_task_editor" class="uk-flex-top" uk-modal>
+<div id="tf_modal_task_editor" class="uk-flex-top uk-modal-container" uk-modal>
   
   <div class="uk-modal-dialog uk-margin-auto-vertical u-custom-rounds">
     <button class="uk-modal-close-default" type="button" uk-close></button>
@@ -58,10 +58,12 @@
         </div> -->
         <div uk-overflow-auto>
         <ul class="uk-subnav uk-subnav-pill u-custom-pills-round" uk-switcher>
-          <li><a href="#">Task</a></li>
-          <li><a href="#">Schedule</a></li>
-          <li><a href="#">Steps</a></li>
-          <li><a href="#">Parameters</a></li>
+          <li><a href="#"><span class='bi-calendar2-check'></span> Task</a></li>
+          <li><a href="#"><span class='bi-calendar3'> Schedule</a></li>
+          <li><a href="#"><span class='bi-card-list'> Steps</a></li>
+          <li><a href="#"><span class='bi-gear'> Params</a></li>
+          <li><a href="#"><span class='bi-capsule'> Deceicions</a></li>
+          <li><a href="#"><span class='bi-card-checklist'> Checklist</a></li>
         </ul>
         
         <ul class="uk-switcher uk-margin">
@@ -92,6 +94,14 @@
           <select class="uk-select">
             <option>Board 1</option>
             <option>Board 2</option>
+          </select>
+        </div>
+        <div class='uk-margin'>
+          <label class='uk-text'>Type</label>
+          <select class="uk-select">
+            <option>Bug-Hunt</option>
+            <option>Update</option>
+            <option>Buy</option>
           </select>
         </div>
         <div class='uk-margin'>
@@ -211,6 +221,61 @@
         informer
       </div>
     </li>
+    <li>
+      DEX
+    </li>
+<li>
+
+<table class="uk-table uk-table-hover uk-table-middle uk-table-divider">
+        <thead>
+            <tr>
+                <th class="uk-table-shrink"><div class='uk-text-lead'><span class='bi-plus-square'></span></div></th>
+                <th class="uk-table-expand">What to do</th>
+                <th class="uk-width-small">Added</th>
+                <th class="uk-table-shrink uk-text-nowrap">Finished</th>
+                <th class="uk-table-shrink uk-text-nowrap"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><input class="uk-checkbox" type="checkbox" aria-label="Checkbox"></td>
+                <td class="uk-table-link">
+                    <a class="uk-link-reset" href="">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.</a>
+                </td>
+                <td class="uk-text-truncate">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.</td>
+                <td class="uk-text-nowrap">Lorem ipsum dolor</td>
+                <td class="uk-text-nowrap"><span class='uk-text bi-trash'></span></td>
+            </tr>
+            <tr>
+                <td><input class="uk-checkbox" type="checkbox" aria-label="Checkbox"></td>
+                <td class="uk-table-link">
+                    <a class="uk-link-reset" href="">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.</a>
+                </td>
+                <td class="uk-text-truncate">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.</td>
+                <td class="uk-text-nowrap">Lorem ipsum dolor</td>
+            </tr>
+            <tr>
+                <td><input class="uk-checkbox" type="checkbox" aria-label="Checkbox"></td>
+                <td class="uk-table-link">
+                    <a class="uk-link-reset" href="">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.</a>
+                </td>
+                <td class="uk-text-truncate">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.</td>
+                <td class="uk-text-nowrap">Lorem ipsum dolor</td>
+            </tr>
+            <tr>
+                <td><input class="uk-checkbox" type="checkbox" aria-label="Checkbox"></td>
+                <td class="uk-table-link">
+                    <a class="uk-link-reset" href="">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.</a>
+                </td>
+                <td class="uk-text-truncate">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.</td>
+                <td class="uk-text-nowrap">Lorem ipsum dolor</td>
+            </tr>
+        </tbody>
+    </table>
+
+  </li>
+
+
 </ul>
 
 </div>

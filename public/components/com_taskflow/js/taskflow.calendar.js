@@ -51,6 +51,19 @@ class flowCalendarVisual
             }
         }
 
+        this.dragcitems = document.querySelectorAll('.dragitem');
+        for (let index = 0; index < this.dragcitems.length; index++) {
+            if (!this.dragcitems[index].classList.contains("tf-watch")){
+                this.dragcitems[index].classList.add("tf-watch");
+                this.dragcitems[index].addEventListener('dblclick', (e) => {
+                    //UIkit.modal("#tf_modal_task_editor").show();
+                    e.preventDefault;
+                    alert("Hello");
+                });
+            }
+        }
+
+
     }
 
     constructor() {
