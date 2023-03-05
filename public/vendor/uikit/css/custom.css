@@ -1,0 +1,80 @@
+
+
+.u-custom-head {
+    background: transparent !important;
+    backdrop-filter: blur(4px);
+    /* position: sticky; */
+    top: 0;
+    z-index: 99;
+}
+.u-custom-gradient-bg {
+    background: #FFAFBD;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #ffc3a0, #FFAFBD);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #ffc3a0, #FFAFBD); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    
+}
+
+.u-custom-head .uk-navbar-item, .u-custom-head .uk-navbar-nav>li>a, .uk-navbar-toggle {
+    display: flex;
+    top: 40px;
+    column-gap: 0.25em;
+
+    min-height: 40px;
+    font-size: .875rem;
+
+}
+.u-custom-uk-logo {
+    width: 50px;
+    border-bottom-right-radius: 16px;
+    box-shadow: 1px 1px 6px #80808054;
+    background: #ffffff62;
+}
+.u-custom-uk-logo > a {
+
+    font-size: x-large;
+    color: rgb(59, 59, 59);
+}
+.u-custom-head .uk-navbar-nav {
+    
+    transition: all 0.3s;
+}
+.u-custom-menu-item:hover {
+    background: #ffffff9c;
+    box-shadow: -1px -11px 0px 12px #ffffffa6;
+    border-radius: 2px;
+}
+
+.u-custom-up-menu{
+    border-radius: 6px;
+    background: #ffffffeb;
+    backdrop-filter: blur(24px);
+
+}
+
+
+.u-custom-nav-widget {
+    display: block;
+    position: fixed;
+    bottom: 80px;
+    right: 12px;
+}
+.u-custom-nav-widget a {
+    background: white;
+    padding: 6px;
+    margin-bottom: 1px;
+    display: block;
+    opacity: 0.5;
+    backdrop-filter: blur(5px);
+    transition: all 0.3s;
+}
+.u-custom-nav-widget a:hover {
+    opacity: 0.8;
+}
+.u-custom-widget-buttons-start > a:first-child {
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+}
+.u-custom-widget-buttons-end > a:last-child {
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+}

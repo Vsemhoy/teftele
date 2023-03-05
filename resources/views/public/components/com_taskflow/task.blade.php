@@ -1,9 +1,9 @@
 @extends('public.components.com_taskflow.template')
 
 @php
-    $component_meta_title = "Taskflow Main";
-    $component_meta_description = "Taskflow Main description";
-    $component_meta_keywords = "Taskflow Main keywords";
+    $component_meta_title = "Taskflow Board";
+    $component_meta_description = "Taskflow Board description";
+    $component_meta_keywords = "Taskflow Board keywords";
 @endphp
 
 @section('script-definitions')
@@ -14,7 +14,7 @@
 
 @section('component-page-content')
 <div class="uk-container uk-margin-top">
-
+    <h3>Board</h3>
   <div class="uk-grid-match uk-child-width-1-2@m uk-child-width-1-3@l" uk-grid>
     <div>
       <div class="uk-card uk-card-default uk-card-body">

@@ -9,6 +9,7 @@
 
     <!-- template assets -->
     <link rel="stylesheet" href="{{ asset('/public/vendor/uikit/3.16.3/css/uikit.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('/public/vendor/uikit/css/custom.css') }}" />
     <script src="{{ asset('/public/vendor/uikit/3.16.3/js/uikit.min.js')}}"></script>
     <script src="{{ asset('/public/vendor/uikit/3.16.3/js/uikit-icons.min.js')}}"></script>
     <!-- end template assets -->
@@ -22,18 +23,28 @@
     <!-- define js variables from component page -->
     @yield('script-definitions')
   </head>
-  <body>
+  <body class='u-custom-gradient-bg'>
 
-  <nav class="uk-navbar-container" uk-navbar>
+  <nav class="uk-navbar-container u-custom-head" id='go_top' uk-navbar>
   <div class="uk-navbar-left">
-    <a class="uk-navbar-item uk-logo" href="#">Logo</a>
+    
+    <div class="uk-navbar-item uk-logo u-custom-uk-logo" href="#">
+@if (isset($component_sidebar_trigger) AND filled($component_sidebar_trigger))
+    <div class='u-component-sidebar-trigger'>
+        <span class="bi-layout-sidebar-inset"></span>
+    </div>
+@else
+    <a href="#"><span class="bi-emoji-smile"></span></a>
+@endif
+
+</div>
     <ul class="uk-navbar-nav uk-visible@m">
         @isset($topMenu)
             @foreach ($topMenu as $item)
-            <li class="<?php echo ($item->is_active ? "uk-active" : "") ;?>">
+            <li class="<?php echo ($item->is_active ? "uk-active" : "") ;?> u-custom-menu-item">
                 <a href="{{ route($item->route) }}">{{$item->name}}</a>
                 @if (@filled($item->itemList))
-                        <div class="uk-navbar-dropdown">
+                        <div class="uk-navbar-dropdown u-custom-up-menu">
                             <ul class="uk-nav uk-navbar-dropdown-nav">
                                 @foreach ($item->itemList as $subnav)
                                 <li class="<?php echo ($subnav->is_active ? "uk-active" : "") ;?>"><a href="{{ route($subnav->route) }}">{{ $subnav->name }}</a></li>
@@ -45,16 +56,21 @@
                 
             @endforeach
         @endisset
-      <li ><a href="#">Home</a></li>
-      <li><a href="#">Contact</a></li>
+      <li class=' u-custom-menu-item'><a href="#">Home</a></li>
+      <li class=' u-custom-menu-item'><a href="#">Contact</a></li>
     </ul>
   </div>
   <div class="uk-navbar-right">
+    <ul class="uk-navbar-nav uk-visible@m">
+        <li ><a href="#">Home</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
     <button class="uk-button uk-button-default uk-hidden@m" type="button" uk-toggle="target: #offcanvas-flip"><span uk-icon="icon: menu"></span></button>
   </div>
 
 
 
+</nav>
 
     <div id="offcanvas-flip" uk-offcanvas="flip: true; overlay: true">
         <div class="uk-offcanvas-bar">
@@ -63,26 +79,28 @@
 
             <div class="uk-width-1-2@s uk-width-2-5@m">
                 <ul class="uk-nav uk-nav-default">
-                    <li class="uk-active"><a href="#">Active</a></li>
-                    <li class="uk-parent">
-                        <a href="#">Parent</a>
-                        <ul class="uk-nav-sub">
-                            <li><a href="#">Sub item</a></li>
-                            <li>
-                                <a href="#">Sub item</a>
-                                <ul>
-                                    <li><a href="#">Sub item</a></li>
-                                    <li><a href="#">Sub item</a></li>
-                                </ul>
-                            </li>
-                        </ul>
+                @isset($topMenu)
+            @foreach ($topMenu as $item)
+            <li class="<?php echo ($item->is_active ? "uk-active" : "") ;?>">
+                <a href="{{ route($item->route) }}">{{$item->name}}</a>
+                @if (@filled($item->itemList))
+                        <div class="uk-navbar-dropdown u-custom-up-menu">
+                            <ul class="uk-nav uk-navbar-dropdown-nav">
+                                @foreach ($item->itemList as $subnav)
+                                <li class="<?php echo ($subnav->is_active ? "uk-active" : "") ;?>"><a href="{{ route($subnav->route) }}">{{ $subnav->name }}</a></li>
+                                @endforeach
+                            </ul>
+                        </div>
                     </li>
+                @endif
+                
+            @endforeach
+        @endisset
                 </ul>
             </div>
 
         </div>
     </div>
-</nav>
 
 <section>    
     @yield('page-menu')
@@ -90,7 +108,19 @@
 
 <section>    
     @yield('page-content')
-</section>    
+</section>
+
+<div class='u-custom-nav-widget' id='u-custom-nav-widget'>
+    <div class='u-custom-widget-buttons-start'>
+        <a href='#go_top'>UP</a>
+    </div>
+    <div id='u-custom-nav-component-buttons'>
+    </div>
+    <div class='u-custom-widget-buttons-end'>
+        <a href='#go_down'>DN</a>
+    </div>
+</div>
+<div id='go_down'></div>
 
     @yield('component-scripts')
     @yield('page-scripts')

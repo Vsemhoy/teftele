@@ -30,4 +30,14 @@ Route::prefix(ComDefinitions::$com_name)->group(function(){
         return view(ComDefinitions::getViewPath()  . '.boards');
     })->name(ComDefinitions::$com_name . ".boards");
 
+
+    Route::get('/board', function () {
+        return view(ComDefinitions::getViewPath()  . '.board');
+    })->name(ComDefinitions::$com_name . ".board");
+
+
+    Route::get('/settings', function () {
+        return view(ComDefinitions::getViewPath()  . '.settings');
+    })->name(ComDefinitions::$com_name . ".settings");
+
 });

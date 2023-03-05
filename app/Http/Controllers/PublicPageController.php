@@ -71,8 +71,36 @@ class PublicPageController extends BaseController
         
         $item = new MenuItem();
         $item->id = 4;
-        $item->name = "Board";
+        $item->name = "Boards";
         $item->route = "taskflow.boards";
+        $item->level = 1;
+        $item->parent = 1;
+        $item->role = 0;
+        $item->part_id = 1;
+        $item->icon = "";
+        $item->status = 1;
+        $item->orderer = $ord;
+        array_push($coms, $item );
+        $ord++;
+
+        $item = new MenuItem();
+        $item->id = 7;
+        $item->name = "Board";
+        $item->route = "taskflow.board";
+        $item->level = 1;
+        $item->parent = 1;
+        $item->role = 0;
+        $item->part_id = 1;
+        $item->icon = "";
+        $item->status = 1;
+        $item->orderer = $ord;
+        array_push($coms, $item );
+        $ord++;
+
+        $item = new MenuItem();
+        $item->id = 8;
+        $item->name = "Settings";
+        $item->route = "taskflow.settings";
         $item->level = 1;
         $item->parent = 1;
         $item->role = 0;
