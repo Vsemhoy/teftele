@@ -383,3 +383,8 @@
   .component-side.cms-hidden {
     right: -288px;
   }
+  .tf-task-form-step-body {
+    border: 1px solid #c5c5c5;
+    border-radius: 6px;
+  }
+  

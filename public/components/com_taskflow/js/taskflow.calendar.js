@@ -16,11 +16,10 @@ class flowCalendarVisual
         for (let index = 0; index < this.dragcells.length; index++) {
             if (!this.dragcells[index].classList.contains("tf-watch")){
                 this.dragcells[index].classList.add("tf-watch");
-                console.log(index);
                 this.dragcells[index].addEventListener('dblclick', (e) => {
                     if (e.target.innerHTML == ""){
-
-                        alert("hello");
+                        UIkit.modal("#tf_modal_task_editor").show();
+                        //alert("hello");
                     } else {
                         let blockEvent_di = false;
                         let dragitems = this.dragcells[index].querySelectorAll('.dragitem');
@@ -43,7 +42,8 @@ class flowCalendarVisual
                             }
                         }
                         if (blockEvent_di == false){
-                            alert("hello");
+                            //alert("hello");
+                            UIkit.modal("#tf_modal_task_editor").show();
                         }
                     }
    
@@ -99,7 +99,7 @@ function getRandomInt() {
 
 function buildRow(date, que = "", exec = "", paus = "", fin = "", drop = "")
 {
-  console.log(date);
+//   console.log(date);
   if (date.getFullYear() < 2023){return "";};
 let formattedDate = date.getDate();
 let formattedMonth = date.toLocaleString('default', { month: 'long' });
@@ -182,9 +182,9 @@ let blockTopScroll = false;
    var vscroll = window.pageYOffset;
    let  viewportHeight = window.innerHeight;
    let topOffset = rect.height + rowCollection.offsetTop;
-console.log("offtop is " + topOffset + " < vscroll is " + vscroll + " + viewportHeight is " +  viewportHeight);
+//console.log("offtop is " + topOffset + " < vscroll is " + vscroll + " + viewportHeight is " +  viewportHeight);
    if (topOffset < vscroll +  viewportHeight + 1){
-   console.log("scroll bottom");
+ //  console.log("scroll bottom");
   //console.log(topOffset);
     datetime = pastDate;
      for (let i = 0 ; i < 7; i++){
@@ -198,7 +198,7 @@ console.log("offtop is " + topOffset + " < vscroll is " + vscroll + " + viewport
      
      //console.log(rowCollection.offsetTop);
      if (rowCollection.offsetTop > vscroll && !blockTopScroll){
-        console.log("scroll top");
+        // console.log("scroll top");
         blockTopScroll = true;
             setTimeout(() => {
                 datetime = futDate;

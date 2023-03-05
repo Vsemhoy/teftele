@@ -51,6 +51,10 @@
 
 }
 
+.u-custom-rounds {
+    border-radius: 12px;
+    border: 4px solid white;
+}
 
 .u-custom-nav-widget {
     display: block;
@@ -77,4 +81,19 @@
 .u-custom-widget-buttons-end > a:last-child {
     border-bottom-left-radius: 6px;
     border-bottom-right-radius: 6px;
+}
+
+.u-custom-minheight {
+    min-height: 600px;
+}
+
+.u-custom-input-awake input:disabled, .u-custom-input-awake textarea:disabled  {
+    color: #3c3c3c !important;
+    padding: 0px;
+    border: 0px;
+    border-bottom: 1px solid #cbcbcb;
+    background: white;
+}
+.u-custom-pills-round a {
+    border-radius: 6px;
 }
