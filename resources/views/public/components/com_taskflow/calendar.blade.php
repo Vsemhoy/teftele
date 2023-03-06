@@ -229,14 +229,14 @@
 <table class="uk-table uk-table-hover uk-table-middle uk-table-divider">
         <thead>
             <tr>
-                <th class="uk-table-shrink"><div class='uk-text-lead'><span class='bi-plus-square'></span></div></th>
+                <th class="uk-table-shrink"></th>
                 <th class="uk-table-expand">What to do</th>
                 <th class="uk-width-small">Added</th>
                 <th class="uk-table-shrink uk-text-nowrap">Finished</th>
-                <th class="uk-table-shrink uk-text-nowrap"></th>
+                <th class="uk-table-shrink uk-text-nowrap"><div class='uk-text-lead'><span class='tf-event-addcheck u-icon-std u-icon-event bi-plus-square'></span></div></th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="tf_checks_list">
             <tr>
                 <td><input class="uk-checkbox" type="checkbox" aria-label="Checkbox"></td>
                 <td class="uk-table-link">
@@ -244,7 +244,7 @@
                 </td>
                 <td class="uk-text-truncate">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.</td>
                 <td class="uk-text-nowrap">Lorem ipsum dolor</td>
-                <td class="uk-text-nowrap"><span class='uk-text bi-trash'></span></td>
+                <td class="uk-text-nowrap"><span class='u-icon-std u-icon-event uk-text-muted bi-trash'></span></td>
             </tr>
             <tr>
                 <td><input class="uk-checkbox" type="checkbox" aria-label="Checkbox"></td>
@@ -272,6 +272,13 @@
             </tr>
         </tbody>
     </table>
+    <div class="uk-padding-small uk-padding-remove-top u-two-col-flex">
+      <div>
+      <span>4</span> of 
+      <span>8</span> are finished.</div> 
+      <div>
+<span class='uk-text tf-event-addcheck'>Add more? <span class=' u-icon-std u-icon-event bi-plus-square'></span></span>
+</div>
 
   </li>
 

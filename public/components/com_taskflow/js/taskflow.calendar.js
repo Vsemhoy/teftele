@@ -9,6 +9,8 @@
 //   }
 // })
 
+const TFTEMPLATE = new TaskFlowTemplates();
+
 class flowCalendarVisual 
 {
     reload(){
@@ -62,13 +64,57 @@ class flowCalendarVisual
                 });
             }
         }
+    }
 
+    checkListReload(){
+      this.taskCheckItems = document.querySelectorAll(".tf-t-checklist-item");
+      for (let index = 0; index < this.taskCheckItems.length; index++) {
+        if (!this.taskCheckItems[index].classList.contains("tf-watch")){
+            this.taskCheckItems[index].classList.add("tf-watch");
+            this.taskCheckItems[index].querySelector('.tf-event-removecheck').addEventListener('dblclick', (e) => {
+                this.taskCheckItems[index].remove();
+            });
+            this.taskCheckItems[index].querySelector('.tf_t_check_editable').addEventListener('dblclick', (e) => {
+              let text = this.taskCheckItems[index].querySelector('.tf_t_check_editable').textContent;
+              let height = this.taskCheckItems[index].querySelector('.tf_t_check_editable').style.height;
+              var divElement = document.createElement("textarea");
+              height += 60;
+              divElement.id = "elementos";
+              divElement.style.height = height + "px";
+              divElement.textContent = text;
+              this.taskCheckItems[index].querySelector('.tf_t_check_editable').innerHTML = "";
+              this.taskCheckItems[index].querySelector('.tf_t_check_editable').appendChild(divElement);
 
+              let textArea = document.querySelector("#elementos");
+              textArea.addEventListener('focusout', (e)=>{
+                let textos = textArea.value;
+                let parentElement = textArea.parentElement;
+                textArea.remove();
+                textos = textos.replace(/\n/g, "<br>");
+                parentElement.innerHTML = textos;
+              })
+          });
+        }
+      }
+
+      
     }
 
     constructor() {
         this.addCustomNavButtons();
         this.reload();
+
+        // add templates into TASK CHECKLIST
+        this.btnAddCheckItem = document.querySelectorAll(".tf-event-addcheck");
+        for (let index = 0; index < this.btnAddCheckItem.length; index++) {
+          this.btnAddCheckItem[index].addEventListener('click', (e)=>{
+            document.querySelector("#tf_checks_list").insertAdjacentHTML('beforeend', TFTEMPLATE.getTaskListTableCheckListTableRow());
+            setTimeout(() => {
+              this.checkListReload();
+            }, 1000);
+          });
+      }
+
     }
 
     addCustomNavButtons(){

@@ -97,3 +97,24 @@
 .u-custom-pills-round a {
     border-radius: 6px;
 }
+
+.u-icon-std {
+    color: #4e4e4e;
+    font-size: larger;
+} 
+.u-icon-event {
+    color: #0288d1;
+    cursor: pointer;
+}
+
+.u-icon-event:hover {
+    color: #039aed;
+
+}
+
+
+.u-two-col-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}

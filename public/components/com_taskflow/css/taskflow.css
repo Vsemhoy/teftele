@@ -387,4 +387,10 @@
     border: 1px solid #c5c5c5;
     border-radius: 6px;
   }
+  .tf_t_check_editable > textarea {
+    width: 100%;
+    background-color: transparent;
+    border-width: 0px;
+    line-height: 1.2rem;
+  }
   

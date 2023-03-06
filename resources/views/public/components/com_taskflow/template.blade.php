@@ -57,6 +57,7 @@
 
 
 @section('component-scripts')
+<script src="{{ asset('/public/components/com_taskflow/js/taskflow.templates.js')}}"></script>   
 <script src="{{ asset('/public/components/com_taskflow/js/taskflow.js')}}"></script>   
 <script>
 </script>    

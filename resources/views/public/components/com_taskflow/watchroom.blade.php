@@ -1,0 +1,1 @@
+other people can Watching for boards or projects

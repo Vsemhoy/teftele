@@ -19,8 +19,27 @@ class TaskFlow{
                 }
                 if (el != null){
                     el.toggleAttribute('disabled');
+
+                    if (el.disabled == true){
+                        
+                        for (let i = 0; i < this.inputAwakers.length; i++) {
+                            let ele = this.inputAwakers[i].querySelector('input');
+                            if (ele == null){
+                                ele = this.inputAwakers[i].querySelector('textarea');
+                            }
+                            if (ele == null){
+                                ele = this.inputAwakers[i].querySelector('checkbox');
+                            }
+                            if (ele == null){
+                                ele = this.inputAwakers[i].querySelector('range');
+                            }
+                            if (ele != null){
+
+                            ele.disabled = true;
+                            }
+                        }
+                    }
                 }
-                console.log("ye");
             });
             
             
