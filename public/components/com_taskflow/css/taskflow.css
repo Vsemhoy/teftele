@@ -384,9 +384,10 @@
     right: -288px;
   }
   .tf-task-form-step-body {
-    border: 1px solid #c5c5c5;
-    border-radius: 6px;
+    background: #f1f1f1;
+    box-shadow: 0px 0px 12px -3px #00000085;
   }
+
   .tf_t_check_editable > textarea {
     width: 100%;
     background-color: transparent;

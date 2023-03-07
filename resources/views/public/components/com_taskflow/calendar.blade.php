@@ -69,7 +69,7 @@
         <ul class="uk-switcher uk-margin">
           <li>
             <div class="uk-modal-body u-custom-minheight">
-            <form>
+            <form class='uk-column-1-1@s uk-column-1-2@m '>
         <div class='uk-margin'>
           <label class='uk-text'>Name</label>
           <input class="uk-input" type="text">
@@ -138,10 +138,16 @@
             <option></option>
           </select>
         </div>
+
         <div class='uk-margin'>
-          <textarea class="uk-textarea"></textarea>
+          <label class='uk-text'>Maker</label>
+          <select class="uk-select">
+            <option></option>
+            <option></option>
+          </select>
         </div>
-        <div class='uk-margin'>
+
+        <!-- <div class='uk-margin'>
           <input class="uk-radio" type="radio">
         </div>
         <div class='uk-margin'>
@@ -149,39 +155,40 @@
         </div>
         <div class='uk-margin'>
           <input class="uk-range" type="range">
-        </div>
+        </div> -->
       </form>
     </div>
     </li>
     <li>
       <div class='uk-modal-body u-custom-minheight'>
-        shedule
+        schedule
       </div>
     </li>
     <li>
-      <div class='uk-modal-body u-custom-minheight uk-padding-small'>
+      <div class='uk-modal-body u-custom-minheight uk-padding-remove'>
         <div class='uk-margin'>
             <form class='tf-task-form-step'>
-              <div class='uk-flex uk-flex-between'>
-            <label class='uk-text'>Step 1</label>
-            <span class='bi-trash tf-step-remove-trigger'></span>
-          </div>
-            <div class='tf-task-form-step-body uk-padding-small'>
-            <div class='u-custom-input-awake'>
-              <textarea class="uk-textarea" rows='7' disabled>Helllow</textarea>
-            </div>
-              <div class='uk-margin uk-column-1-3'>
-            <div class='u-custom-input-awake'>
-              <label class='uk-text-small'>Started at <span class='uk-text-muted'></span></label>
-              <input class="uk-input" disabled type="datetime-local">
-            </div>
-            <div class='u-custom-input-awake'>
-              <label class='uk-text-small'>Finished at<span class='uk-text-muted'></span></label>
-              <input class="uk-input" disabled type="datetime-local" min='0' max='999'>
-            </div>
-            <div class='u-custom-input-awake'>
-              <label class='uk-text-small'>Duration  <span class='uk-text-muted'></span></label>
-              <input class="uk-input" disabled type="text" min='0' max='9999'>
+
+              <div class='tf-task-form-step-body uk-padding-small'>
+                  <div class='uk-flex uk-flex-between'>
+                    <label class='uk-text-muted'>#1 24.03.2004 14:55</label>
+                    <span class='bi-trash tf-step-remove-trigger'></span>
+                  </div>
+                <div class='u-custom-input-awake'>
+                  <textarea class="uk-textarea" rows='7' disabled>Helllow</textarea>
+                </div>
+                  <div class='uk-margin uk-column-1-3'>
+                <div class='u-custom-input-awake'>
+                  <label class='uk-text-small'>Started at <span class='uk-text-muted'></span></label>
+                  <input class="uk-input" disabled type="datetime-local">
+                </div>
+                <div class='u-custom-input-awake'>
+                  <label class='uk-text-small'>Finished at<span class='uk-text-muted'></span></label>
+                  <input class="uk-input" disabled type="datetime-local" min='0' max='999'>
+                </div>
+                <div class='u-custom-input-awake'>
+                  <label class='uk-text-small'>Duration  <span class='uk-text-muted'></span></label>
+                  <input class="uk-input" disabled type="text" min='0' max='9999'>
             </div>
   </div>
         </div>
@@ -237,39 +244,7 @@
             </tr>
         </thead>
         <tbody id="tf_checks_list">
-            <tr>
-                <td><input class="uk-checkbox" type="checkbox" aria-label="Checkbox"></td>
-                <td class="uk-table-link">
-                    <a class="uk-link-reset" href="">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.</a>
-                </td>
-                <td class="uk-text-truncate">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.</td>
-                <td class="uk-text-nowrap">Lorem ipsum dolor</td>
-                <td class="uk-text-nowrap"><span class='u-icon-std u-icon-event uk-text-muted bi-trash'></span></td>
-            </tr>
-            <tr>
-                <td><input class="uk-checkbox" type="checkbox" aria-label="Checkbox"></td>
-                <td class="uk-table-link">
-                    <a class="uk-link-reset" href="">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.</a>
-                </td>
-                <td class="uk-text-truncate">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.</td>
-                <td class="uk-text-nowrap">Lorem ipsum dolor</td>
-            </tr>
-            <tr>
-                <td><input class="uk-checkbox" type="checkbox" aria-label="Checkbox"></td>
-                <td class="uk-table-link">
-                    <a class="uk-link-reset" href="">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.</a>
-                </td>
-                <td class="uk-text-truncate">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.</td>
-                <td class="uk-text-nowrap">Lorem ipsum dolor</td>
-            </tr>
-            <tr>
-                <td><input class="uk-checkbox" type="checkbox" aria-label="Checkbox"></td>
-                <td class="uk-table-link">
-                    <a class="uk-link-reset" href="">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.</a>
-                </td>
-                <td class="uk-text-truncate">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.</td>
-                <td class="uk-text-nowrap">Lorem ipsum dolor</td>
-            </tr>
+
         </tbody>
     </table>
     <div class="uk-padding-small uk-padding-remove-top u-two-col-flex">

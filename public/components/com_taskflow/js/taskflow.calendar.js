@@ -41,11 +41,14 @@ class flowCalendarVisual
                             // console.log("Height: " + rect.height);
                             if (rect.top < moY && rect.bottom > moY && rect.left < moX && rect.right > moX){ 
                                 blockEvent_di = true;
+                                break;
                             }
                         }
                         if (blockEvent_di == false){
                             //alert("hello");
                             UIkit.modal("#tf_modal_task_editor").show();
+                        } else {
+                          UIkit.modal("#tf_modal_task_editor").hide();
                         }
                     }
    
