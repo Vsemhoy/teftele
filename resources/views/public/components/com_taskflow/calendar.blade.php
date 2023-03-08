@@ -1,3 +1,20 @@
+<?php
+
+  $taskTypes = [];
+
+  for ($i = 1; $i <= 20; $i++) {
+    $obj = (object) [
+        'id' => $i,
+        'name' => "Activity $i",
+        'color' => "#CC4488",
+        'owner' => 1,
+        'order' => $i
+    ];
+    array_push($taskTypes, $obj);
+}
+
+?>
+
 @extends('public.components.com_taskflow.template')
 
 @php
@@ -8,7 +25,8 @@
 
 @section('script-definitions')
 <script>
-    
+  var currentTaskBoard = 1; // load from PHP
+  var pageCommandStack = [];
 </script>
 @endsection
 
@@ -23,23 +41,23 @@
          <div class='uk-text-medium content-mid'><span uk-icon='calendar'></span> <span class='hide-m'>  DEMO</span></div>
             </div>
             
-<div class='col-item col-que head-act' tgc='active-que' data-section='q'>
+<div class='col-item col-que tf-head-act' tgc='active-que' data-section='q'>
          <div class='uk-text-medium content-mid'><span class='uk-text-bold'>Q</span> <span class='hide-m'>Waiting tasks</span></div>
             </div>
             
-<div class='col-item col-exec head-act' tgc='active-exec' data-section='e'>
+<div class='col-item col-exec tf-head-act' tgc='active-exec' data-section='e'>
          <div class='uk-text-medium content-mid'><span class='uk-text-bold'>EX</span> <span class='hide-m'>Eecuted active tasks</span></div>
             </div>
             
-<div class='col-item col-paus head-act' tgc='active-paus' data-section='p'>
+<div class='col-item col-paus tf-head-act' tgc='active-paus' data-section='p'>
          <div class='uk-text-medium content-mid'><span class='uk-text-bold'>P</span> <span class='hide-m'>Temporary paused tasks</span></div>
             </div>
             
-            <div class='col-item col-fin head-act' tgc='active-fin' data-section='f'>
+            <div class='col-item col-fin tf-head-act' tgc='active-fin' data-section='f'>
          <div class='uk-text-medium content-mid'><span class='uk-text-bold'>FN</span> <span class='hide-m'>Finished tasks</span></div>
             </div>
             
-            <div class='col-item col-drop head-act' tgc='active-drop' data-section='d'>
+            <div class='col-item col-drop tf-head-act' tgc='active-drop' data-section='d'>
          <div class='uk-text-medium content-mid'><span class='uk-text-bold'>D</span> <span class='hide-m'>Dropped tasks</span></div>
             </div>
             
@@ -59,10 +77,10 @@
         <div uk-overflow-auto >
         <ul class="uk-subnav uk-subnav-pill" uk-switcher style="padding: 6px;">
           <li><a href="#"><span class='bi-calendar2-check'></span> Task</a></li>
-          <li><a href="#"><span class='bi-calendar3'> Schedule</a></li>
+          <!-- <li><a href="#"><span class='bi-calendar3'> Schedule</a></li> -->
           <li><a href="#"><span class='bi-card-list'> Steps</a></li>
           <li><a href="#"><span class='bi-gear'> Params</a></li>
-          <li><a href="#"><span class='bi-capsule'> Deceicions</a></li>
+          <li><a href="#"><span class='bi-capsule'> Solutions</a></li>
           <li><a href="#"><span class='bi-card-checklist'> Checklist</a></li>
         </ul>
         
@@ -76,7 +94,7 @@
         </div>
         <div class='uk-margin'>
           <label class='uk-text'>Description</label>
-          <textarea class="uk-textarea" rows='7'></textarea>
+          <textarea class="uk-textarea" rows='8'></textarea>
         </div>
         <div class='uk-margin'>
           <label class='uk-text'>Status</label>
@@ -97,11 +115,20 @@
           </select>
         </div>
         <div class='uk-margin'>
-          <label class='uk-text'>Type</label>
+          <label class='uk-text'>Group</label>
           <select class="uk-select">
-            <option>Bug-Hunt</option>
-            <option>Update</option>
-            <option>Buy</option>
+            <option>Group 1</option>
+            <option>Group 2</option>
+          </select>
+        </div>
+        <div class='uk-margin'>
+          <label class='uk-text'>Type</label>
+          <select class="uk-select" id='tf_input_type'>
+            <?php 
+              foreach ($taskTypes as $value) {
+                echo "<option value='" .  $value->id . "'>" . $value->name . "</option>";
+              };
+            ?>
           </select>
         </div>
         <div class='uk-margin'>
@@ -147,23 +174,14 @@
           </select>
         </div>
 
-        <!-- <div class='uk-margin'>
-          <input class="uk-radio" type="radio">
-        </div>
-        <div class='uk-margin'>
-          <input class="uk-checkbox" type="checkbox">
-        </div>
-        <div class='uk-margin'>
-          <input class="uk-range" type="range">
-        </div> -->
       </form>
     </div>
     </li>
-    <li class='u-custom-minheight'>
+    <!-- <li class='u-custom-minheight'>
       <div class='uk-modal-body u-custom-minheight'>
         schedule
       </div>
-    </li>
+    </li> -->
     <li>
       <div class='uk-modal-body u-custom-minheight uk-padding-remove' id='tf_t_steplist'>
 
@@ -200,11 +218,11 @@
             <tr>
                 <th class="uk-table-shrink"></th>
                 <th class="uk-width-small">Comment</th>
-                <th class="uk-table-expand">Deceicion</th>
+                <th class="uk-table-expand">Solution</th>
                 <th class="uk-table-small uk-text-nowrap"><div class='uk-text-lead'><span class='tf-event-addcheck u-icon-std u-icon-event bi-plus-square'></span></div></th>
             </tr>
         </thead>
-        <tbody id="tf_deceision_list">
+        <tbody id="tf_solution_list">
         <tr class='tf-t-checklist-item '>
         <td><input class="uk-checkbox" type="checkbox" aria-label="Checkbox" /></td>
         <td class="uk-text-truncate">

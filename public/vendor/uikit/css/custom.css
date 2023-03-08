@@ -118,3 +118,21 @@
     justify-content: space-between;
     align-items: center;
 }
+.u-sticky-bottom-bar {
+    position: sticky;
+    bottom: 0px;
+    background: #ffffff4a;
+    backdrop-filter: blur(6px);
+    display: flex;
+    justify-content: space-between;
+}
+.u-sticky-bottom-bar > div > * {
+    display: grid;
+    height: 100%;
+    border: 0px;
+    align-content: center;
+    transition: all 0.3s;
+}
+.u-sticky-bottom-bar > div > div:hover {
+    opacity: 0.7;
+}

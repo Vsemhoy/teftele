@@ -46,6 +46,27 @@
 <div id='component_content'>
     @yield('component-page-content')
 </div>
+
+<div id='component_bottom_bar' class='u-sticky-bottom-bar'>
+    <div uk-grid>
+    <div class='uk-button '><span uk-icon='more-vertical'></span></div>
+    <div class='uk-button uk-button-default'>Board: </div>
+    <div>
+    <select class="uk-select">
+            <option>SPL-module</option>
+            <option>Tele-CRM</option>
+            <option>Personal Deals</option>
+          </select>
+</div>
+    </div>
+    <div>
+    <div class='uk-button uk-button-default'>New task</div>
+    </div>
+    <div>
+    <div class='uk-button '><span uk-icon='more-vertical'></span></div>
+    </div>
+</div>
+
 @endsection
 
 @section('component-assets')
@@ -58,6 +79,7 @@
 
 @section('component-scripts')
 <script src="{{ asset('/public/components/com_taskflow/js/taskflow.templates.js')}}"></script>   
+<script src="{{ asset('/public/components/com_taskflow/js/taskflow.models.js')}}"></script>   
 <script src="{{ asset('/public/components/com_taskflow/js/taskflow.js')}}"></script>   
 <script>
 </script>    

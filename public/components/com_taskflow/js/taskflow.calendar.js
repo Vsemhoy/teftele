@@ -9,52 +9,15 @@
 //   }
 // })
 
-const TaskModel =
-{
-  name: "name",
-  description: "descripty",
-  status: 1,
-  board: 1,
-  type: 3,
-  category: 0,
-  tags: "",
-  planned_time: 52645478,
-  setter: 1,
-  executor: 1,
-  created_at : 7870,
-  updated_at : 87809789,
-  schedule: [],
-  steps: [
-    {
-      id: 1,
-      text : "Step text",
-      startTime : 75675,
-      endTime: 456345,
-      duration: 0
-    },
-    
-  ],
-  totalDuration : 75896,
-  deceisions : [{
-    id: 3,
-    comment: "Super comment",
-    added_at: 543645,
-    owner: 1,
-  }],
-  checklist: [{
-    id : 1,
-    todo: "What to do",
-    addTime: 534576,
-    finTime: 5645634,
-    isDone: 0
-  }],
-  totalChecks: 1,
-  doneChecks: 0,
-  percentChecks: 0,
-  condition_phys: 100,
-  condition_emo: 100,
-  condition_intel: 100
-};
+var dataToInsert = [
+  {'id': '7245434', 'name' : 'New Task', 'date' : '2023-02-21', 'section' : 'q'},
+  {'id': '72454434', 'name' : 'Not New Task', 'date' : '2023-02-21', 'section' : 'e'},
+    {'id': '78245434', 'name' : 'AND NES STUFF', 'date' : '2023-02-21', 'section' : 'f'},
+    {'id': '72445434', 'name' : 'Do something!', 'date' : '2023-02-21', 'section' : 'p'},
+      {'id': '724t45434', 'name' : 'OKAY< GO', 'date' : '2023-02-21', 'section' : 'd'},
+        {'id': '72445r434', 'name' : 'Thied f fjasdjfdfj djfkasjdfkjj j jkjdf', 'date' : '2023-02-20', 'section' : 'd'},
+        {'id': '7244w5434', 'name' : 'Sunday sweet task', 'date' : '2023-02-15', 'section' : 'e', 'text': 'The super text here i will come to home yesterday and will meet my husband. He is so strong, but today he is ill. I strive to do something.'},
+];
 
 const TFTEMPLATE = new TaskFlowTemplates();
 
@@ -124,20 +87,26 @@ class flowCalendarVisual
                   alert("Hello");
               });
 
-              element.querySelector('.tf_card_event_minifycard').addEventListener('click', (e)=>{
-                element.classList.add('tsm-vis-hidden');
-                element.classList.remove('tsm-vis-middle');
-              });
+              if (element.querySelector('.tf_card_event_minifycard') != null){
+                element.querySelector('.tf_card_event_minifycard').addEventListener('click', (e)=>{
+                  element.classList.add('tsm-vis-hidden');
+                  element.classList.remove('tsm-vis-middle');
+                });
+              }
 
-              element.querySelector('.tf_card_event_midifycard').addEventListener('click', (e)=>{
-                element.classList.remove('tsm-vis-hidden');
-                element.classList.add('tsm-vis-middle');
-              });
+              if (element.querySelector('.tf_card_event_minifycard') != null){
+                element.querySelector('.tf_card_event_midifycard').addEventListener('click', (e)=>{
+                  element.classList.remove('tsm-vis-hidden');
+                  element.classList.add('tsm-vis-middle');
+                });                
+              }
 
-              element.querySelector('.tf_card_event_expandcard').addEventListener('click', (e)=>{
-                element.classList.remove('tsm-vis-hidden');
-                element.classList.remove('tsm-vis-middle');
-              });
+              if (element.querySelector('.tf_card_event_minifycard') != null){
+                element.querySelector('.tf_card_event_expandcard').addEventListener('click', (e)=>{
+                  element.classList.remove('tsm-vis-hidden');
+                  element.classList.remove('tsm-vis-middle');
+                });
+              }
           }
       }
     }
@@ -179,6 +148,9 @@ class flowCalendarVisual
     }
 
     constructor() {
+      this.rowCollection = document.querySelector('#rowCollection');
+      this.addTableResizers();
+      this.renderStartRows();
         this.addCustomNavButtons();
         this.reload();
         this.cardReload();
@@ -193,7 +165,7 @@ class flowCalendarVisual
             }, 1000);
           });
       }
-
+      this.sectionMap = this.buildSectionMap();
 
       // set condition color listeners
       this.cond_phys = document.querySelector("#tf_t_phys_cond");
@@ -205,6 +177,70 @@ class flowCalendarVisual
       this.cond_intel.addEventListener('mousemove', (e)=>{ this.setConditionColor();})
       this.cond_color.addEventListener('change', (e)=>{ this.setConditionsByColor();})
 
+
+      // add rows by scroll
+      let blockTopScroll = false;
+      
+      window.onscroll = (ev)=>{
+        this.rowCollection = document.querySelector('#rowCollection');
+        var rect = this.rowCollection.getBoundingClientRect();
+      //console.log(rect.top, rect.right, rect.bottom, rect.left);
+      
+        var vscroll = window.pageYOffset;
+        let  viewportHeight = window.innerHeight;
+        let topOffset = rect.height + this.rowCollection.offsetTop;
+      //console.log("offtop is " + topOffset + " < vscroll is " + vscroll + " + viewportHeight is " +  viewportHeight);
+        if (topOffset < vscroll +  viewportHeight + 1){
+          this.datetime = this.pastDate;
+          for (let i = 0 ; i < 7; i++){
+              var additionalDate = new Date();
+              additionalDate.setTime(this.datetime.getTime() - ((1 + i) * this.day));
+              this.pastDate = additionalDate;
+              this.rowCollection.insertAdjacentHTML('beforeend', this.buildRow(additionalDate));
+              }
+              this.reload();
+          }
+          
+          //console.log(this.rowCollection.offsetTop);
+          if (this.rowCollection.offsetTop > vscroll && !blockTopScroll){
+              // console.log("scroll top");
+              blockTopScroll = true;
+                  setTimeout(() => {
+                      this.datetime = this.futDate;
+                      for (let i = 0 ; i < 14; i++){
+                      var additionalDate = new Date();
+                      var msr = document.querySelector("#master-row");
+                      additionalDate.setTime(this.datetime.getTime() + ((1 + i) * this.day));
+                      this.futDate = additionalDate;
+                      this.rowCollection.insertAdjacentHTML('afterbegin', this.buildRow(additionalDate));
+                      }
+                      this.rowCollection.prepend(msr);
+                      blockTopScroll = false;
+                      this.reload();
+                  }, 500);
+        }
+      }
+    }
+
+    renderStartRows(date = null) {
+      this.day = (24 * 60 * 60 * 1000);
+      this.pastDate = null;
+      this.futDate = null;
+          this.datetime = new Date();
+          
+          if (date != null){
+            this.datetime = date;
+          }
+          this.datetime.setTime(this.datetime.getTime() + (3 * this.day));
+          this.futDate = this.datetime;
+          this.pastDate = this.datetime;
+      
+      for (let i = 0 ; i < 30; i++){
+        var additionalDate = new Date();
+          additionalDate.setTime(this.datetime.getTime() - (i * this.day));
+          this.pastDate = additionalDate;
+        this.rowCollection.insertAdjacentHTML('beforeend', this.buildRow(additionalDate));
+      }
     }
 
     addCustomNavButtons(){
@@ -247,93 +283,106 @@ class flowCalendarVisual
   
       return hex;
   }
+
+  getRandomInt() {
+    let max = 32000000000;
+    return Math.floor(Math.random() * max);
+  }
+
+  addTableResizers(){
+    let actuators = document.querySelectorAll('.tf-head-act');
+    for (let i = 0; i < actuators.length; i++)
+    {
+      actuators[i].addEventListener('click', () => {
+        
+        let cls = actuators[i].getAttribute('tgc');
+        this.this.rowCollection.classList.remove('active-que');
+        this.this.rowCollection.classList.remove('active-exec');
+        this.this.rowCollection.classList.remove('active-fin');
+        this.this.rowCollection.classList.remove('active-paus');
+        this.this.rowCollection.classList.remove('active-drop');
+        this.this.rowCollection.classList.add(cls);
+      })
+    }
+  }
+
+
+  buildRow(date, que = "", exec = "", paus = "", fin = "", drop = "")
+  {
+    let day = (24 * 60 * 60 * 1000);
+  //   console.log(date);
+    if (date.getFullYear() < 2023){return "";};
+  let formattedDate = date.getDate();
+  let formattedMonth = date.toLocaleString('default', { month: 'long' });
+    let currentDate = "";
+    let currentDateId = "";
+      let weekend = "";
+    if (date.getDay() == 6 || date.getDay() == 0){
+      weekend = " row-weekend";
+    } else {
+      weekend = " row-" + date.getDay();
+    }
+    
+    if (formattedDate == new Date().getDate() &&
+       date.getMonth() == new Date().getMonth()
+       && date.getYear() == new Date().getYear()
+       ){ currentDate = " row-today";
+      currentDateId = "id='row-current-date'";
+      }
+    
+    let newMonthRow = "";
+    if (formattedDate == 1){
+      date.setTime(date.getTime() - (1 * day));
+      newMonthRow = "<div class='col-row col-row-delimeter uk-padding-small'>" + date.toLocaleString('default', { month: 'long'}) + " - " + date.getFullYear() + "</div>";
+    }
+    
+  
+    let id = "R_" + formattedDate + "_" + date.getMonth() + "_" + date.getYear();
+    let result = "<div class='col-row" + currentDate + weekend + "' id='" + id +"'>";
+    result += "<div " + currentDateId + " class='col-item col-date'><div class='uk-text-medium content-mid-reverse'><span class='hide-m'>  " + formattedMonth + "</span> <span class='uk-text-bold'>" + formattedDate + "</span></div></div>";
+    result += "<div class='col-item col-que dragsection'    id='cell_" + this.getRandomInt() + "' ondrop='drop(event)' ondragover='allowDrop(event)' >" + que + "</div>";
+      result += "<div class='col-item col-exec dragsection' id='cell_" + this.getRandomInt() + "' ondrop='drop(event)' ondragover='allowDrop(event)' >" + exec + "</div>";
+      result += "<div class='col-item col-paus dragsection' id='cell_" + this.getRandomInt() + "' ondrop='drop(event)' ondragover='allowDrop(event)' >" + paus + "</div>";
+      result += "<div class='col-item col-fin dragsection'  id='cell_" + this.getRandomInt() + "' ondrop='drop(event)' ondragover='allowDrop(event)' >" + fin + "</div>";
+      result += "<div class='col-item col-drop dragsection' id='cell_" + this.getRandomInt() + "' ondrop='drop(event)' ondragover='allowDrop(event)' >" + drop + "</div>";
+    result += "";
+    result += "</div>" + newMonthRow;
+    return result;
+  }
+
+
+  
+
+  
+
+  buildSectionMap(){
+  let result = [];
+  let divs  = document.querySelector('#master-row').querySelectorAll("div");
+  for (let i = 0; i < divs.length; i++){
+    let att = divs[i].getAttribute('data-section');
+    if (att != undefined && att != null){
+    result.push(att);
+    }
+  }
+  return result;
+}
+
 }
 
 const FLOWCV = new flowCalendarVisual();
 
-let rowCollection = document.querySelector('#rowCollection');
-
-let row = rowCollection.innerHTML;
 
 
 
-let actuators = document.querySelectorAll('.head-act');
-for (let i = 0; i < actuators.length; i++)
-  {
-    actuators[i].addEventListener('click', () => {
-      
-      let cls = actuators[i].getAttribute('tgc');
-      rowCollection.classList.remove('active-que');
-      rowCollection.classList.remove('active-exec');
-      rowCollection.classList.remove('active-fin');
-      rowCollection.classList.remove('active-paus');
-      rowCollection.classList.remove('active-drop');
-      rowCollection.classList.add(cls);
-    })
-  }
-
-function getRandomInt() {
-  let max = 32000000000;
-  return Math.floor(Math.random() * max);
-}
 
 
-function buildRow(date, que = "", exec = "", paus = "", fin = "", drop = "")
-{
-//   console.log(date);
-  if (date.getFullYear() < 2023){return "";};
-let formattedDate = date.getDate();
-let formattedMonth = date.toLocaleString('default', { month: 'long' });
-  let currentDate = "";
-  let currentDateId = "";
-    let weekend = "";
-  if (date.getDay() == 6 || date.getDay() == 0){
-    weekend = " row-weekend";
-  } else {
-    weekend = " row-" + date.getDay();
-  }
-  
-  if (formattedDate == new Date().getDate() &&
-     date.getMonth() == new Date().getMonth()
-     && date.getYear() == new Date().getYear()
-     ){ currentDate = " row-today";
-    currentDateId = "id='row-current-date'";
-    }
-  
-  let newMonthRow = "";
-  if (formattedDate == 1){
-    date.setTime(date.getTime() - (1 * day));
-    newMonthRow = "<div class='col-row col-row-delimeter uk-padding-small'>" + date.toLocaleString('default', { month: 'long'}) + " - " + date.getFullYear() + "</div>";
-  }
-  
 
-  let id = "R_" + formattedDate + "_" + date.getMonth() + "_" + date.getYear();
-  let result = "<div class='col-row" + currentDate + weekend + "' id='" + id +"'>";
-  result += "<div " + currentDateId + " class='col-item col-date'><div class='uk-text-medium content-mid-reverse'><span class='hide-m'>  " + formattedMonth + "</span> <span class='uk-text-bold'>" + formattedDate + "</span></div></div>";
-  result += "<div class='col-item col-que dragsection'    id='cell_" + getRandomInt() + "' ondrop='drop(event)' ondragover='allowDrop(event)' >" + que + "</div>";
-    result += "<div class='col-item col-exec dragsection' id='cell_" + getRandomInt() + "' ondrop='drop(event)' ondragover='allowDrop(event)' >" + exec + "</div>";
-    result += "<div class='col-item col-paus dragsection' id='cell_" + getRandomInt() + "' ondrop='drop(event)' ondragover='allowDrop(event)' >" + paus + "</div>";
-    result += "<div class='col-item col-fin dragsection'  id='cell_" + getRandomInt() + "' ondrop='drop(event)' ondragover='allowDrop(event)' >" + fin + "</div>";
-    result += "<div class='col-item col-drop dragsection' id='cell_" + getRandomInt() + "' ondrop='drop(event)' ondragover='allowDrop(event)' >" + drop + "</div>";
-  result += "";
-  result += "</div>" + newMonthRow;
-  return result;
-}
 
-  var day = (24 * 60 * 60 * 1000);
-var pastDate = null;
-var futDate = null;
-    var datetime = new Date();
-    datetime.setTime(datetime.getTime() + (3 * day));
-    futDate = datetime;
-    pastDate = datetime;
 
-for (let i = 0 ; i < 30; i++){
-  var dater = new Date();
-    dater.setTime(datetime.getTime() - (i * day));
-    pastDate = dater;
-  rowCollection.insertAdjacentHTML('beforeend', buildRow(dater));
-}
+
+
+
+
 
  function allowDrop(ev) {
       ev.preventDefault();
@@ -354,50 +403,7 @@ for (let i = 0 ; i < 30; i++){
       ev.target.appendChild(document.getElementById(data));
     }
 
-let blockTopScroll = false;
- window.onscroll = function(ev){
-   rowCollection = rowCollection = document.querySelector('#rowCollection');
-   var rect = rowCollection.getBoundingClientRect();
-//console.log(rect.top, rect.right, rect.bottom, rect.left);
- 
-   var vscroll = window.pageYOffset;
-   let  viewportHeight = window.innerHeight;
-   let topOffset = rect.height + rowCollection.offsetTop;
-//console.log("offtop is " + topOffset + " < vscroll is " + vscroll + " + viewportHeight is " +  viewportHeight);
-   if (topOffset < vscroll +  viewportHeight + 1){
- //  console.log("scroll bottom");
-  //console.log(topOffset);
-    datetime = pastDate;
-     for (let i = 0 ; i < 7; i++){
-        var dater = new Date();
-        dater.setTime(datetime.getTime() - ((1 + i) * day));
-        pastDate = dater;
-        rowCollection.insertAdjacentHTML('beforeend', buildRow(dater));
-        }
-        FLOWCV.reload();
-    }
-     
-     //console.log(rowCollection.offsetTop);
-     if (rowCollection.offsetTop > vscroll && !blockTopScroll){
-        // console.log("scroll top");
-        blockTopScroll = true;
-            setTimeout(() => {
-                datetime = futDate;
-                for (let i = 0 ; i < 14; i++){
-                var dater = new Date();
-                var msr = document.querySelector("#master-row");
-                dater.setTime(datetime.getTime() + ((1 + i) * day));
-                futDate = dater;
-                rowCollection.insertAdjacentHTML('afterbegin', buildRow(dater));
-                }
-                rowCollection.prepend(msr);
-                blockTopScroll = false;
-                FLOWCV.reload();
-            }, 500);
-   }
-  
 
- }
 
 function taskTemplate(id, name, text = ""){
  let result = `<div class='dragitem uk-card uk-card-default dragcard' draggable='true' ondragstart='drag(event)' id='${id}'>
@@ -412,33 +418,17 @@ function taskTemplate(id, name, text = ""){
 }
 
 
-let sectionMap = buildSectionMap();
-
-function buildSectionMap(){
-  let result = [];
-  let divs  = document.querySelector('#master-row').querySelectorAll("div");
-  for (let i = 0; i < divs.length; i++){
-    let att = divs[i].getAttribute('data-section');
-    if (att != undefined && att != null){
-    result.push(att);
-    }
-  }
-  return result;
-}
-//console.log(sectionMap);
-
-let dataToInsert = [
-  {'id': '7245434', 'name' : 'New Task', 'date' : '2023-02-21', 'section' : 'q'},
-  {'id': '72454434', 'name' : 'Not New Task', 'date' : '2023-02-21', 'section' : 'e'},
-    {'id': '78245434', 'name' : 'AND NES STUFF', 'date' : '2023-02-21', 'section' : 'f'},
-    {'id': '72445434', 'name' : 'Do something!', 'date' : '2023-02-21', 'section' : 'p'},
-      {'id': '724t45434', 'name' : 'OKAY< GO', 'date' : '2023-02-21', 'section' : 'd'},
-        {'id': '72445r434', 'name' : 'Thied f fjasdjfdfj djfkasjdfkjj j jkjdf', 'date' : '2023-02-20', 'section' : 'd'},
-        {'id': '7244w5434', 'name' : 'Sunday sweet task', 'date' : '2023-02-15', 'section' : 'e', 'text': 'The super text here i will come to home yesterday and will meet my husband. He is so strong, but today he is ill. I strive to do something.'},
-];
 
 //console.log(sectionMap);
-SetEventsToChart(dataToInsert, sectionMap);
+
+
+
+//console.log(sectionMap);
+
+
+
+FLOWCV.reload();
+
 
 function SetEventsToChart(events, map)
 {
@@ -454,7 +444,7 @@ function SetEventsToChart(events, map)
     
     let target = document.querySelector("#" + idn);
     if (target != null){
-      let index = sectionMap.indexOf(evt.section);
+      let index = map.indexOf(evt.section);
       //console.log("index is  " + index);
       let columns = target.querySelectorAll('.col-item');
       if (columns[index] != null){
@@ -464,7 +454,7 @@ function SetEventsToChart(events, map)
   }
 }
 
-
+SetEventsToChart(dataToInsert, FLOWCV.sectionMap);
 
 var x = 0;
 var y = 0;
@@ -477,7 +467,6 @@ let comside = document.querySelector("#comside");
 let cmsactuator = document.querySelector("#cmsactuator");
 
 
-FLOWCV.reload();
 
 // cmsactuator.addEventListener("click", (e)=> {
 //   comside.classList.toggle('cms-hidden');
