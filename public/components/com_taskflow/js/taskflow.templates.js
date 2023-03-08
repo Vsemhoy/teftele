@@ -150,4 +150,16 @@ let result = `  <tr class='tf-t-checklist-item ${finClass}'>
 return result;
     }
 
+    getRandomInt() {
+        let max = 32000000000;
+        return Math.floor(Math.random() * max);
+      }
+
+    getTaskCardTempBlock(temp_id){
+        let result = "<div class='tf-temp-card' id='" + 
+        temp_id + "'><div><span class='tf-t-c-clock bi-arrow-clockwise'></span></div> Inserting...</div>";
+        return result;
+
+    }
+
 }

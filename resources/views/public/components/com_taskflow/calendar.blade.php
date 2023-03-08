@@ -41,15 +41,15 @@
          <div class='uk-text-medium content-mid'><span uk-icon='calendar'></span> <span class='hide-m'>  DEMO</span></div>
             </div>
             
-<div class='col-item col-que tf-head-act' tgc='active-que' data-section='q'>
+      <div class='col-item col-que tf-head-act' tgc='active-que' data-section='q'>
          <div class='uk-text-medium content-mid'><span class='uk-text-bold'>Q</span> <span class='hide-m'>Waiting tasks</span></div>
             </div>
             
-<div class='col-item col-exec tf-head-act' tgc='active-exec' data-section='e'>
+      <div class='col-item col-exec tf-head-act' tgc='active-exec' data-section='e'>
          <div class='uk-text-medium content-mid'><span class='uk-text-bold'>EX</span> <span class='hide-m'>Eecuted active tasks</span></div>
             </div>
             
-<div class='col-item col-paus tf-head-act' tgc='active-paus' data-section='p'>
+      <div class='col-item col-paus tf-head-act' tgc='active-paus' data-section='p'>
          <div class='uk-text-medium content-mid'><span class='uk-text-bold'>P</span> <span class='hide-m'>Temporary paused tasks</span></div>
             </div>
             
@@ -90,15 +90,15 @@
             <form class='uk-column-1-1@s uk-column-1-2@m '>
         <div class='uk-margin'>
           <label class='uk-text'>Name</label>
-          <input class="uk-input" type="text">
+          <input class="uk-input" type="text"  id='tf_input_name'>
         </div>
         <div class='uk-margin'>
           <label class='uk-text'>Description</label>
-          <textarea class="uk-textarea" rows='8'></textarea>
+          <textarea class="uk-textarea" rows='8'  id='tf_input_description'></textarea>
         </div>
         <div class='uk-margin'>
           <label class='uk-text'>Status</label>
-          <select class="uk-select">
+          <select class="uk-select" id='tf_input_status'>
             <option value='0'>Waiting</option>
             <option value='1'>Running</option>
             <option value='2'>Paused</option>
@@ -109,14 +109,14 @@
         </div>
         <div class='uk-margin'>
           <label class='uk-text'>Board</label>
-          <select class="uk-select">
+          <select class="uk-select"  id='tf_input_board'>
             <option>Board 1</option>
             <option>Board 2</option>
           </select>
         </div>
         <div class='uk-margin'>
           <label class='uk-text'>Group</label>
-          <select class="uk-select">
+          <select class="uk-select"  id='tf_input_group'>
             <option>Group 1</option>
             <option>Group 2</option>
           </select>
@@ -133,34 +133,38 @@
         </div>
         <div class='uk-margin'>
           <label class='uk-text'>Category</label>
-          <select class="uk-select">
+          <select class="uk-select"  id='tf_input_category'>
             <option>Cat 1</option>
             <option>cat 2</option>
           </select>
         </div>
         <div class='uk-margin'>
           <label class='uk-text'>Tags</label>
-          <input class="uk-input" type="text">
+          <input class="uk-input" type="text"  id='tf_input_tags'>
         </div>
 
         <div class='uk-margin uk-column-1-3'>
           <div>
             <label class='uk-text'>Days <span class='uk-text-muted'>planned</span></label>
-            <input class="uk-input" type="number" min='0' max='999'>
+            <input class="uk-input" type="number" min='0' max='999'  id='tf_input_days'>
           </div>
           <div>
             <label class='uk-text'>Hours <span class='uk-text-muted'>planned</span></label>
-            <input class="uk-input" type="number" min='0' max='999'>
+            <input class="uk-input" type="number" min='0' max='999' id='tf_input_hours'>
           </div>
           <div>
             <label class='uk-text'>Minutes  <span class='uk-text-muted'>planned</span></label>
-            <input class="uk-input" type="number" min='0' max='9999'>
+            <input class="uk-input" type="number" min='0' max='9999' id='tf_input_minutes'>
+          </div>
+          <div>
+            <label class='uk-text'>Minutes  <span class='uk-text-muted'>planned</span></label>
+            <input class="uk-input" type="number" min='0' max='9999' id='tf_input_duration'>
           </div>
         </div>
         
         <div class='uk-margin'>
           <label class='uk-text'>Setter</label>
-          <select class="uk-select">
+          <select class="uk-select" id='tf_input_setter'>
             <option></option>
             <option></option>
           </select>
@@ -168,7 +172,7 @@
 
         <div class='uk-margin'>
           <label class='uk-text'>Maker</label>
-          <select class="uk-select">
+          <select class="uk-select" id='tf_input_executor'>
             <option></option>
             <option></option>
           </select>
@@ -243,7 +247,7 @@
 <li class='u-custom-minheight'>
 
 <table class="uk-table uk-table-hover uk-table-middle uk-table-divider">
-        <thead>
+        <thead id='tf_t_checklist'>
             <tr>
                 <th class="uk-table-shrink"></th>
                 <th class="uk-table-expand">What to do</th>
@@ -258,8 +262,8 @@
     </table>
     <div class="uk-padding-small uk-padding-remove-top u-two-col-flex">
       <div>
-      <span>4</span> of 
-      <span>8</span> are finished.</div> 
+      <span id='tf_t_countchecked'>4</span> of 
+      <span id='tf_t_countchecktotal'>8</span> are finished.</div> 
       <div>
 <span class='uk-text tf-event-addcheck'>Add more? <span class=' u-icon-std u-icon-event bi-plus-square'></span></span>
 </div>
@@ -272,7 +276,7 @@
 </div>
         <div class="uk-modal-footer uk-text-right">
             <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
-            <button class="uk-button uk-button-primary" type="button">Save</button>
+            <button id='tf_btn_savetask' class="uk-button uk-button-primary" type="button">Save</button>
         </div>
     </div>
 </div>

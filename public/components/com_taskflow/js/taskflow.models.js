@@ -2,6 +2,7 @@
 const TaskCardModel =
 {
     id: 1,
+    temp_id : 0,
     parent_id : null,
   name: "name",
   description: "descripty",

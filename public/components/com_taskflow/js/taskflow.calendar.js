@@ -30,6 +30,7 @@ class flowCalendarVisual
                 this.dragcells[index].classList.add("tf-watch");
                 let element = this.dragcells[index];
                 element.addEventListener('dblclick', (e) => {
+                  this.targetCell = element.id;
                     if (e.target.innerHTML == ""){
                       element.insertAdjacentHTML('beforeend', TFTEMPLATE.getTaskCardInCalendar());
                       this.cardReload();
@@ -148,11 +149,12 @@ class flowCalendarVisual
     }
 
     constructor() {
+      this.targetCell = null;
       this.rowCollection = document.querySelector('#rowCollection');
-      this.addTableResizers();
       this.renderStartRows();
-        this.addCustomNavButtons();
-        this.reload();
+      this.addCustomNavButtons();
+
+      this.reload();
         this.cardReload();
 
         // add templates into TASK CHECKLIST
@@ -220,6 +222,7 @@ class flowCalendarVisual
                   }, 500);
         }
       }
+      this.addTableResizers();
     }
 
     renderStartRows(date = null) {
@@ -296,12 +299,12 @@ class flowCalendarVisual
       actuators[i].addEventListener('click', () => {
         
         let cls = actuators[i].getAttribute('tgc');
-        this.this.rowCollection.classList.remove('active-que');
-        this.this.rowCollection.classList.remove('active-exec');
-        this.this.rowCollection.classList.remove('active-fin');
-        this.this.rowCollection.classList.remove('active-paus');
-        this.this.rowCollection.classList.remove('active-drop');
-        this.this.rowCollection.classList.add(cls);
+        this.rowCollection.classList.remove('active-que');
+        this.rowCollection.classList.remove('active-exec');
+        this.rowCollection.classList.remove('active-fin');
+        this.rowCollection.classList.remove('active-paus');
+        this.rowCollection.classList.remove('active-drop');
+        this.rowCollection.classList.add(cls);
       })
     }
   }
@@ -455,6 +458,51 @@ function SetEventsToChart(events, map)
 }
 
 SetEventsToChart(dataToInsert, FLOWCV.sectionMap);
+
+
+
+
+class TaskCardHandlers{
+
+  constructor(){
+    this.task_id = null;
+    let saveBtn = document.querySelector("#tf_btn_savetask");
+    saveBtn.addEventListener('click', ()=>{
+      this.harvestTaskSave();
+    });
+  }
+
+  harvestTaskSave(){
+    if (this.task_id == null){
+      let temp_id = "temp_card_" + FLOWCV.getRandomInt();
+      let targetCell = document.querySelector("#" + FLOWCV.targetCell);
+      targetCell.insertAdjacentHTML("beforeend", TFTEMPLATE.getTaskCardTempBlock(temp_id));
+    }
+
+    this.task_= document.querySelector("#tf_input_").value;
+    this.task_= document.querySelector("#tf_input_").value;
+    this.task_= document.querySelector("#tf_input_").value;
+    this.task_= document.querySelector("#tf_input_").value;
+    this.task_= document.querySelector("#tf_input_").value;
+    this.task_= document.querySelector("#tf_input_").value;
+    this.task_= document.querySelector("#tf_input_").value;
+    this.task_= document.querySelector("#tf_input_").value;
+    this.task_= document.querySelector("#tf_input_").value;
+    this.task_= document.querySelector("#tf_input_").value;
+    this.task_= document.querySelector("#tf_input_").value;
+    this.task_= document.querySelector("#tf_input_").value;
+    this.task_= document.querySelector("#tf_input_").value;
+    this.task_= document.querySelector("#tf_input_").value;
+    this.task_= document.querySelector("#tf_input_").value;
+    this.task_= document.querySelector("#tf_input_").value;
+    this.task_= document.querySelector("#tf_input_").value;
+
+  }
+
+};
+
+const TCH = new TaskCardHandlers();
+
 
 var x = 0;
 var y = 0;
