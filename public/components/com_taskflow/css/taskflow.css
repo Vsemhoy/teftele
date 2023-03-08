@@ -74,15 +74,8 @@
     margin-bottom: 1px;
     background: transparent !important;
   }
-  .dragitem > div {
-    padding: 6px;
-    background: white;
-  }
-  .dragitem > div:nth-child(2) {
 
-    margin-left: 1px;
 
-  }
   
   .col-container {
 
@@ -91,9 +84,11 @@
     outline: 3px solid #ffffff55;
       border-bottom: none !important;
         box-shadow: inset 0px 0px 41px #ffffff9c;
+        outline: 3px solid #8080809e;
+        background-color: rgb(255, 255, 255);
   }
   .row-today > div {
-    
+    min-height: 400px;
   }
   .tf-watch {
     border-color: red;
@@ -394,4 +389,126 @@
     border-width: 0px;
     line-height: 1.2rem;
   }
+  #rowCollection {
+    background: #ffffffd6;
+  }
+
+
+
+
+  /* card description */
+  .tsm-card {
+    margin-bottom: 5px;
+    transition: all 0.3s;
+  }
+  .tsm-card-row {
+    transition: all 0.3s;
+    box-shadow: 0px 1px 6px #00000038;
+    display: grid;
+    grid-template-columns: 50px auto;
+    grid-gap: 2px;
+    margin-bottom: 1px;
+  }
+.tsm-card-row > div:nth-child(odd) {
+  text-align: center;
+  display: grid;
+  grid-template-rows: auto auto;
+  align-content: space-between;
+}
+.tsm-card-row > div {
+  background: white;
+}
+.tsm-card-row:hover {
+  box-shadow: 0px 2px 11px #0000005e;
+  background: #0000005e;
+}
+.tsm-card-padding {
+  padding: 6px;
+  }
+   .tsm-card-pre-header {
+        font-weight: 500;
+    font-size: 1.15rem;
+  }
+  .tsm-card-header {
+    font-weight: 500;
+    font-size: 1.15rem;
+  }
+   .tsm-card-pre-body {
+    
+  }
+  .tsm-card-body {
+    
+  }
+.tsm-status-done .tsm-card-pre-header {
+  background: #11BB55;
+  color: white;
+}
+
+.tsm-card-header {
+  display: flex;
+      justify-content: space-between;
+}
+.tsm-card-content {
+  /*border-bottom: 1px solid #dddddd; */
+}
+.tsm-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.tsm-label {
+  padding: 3px 6px;
   
+}
+
+.tsm-task-session-body {
+  display: grid;
+  grid-template-columns: auto 100px;
+}
+.tsm-task-session-date {
+  border-left: 1px solid #dddddd;
+  padding-left: 6px;
+}
+.tsm-card-topbuttons {
+  display: flex;
+}
+.tsm-card-topbuttons > .tsm-card-button {
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: all ease 0.2s;
+}
+.tsm-card-topbuttons > .tsm-card-button:hover {
+  background: #80808047;
+}
+.tsm-card-topbuttons > .tsm-card-button:active {
+  background: #80808077;
+}
+
+.tsm-vis-hidden .tsm-card-row:not(:first-child) {
+  display: none;
+}
+.tsm-vis-middle .tsm-mid-mark {
+  display: none;
+}
+
+.lilo {
+  background: #cc0680;
+  color: white;
+}
+
+.tsm-card .tf_card_event_expandcard {
+  background-color: #03a9f41f;
+}
+.tsm-card.tsm-vis-hidden  .tf_card_event_minifycard {
+  background-color: #03a9f41f;
+}
+.tsm-card.tsm-vis-middle  .tf_card_event_midifycard {
+  background-color: #03a9f41f;
+}
+.tsm-card.tsm-vis-hidden  .tf_card_event_expandcard  {
+  background-color: transparent;
+}
+.tsm-card.tsm-vis-middle  .tf_card_event_expandcard  {
+  background-color: transparent;
+}

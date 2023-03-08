@@ -9,6 +9,53 @@
 //   }
 // })
 
+const TaskModel =
+{
+  name: "name",
+  description: "descripty",
+  status: 1,
+  board: 1,
+  type: 3,
+  category: 0,
+  tags: "",
+  planned_time: 52645478,
+  setter: 1,
+  executor: 1,
+  created_at : 7870,
+  updated_at : 87809789,
+  schedule: [],
+  steps: [
+    {
+      id: 1,
+      text : "Step text",
+      startTime : 75675,
+      endTime: 456345,
+      duration: 0
+    },
+    
+  ],
+  totalDuration : 75896,
+  deceisions : [{
+    id: 3,
+    comment: "Super comment",
+    added_at: 543645,
+    owner: 1,
+  }],
+  checklist: [{
+    id : 1,
+    todo: "What to do",
+    addTime: 534576,
+    finTime: 5645634,
+    isDone: 0
+  }],
+  totalChecks: 1,
+  doneChecks: 0,
+  percentChecks: 0,
+  condition_phys: 100,
+  condition_emo: 100,
+  condition_intel: 100
+};
+
 const TFTEMPLATE = new TaskFlowTemplates();
 
 class flowCalendarVisual 
@@ -18,13 +65,16 @@ class flowCalendarVisual
         for (let index = 0; index < this.dragcells.length; index++) {
             if (!this.dragcells[index].classList.contains("tf-watch")){
                 this.dragcells[index].classList.add("tf-watch");
-                this.dragcells[index].addEventListener('dblclick', (e) => {
+                let element = this.dragcells[index];
+                element.addEventListener('dblclick', (e) => {
                     if (e.target.innerHTML == ""){
+                      element.insertAdjacentHTML('beforeend', TFTEMPLATE.getTaskCardInCalendar());
+                      this.cardReload();
                         UIkit.modal("#tf_modal_task_editor").show();
                         //alert("hello");
                     } else {
                         let blockEvent_di = false;
-                        let dragitems = this.dragcells[index].querySelectorAll('.dragitem');
+                        let dragitems = element.querySelectorAll('.dragitem');
                         let moX = e.clientX;
                         let moY = e.clientY;
                         console.log(moX);
@@ -47,6 +97,8 @@ class flowCalendarVisual
                         if (blockEvent_di == false){
                             //alert("hello");
                             UIkit.modal("#tf_modal_task_editor").show();
+                            element.insertAdjacentHTML('beforeend', TFTEMPLATE.getTaskCardInCalendar());
+                            this.cardReload();
                         } else {
                           UIkit.modal("#tf_modal_task_editor").hide();
                         }
@@ -56,18 +108,41 @@ class flowCalendarVisual
             }
         }
 
-        this.dragcitems = document.querySelectorAll('.dragitem');
-        for (let index = 0; index < this.dragcitems.length; index++) {
-            if (!this.dragcitems[index].classList.contains("tf-watch")){
-                this.dragcitems[index].classList.add("tf-watch");
-                this.dragcitems[index].addEventListener('dblclick', (e) => {
-                    //UIkit.modal("#tf_modal_task_editor").show();
-                    e.preventDefault;
-                    alert("Hello");
-                });
-            }
-        }
+
     }
+
+    cardReload(){
+      this.dragcitems = document.querySelectorAll('.dragitem');
+      for (let index = 0; index < this.dragcitems.length; index++) {
+          if (!this.dragcitems[index].classList.contains("tf-watch")){
+              this.dragcitems[index].classList.add("tf-watch");
+              let element = this.dragcitems[index];
+              element.addEventListener('dblclick', (e) => {
+                  //UIkit.modal("#tf_modal_task_editor").show();
+                  e.preventDefault;
+                  UIkit.modal("#tf_modal_task_editor").hide();
+                  alert("Hello");
+              });
+
+              element.querySelector('.tf_card_event_minifycard').addEventListener('click', (e)=>{
+                element.classList.add('tsm-vis-hidden');
+                element.classList.remove('tsm-vis-middle');
+              });
+
+              element.querySelector('.tf_card_event_midifycard').addEventListener('click', (e)=>{
+                element.classList.remove('tsm-vis-hidden');
+                element.classList.add('tsm-vis-middle');
+              });
+
+              element.querySelector('.tf_card_event_expandcard').addEventListener('click', (e)=>{
+                element.classList.remove('tsm-vis-hidden');
+                element.classList.remove('tsm-vis-middle');
+              });
+          }
+      }
+    }
+
+
 
     checkListReload(){
       this.taskCheckItems = document.querySelectorAll(".tf-t-checklist-item");
@@ -106,6 +181,7 @@ class flowCalendarVisual
     constructor() {
         this.addCustomNavButtons();
         this.reload();
+        this.cardReload();
 
         // add templates into TASK CHECKLIST
         this.btnAddCheckItem = document.querySelectorAll(".tf-event-addcheck");
@@ -118,6 +194,17 @@ class flowCalendarVisual
           });
       }
 
+
+      // set condition color listeners
+      this.cond_phys = document.querySelector("#tf_t_phys_cond");
+      this.cond_emo = document.querySelector("#tf_t_emo_cond");
+      this.cond_intel = document.querySelector("#tf_t_intel_cond");
+      this.cond_color = document.querySelector("#tf_t_cond_color");
+       this.cond_phys.addEventListener('mousemove', (e)=>{ this.setConditionColor();}) 
+        this.cond_emo.addEventListener('mousemove', (e)=>{ this.setConditionColor();})
+      this.cond_intel.addEventListener('mousemove', (e)=>{ this.setConditionColor();})
+      this.cond_color.addEventListener('change', (e)=>{ this.setConditionsByColor();})
+
     }
 
     addCustomNavButtons(){
@@ -128,6 +215,38 @@ class flowCalendarVisual
             target.insertAdjacentHTML('afterbegin', today);
         }
     }
+
+    setConditionColor(){
+      let r = this.cond_phys.value;
+      let g = this.cond_emo.value;
+      let b = this.cond_intel.value;
+
+      let color = "#" + this.decimalToHex(r) + this.decimalToHex(g) + this.decimalToHex(b);
+      this.cond_color.value = color;
+      // parseInt(hexString, 16); - backward
+    }
+
+    setConditionsByColor(){
+      let c = this.cond_color.value;
+      let r = c.substring(1, 3);
+      let g = c.substring(3, 5);
+      let b = c.substring(5, 7);
+      this.cond_phys.value = parseInt(r, 16);
+      this.cond_emo.value = parseInt(g, 16);
+      this.cond_intel.value = parseInt(b, 16);
+    }
+
+    // service function
+    decimalToHex(d, padding) {
+      var hex = Number(d).toString(16);
+      padding = typeof (padding) === "undefined" || padding === null ? padding = 2 : padding;
+  
+      while (hex.length < padding) {
+          hex = "0" + hex;
+      }
+  
+      return hex;
+  }
 }
 
 const FLOWCV = new flowCalendarVisual();
@@ -191,11 +310,11 @@ let formattedMonth = date.toLocaleString('default', { month: 'long' });
   let id = "R_" + formattedDate + "_" + date.getMonth() + "_" + date.getYear();
   let result = "<div class='col-row" + currentDate + weekend + "' id='" + id +"'>";
   result += "<div " + currentDateId + " class='col-item col-date'><div class='uk-text-medium content-mid-reverse'><span class='hide-m'>  " + formattedMonth + "</span> <span class='uk-text-bold'>" + formattedDate + "</span></div></div>";
-  result += "<div class='col-item col-que dragsection' id='cell_'" + getRandomInt() + " ondrop='drop(event)'' ondragover='allowDrop(event)''>" + que + "</div>";
-    result += "<div class='col-item col-exec dragsection' id='cell_'" + getRandomInt() + " ondrop='drop(event)'' ondragover='allowDrop(event)''>" + exec + "</div>";
-    result += "<div class='col-item col-paus dragsection' id='cell_'" + getRandomInt() + " ondrop='drop(event)'' ondragover='allowDrop(event)''>" + paus + "</div>";
-    result += "<div class='col-item col-fin dragsection' id='cell_'" + getRandomInt() + " ondrop='drop(event)'' ondragover='allowDrop(event)''>" + fin + "</div>";
-    result += "<div class='col-item col-drop dragsection' id='cell_'" + getRandomInt() + " ondrop='drop(event)'' ondragover='allowDrop(event)''>" + drop + "</div>";
+  result += "<div class='col-item col-que dragsection'    id='cell_" + getRandomInt() + "' ondrop='drop(event)' ondragover='allowDrop(event)' >" + que + "</div>";
+    result += "<div class='col-item col-exec dragsection' id='cell_" + getRandomInt() + "' ondrop='drop(event)' ondragover='allowDrop(event)' >" + exec + "</div>";
+    result += "<div class='col-item col-paus dragsection' id='cell_" + getRandomInt() + "' ondrop='drop(event)' ondragover='allowDrop(event)' >" + paus + "</div>";
+    result += "<div class='col-item col-fin dragsection'  id='cell_" + getRandomInt() + "' ondrop='drop(event)' ondragover='allowDrop(event)' >" + fin + "</div>";
+    result += "<div class='col-item col-drop dragsection' id='cell_" + getRandomInt() + "' ondrop='drop(event)' ondragover='allowDrop(event)' >" + drop + "</div>";
   result += "";
   result += "</div>" + newMonthRow;
   return result;

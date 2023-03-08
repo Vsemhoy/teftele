@@ -51,13 +51,13 @@
 
 <div id="tf_modal_task_editor" class="uk-flex-top uk-modal-container" uk-modal>
   
-  <div class="uk-modal-dialog uk-margin-auto-vertical u-custom-rounds">
+  <div class="uk-modal-dialog uk-margin-auto-vertical">
     <button class="uk-modal-close-default" type="button" uk-close></button>
         <!-- <div class="uk-modal-header">
             <h2 class="uk-modal-title uk-text-lead">Modal-title</h2>
         </div> -->
-        <div uk-overflow-auto>
-        <ul class="uk-subnav uk-subnav-pill u-custom-pills-round" uk-switcher>
+        <div uk-overflow-auto >
+        <ul class="uk-subnav uk-subnav-pill" uk-switcher style="padding: 6px;">
           <li><a href="#"><span class='bi-calendar2-check'></span> Task</a></li>
           <li><a href="#"><span class='bi-calendar3'> Schedule</a></li>
           <li><a href="#"><span class='bi-card-list'> Steps</a></li>
@@ -67,8 +67,8 @@
         </ul>
         
         <ul class="uk-switcher uk-margin">
-          <li>
-            <div class="uk-modal-body u-custom-minheight">
+          <li class='u-custom-minheight'>
+            <div class="uk-modal-body ">
             <form class='uk-column-1-1@s uk-column-1-2@m '>
         <div class='uk-margin'>
           <label class='uk-text'>Name</label>
@@ -159,79 +159,70 @@
       </form>
     </div>
     </li>
-    <li>
+    <li class='u-custom-minheight'>
       <div class='uk-modal-body u-custom-minheight'>
         schedule
       </div>
     </li>
     <li>
-      <div class='uk-modal-body u-custom-minheight uk-padding-remove'>
-        <div class='uk-margin'>
-            <form class='tf-task-form-step'>
-
-              <div class='tf-task-form-step-body uk-padding-small'>
-                  <div class='uk-flex uk-flex-between'>
-                    <label class='uk-text-muted'>#1 24.03.2004 14:55</label>
-                    <span class='bi-trash tf-step-remove-trigger'></span>
-                  </div>
-                <div class='u-custom-input-awake'>
-                  <textarea class="uk-textarea" rows='7' disabled>Helllow</textarea>
-                </div>
-                  <div class='uk-margin uk-column-1-3'>
-                <div class='u-custom-input-awake'>
-                  <label class='uk-text-small'>Started at <span class='uk-text-muted'></span></label>
-                  <input class="uk-input" disabled type="datetime-local">
-                </div>
-                <div class='u-custom-input-awake'>
-                  <label class='uk-text-small'>Finished at<span class='uk-text-muted'></span></label>
-                  <input class="uk-input" disabled type="datetime-local" min='0' max='999'>
-                </div>
-                <div class='u-custom-input-awake'>
-                  <label class='uk-text-small'>Duration  <span class='uk-text-muted'></span></label>
-                  <input class="uk-input" disabled type="text" min='0' max='9999'>
-            </div>
-  </div>
-        </div>
-      </form>
-        </div>
-
-        <div class='uk-margin'>
-            <form class='tf-task-form-step'>
-            <label class='uk-text'>Step 1</label>
-            <div class='tf-task-form-step-body uk-padding-small'>
-            <div class='u-custom-input-awake'>
-              <textarea class="uk-textarea" rows='7' disabled>Helllow</textarea>
-            </div>
-              <div class='uk-margin uk-column-1-3'>
-            <div class='u-custom-input-awake'>
-              <label class='uk-text'>Started at <span class='uk-text-muted'></span></label>
-              <input class="uk-input" disabled type="datetime-local">
-            </div>
-            <div class='u-custom-input-awake'>
-              <label class='uk-text'>Finished at<span class='uk-text-muted'></span></label>
-              <input class="uk-input" disabled type="datetime-local" min='0' max='999'>
-            </div>
-            <div class='u-custom-input-awake'>
-              <label class='uk-text'>Duration  <span class='uk-text-muted'></span></label>
-              <input class="uk-input" disabled type="text" min='0' max='9999'>
-            </div>
-  </div>
-        </div>
-      </form>
-        </div>
+      <div class='uk-modal-body u-custom-minheight uk-padding-remove' id='tf_t_steplist'>
 
 
       </div>
     </li>
-    <li>
+    <li class='u-custom-minheight'>
       <div class='uk-modal-body u-custom-minheight'>
-        informer
+            <form class='uk-column-1-1@s uk-column-1-2@m '>
+            <div class='uk-margin'>
+              <label class='uk-text'>Physical condition</label>
+              <input id="tf_t_phys_cond" class="uk-range" min="0" max="255" step="1" type="range">
+            </div>
+            <div class='uk-margin'>
+              <label class='uk-text'>Emotional condition</label>
+              <input id="tf_t_emo_cond" class="uk-range" min="0" max="255" step="1" type="range">
+            </div>
+            <div class='uk-margin'>
+              <label class='uk-text'>Intelligence condition</label>
+              <input id="tf_t_intel_cond" class="uk-range" min="0" max="255" step="1" type="range">
+            </div>
+            <div class='uk-margin'>
+              <label class='uk-text'>Condition color</label>
+              <input id="tf_t_cond_color" class="" type="color">
+            </div>
+            </form>
+        <div class='uk-margin'>
       </div>
     </li>
-    <li>
-      DEX
+    <li class='u-custom-minheight'>
+      
+    <table class="uk-table uk-table-hover uk-table-middle uk-table-divider">
+        <thead>
+            <tr>
+                <th class="uk-table-shrink"></th>
+                <th class="uk-width-small">Comment</th>
+                <th class="uk-table-expand">Deceicion</th>
+                <th class="uk-table-small uk-text-nowrap"><div class='uk-text-lead'><span class='tf-event-addcheck u-icon-std u-icon-event bi-plus-square'></span></div></th>
+            </tr>
+        </thead>
+        <tbody id="tf_deceision_list">
+        <tr class='tf-t-checklist-item '>
+        <td><input class="uk-checkbox" type="checkbox" aria-label="Checkbox" /></td>
+        <td class="uk-text-truncate">
+          <div class="tf_t_check_editable uk-padding-small"></div>
+          
+        </td>
+        <td class="uk-table-link uk-padding-small">
+          <div class='uk-card uk-card-default uk-padding-small'>
+            This is the Deceicions one djklfdj skfjasdjfasj kdfjklasjd kljfasdjdfasj dkjasd jfasldfj asjlkdfj aslk jdflksadklf sdf ....
+          </div>
+        </td>
+        <td class="uk-text-nowrap"><span class='tf-event-removecheck u-icon-std u-icon-event uk-text-muted bi-trash'></span></td>
+    </tr>
+        </tbody>
+    </table>
+
     </li>
-<li>
+<li class='u-custom-minheight'>
 
 <table class="uk-table uk-table-hover uk-table-middle uk-table-divider">
         <thead>
