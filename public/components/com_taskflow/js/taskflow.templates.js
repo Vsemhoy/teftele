@@ -135,8 +135,8 @@ let result = `  <tr class='tf-t-checklist-item ${finClass}'>
   <div class='tsm-card-padding'>INFO</div>
   <div class='hide-m'>
     <div class='tsm-card-footer tsm-card-padding'>
-        <div class='tsm-label'>Parent task: Step des</div>
-        <div class='tsm-label lilo'>Super Digital</div>
+        <div class='tsm-label'>Group</div>
+        <div class='tsm-label lilo'>Category</div>
         <div class='tsm-label'>Duration: 132h 32m</div>
         <div class='tsm-label'>Sessions: 19</div>
           <div class='tsm-card-date'>12-01-2045</div>
