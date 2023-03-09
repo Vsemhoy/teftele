@@ -45,6 +45,12 @@ class TaskFlow{
             
         }
     }
+
+
+    getRandomInt() {
+        let max = 32000000000;
+        return Math.floor(Math.random() * max);
+    }
 }
 
 var TSF = new TaskFlow();

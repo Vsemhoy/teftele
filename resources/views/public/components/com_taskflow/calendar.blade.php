@@ -27,6 +27,7 @@
 <script>
   var currentTaskBoard = 1; // load from PHP
   var pageCommandStack = [];
+  var currentUser = 1;
 </script>
 @endsection
 
@@ -226,7 +227,8 @@
                 <th class="uk-table-small uk-text-nowrap"><div class='uk-text-lead'><span class='tf-event-addcheck u-icon-std u-icon-event bi-plus-square'></span></div></th>
             </tr>
         </thead>
-        <tbody id="tf_solution_list">
+        <tbody id="tf_t_solution_list">
+
         <tr class='tf-t-checklist-item '>
         <td><input class="uk-checkbox" type="checkbox" aria-label="Checkbox" /></td>
         <td class="uk-text-truncate">
@@ -240,6 +242,7 @@
         </td>
         <td class="uk-text-nowrap"><span class='tf-event-removecheck u-icon-std u-icon-event uk-text-muted bi-trash'></span></td>
     </tr>
+
         </tbody>
     </table>
 
@@ -247,7 +250,7 @@
 <li class='u-custom-minheight'>
 
 <table class="uk-table uk-table-hover uk-table-middle uk-table-divider">
-        <thead id='tf_t_checklist'>
+        <thead id=''>
             <tr>
                 <th class="uk-table-shrink"></th>
                 <th class="uk-table-expand">What to do</th>
