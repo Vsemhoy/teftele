@@ -157,8 +157,8 @@
             <label class='uk-text'>Minutes  <span class='uk-text-muted'>planned</span></label>
             <input class="uk-input" type="number" min='0' max='9999' id='tf_input_minutes'>
           </div>
-          <div>
-            <label class='uk-text'>Minutes  <span class='uk-text-muted'>planned</span></label>
+          <div class='uk-hidden'>
+            <label class='uk-text'>Totaltime in seconds<span class='uk-text-muted'>planned</span></label>
             <input class="uk-input" type="number" min='0' max='9999' id='tf_input_duration'>
           </div>
         </div>

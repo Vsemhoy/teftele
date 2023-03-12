@@ -394,32 +394,57 @@ class flowCalendarVisual
         document.querySelector("#" + temp_id).remove();
       }, 5000);
     }
-
-
+    alert("YOU");
+    console.log(this.harvestTasModalData());
     // this.task_ = document.querySelector("#tf_input_").value;
     // this.task_ = document.querySelector("#tf_input_").value;
 
   }
 
 
-  initModalSelectors(){
-    this.task_name        = document.querySelector("#tf_input_name");
-    this.task_description = document.querySelector("#tf_input_description");
-    this.task_status      = document.querySelector("#tf_input_status");
-    this.task_board       = document.querySelector("#tf_input_board");
-    this.task_group       = document.querySelector("#tf_input_group");
-    this.task_type        = document.querySelector("#tf_input_type");
-    this.task_category    = document.querySelector("#tf_input_category");
-    this.task_tags        = document.querySelector("#tf_input_tags");
-    this.task_days        = document.querySelector("#tf_input_days");
-    this.task_hours       = document.querySelector("#tf_input_hours");
-    this.task_minutes     = document.querySelector("#tf_input_minutes");
-    this.task_duration    = document.querySelector("#tf_input_duration");
-    this.task_setter      = document.querySelector("#tf_input_setter");
-    this.task_executor    = document.querySelector("#tf_input_executor");
-    this.task_steplist    = document.querySelector("#tf_t_steplist");
+  harvestTasModalData(id){
+    this.updateModalSelectorValues();
+    let obj = {
+      'task_id'            : id,
+      'task_name'          : this.task_name.value         ,
+      'task_description'   : this.task_description.value  ,
+      'task_status'        : this.task_status.value       ,
+      'task_board'         : this.task_board.value        ,
+      'task_group'         : this.task_group.value        ,
+      'task_type'          : this.task_type.value         ,
+      'task_category'      : this.task_category.value     ,
+      'task_tags'          : this.task_tags.value         ,
+      'task_days'          : this.task_days.value         ,
+      'task_hours'         : this.task_hours.value        ,
+      'task_minutes'       : this.task_minutes.value      ,
+      'task_duration'      : this.task_duration.value     ,
+      'task_setter'        : this.task_setter.value       ,
+      'task_executor'      : this.task_executor.value     ,
+      'task_steplist'      : this.task_steplist.value     ,
+      'task_solution_list' : this.task_solution_list.value,
+      'task_checklist'     : this.task_checklist.value    ,
+    }
+    return obj;
+  }
+  
+  initModalSelectors(){  
+    this.task_name          = document.querySelector("#tf_input_name");
+    this.task_description   = document.querySelector("#tf_input_description");
+    this.task_status        = document.querySelector("#tf_input_status");
+    this.task_board         = document.querySelector("#tf_input_board");
+    this.task_group         = document.querySelector("#tf_input_group");
+    this.task_type          = document.querySelector("#tf_input_type");
+    this.task_category      = document.querySelector("#tf_input_category");
+    this.task_tags          = document.querySelector("#tf_input_tags");
+    this.task_days          = document.querySelector("#tf_input_days");
+    this.task_hours         = document.querySelector("#tf_input_hours");
+    this.task_minutes       = document.querySelector("#tf_input_minutes");
+    this.task_duration      = document.querySelector("#tf_input_duration");
+    this.task_setter        = document.querySelector("#tf_input_setter");
+    this.task_executor      = document.querySelector("#tf_input_executor");
+    this.task_steplist      = document.querySelector("#tf_t_steplist");
     this.task_solution_list = document.querySelector("#tf_t_solution_list");
-    this.task_checklist  = document.querySelector("#tf_checks_list");
+    this.task_checklist     = document.querySelector("#tf_checks_list");
   }
 
 
@@ -438,9 +463,9 @@ class flowCalendarVisual
     this.ms_task_duration    = document.querySelector("#tf_input_duration").value;
     this.ms_task_setter      = document.querySelector("#tf_input_setter").value;
     this.ms_task_executor    = document.querySelector("#tf_input_executor").value;
-    this.ms_task_steplist    = document.querySelector("#tf_t_steplist").value;
-    this.ms_task_solution_list = document.querySelector("#tf_t_solution_list").value;
-    this.ms_task_checklist  = document.querySelector("#tf_checks_list").value;
+    // this.ms_task_steplist    = document.querySelector("#tf_t_steplist");
+    // this.ms_task_solution_list = document.querySelector("#tf_t_solution_list").value;
+    // this.ms_task_checklist  = document.querySelector("#tf_checks_list").value;
   }
 
   flushInputs(){
