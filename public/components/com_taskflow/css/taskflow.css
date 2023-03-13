@@ -203,23 +203,23 @@
       grid-template-columns: 120px auto 300px 250px 250px 250px;
     }
   .col-container.active-que .col-row {
-          grid-template-columns: 120px calc(100% - 1000px) 400px 400px 46px 46px;
+          grid-template-columns: 120px calc(100% - 1012px) 400px 400px 46px 46px;
     }
   .col-container.active-exec .col-row {
-          grid-template-columns: 120px 400px calc(100% - 1000px) 400px 46px 46px;
+          grid-template-columns: 120px 400px calc(100% - 1012px) 400px 46px 46px;
     }
     
   .col-container.active-paus .col-row {
           grid-template-columns: 120px 
-            46px 400px calc(100% - 1000px) 400px 46px;
+            46px 400px calc(100% - 1012px) 400px 46px;
     }
   .col-container.active-fin .col-row {
           grid-template-columns: 120px 
-            46px 46px 400px calc(100% - 1000px) 400px;
+            46px 46px 400px calc(100% - 1012px) 400px;
     }
   .col-container.active-drop .col-row {
           grid-template-columns: 120px 
-            46px 46px 400px 400px calc(100% - 1000px);
+            46px 46px 400px 400px calc(100% - 1012px);
     }
   /* .col-container.active-que .col-que, .col-container.active-exec .col-exec, .col-container.active-paus .col-paus, .col-container.active-fin .col-fin, .col-container.active-drop .col-drop {
       display: grid;
@@ -235,19 +235,19 @@
       grid-template-columns: 120px auto auto auto auto auto;
     }
     .col-container.active-que .col-row {
-          grid-template-columns: 120px calc(100% - 646px) 400px 46px 46px 46px;
+          grid-template-columns: 120px calc(100% - 658px) 400px 46px 46px 46px;
     }
       .col-container.active-exec .col-row {
-          grid-template-columns: 120px 400px calc(100% - 646px) 46px 46px 46px;
+          grid-template-columns: 120px 400px calc(100% - 658px) 46px 46px 46px;
     }
     .col-container.active-paus .col-row {
-          grid-template-columns: 120px 46px 400px calc(100% - 646px) 46px 46px;
+          grid-template-columns: 120px 46px 400px calc(100% - 658px) 46px 46px;
     }
       .col-container.active-fin .col-row {
-          grid-template-columns: 120px 46px 46px 400px calc(100% - 646px) 46px;
+          grid-template-columns: 120px 46px 46px 400px calc(100% - 658px) 46px;
     }
         .col-container.active-drop .col-row {
-          grid-template-columns: 120px 46px 46px 46px 400px calc(100% - 646px) ;
+          grid-template-columns: 120px 46px 46px 46px 400px calc(100% - 658px) ;
     }
     
      .active-que .col-fin .hide-m, .active-que .col-drop .hide-m , .active-que .col-paus .hide-m {
@@ -289,29 +289,29 @@
   
   @media (max-width:599.98px) {
     .col-container {
-      width: calc(100% + 120px);
+      width: calc(100% + 140px);
     }
     .col-row {
       display: grid;
-      grid-template-columns: 46px 46px calc(100% - 200px) 46px 46px 46px ;
+      grid-template-columns: 46px 46px calc(100% - 230px) 46px 46px 46px ;
     }
     .col-date .hide-m {
       display: none;
     }
       .col-container.active-que .col-row {
-          grid-template-columns: 46px calc(100% - 200px) 46px 46px 46px 46px;
+          grid-template-columns: 46px calc(100% - 230px) 46px 46px 46px 46px;
     }
         .col-container.active-exec .col-row {
-          grid-template-columns: 46px 46px calc(100% - 200px) 46px 46px 46px;
+          grid-template-columns: 46px 46px calc(100% - 230px) 46px 46px 46px;
     }
         .col-container.active-paus .col-row {
-          grid-template-columns: 46px 46px 46px calc(100% - 200px) 46px 46px;
+          grid-template-columns: 46px 46px 46px calc(100% - 230px) 46px 46px;
     }
         .col-container.active-fin .col-row {
-          grid-template-columns: 46px 46px 46px 46px calc(100% - 200px) 46px;
+          grid-template-columns: 46px 46px 46px 46px calc(100% - 230px) 46px;
     }
         .col-container.active-drop .col-row {
-          grid-template-columns: 46px 46px 46px 46px 46px calc(100% - 200px);
+          grid-template-columns: 46px 46px 46px 46px 46px calc(100% - 230px);
     }
        .active-que .col-fin .hide-m, .active-que .col-drop .hide-m , .active-que .col-paus .hide-m, .active-que .col-exec .hide-m {
       display: none !important;
