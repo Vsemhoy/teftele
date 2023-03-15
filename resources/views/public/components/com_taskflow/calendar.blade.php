@@ -25,9 +25,14 @@
 
 @section('script-definitions')
 <script>
-  var currentTaskBoard = 1; // load from PHP
+  var currentTaskBoard = 1; <?php // loaded from PHP ?>
   var pageCommandStack = [];
   var currentUser = 1;
+  const TaskCollection = [];
+
+  const TaskQueue = [];
+  var token = "<?php echo csrf_token(); ?>";
+  var path = "/com/taskflow/post/";
 </script>
 @endsection
 

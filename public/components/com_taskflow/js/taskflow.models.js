@@ -1,5 +1,7 @@
 
-const TaskCardModel =
+class TaskFlowModels {
+
+TaskCardModel =
 {
     id: 1,
     temp_id : 0,
@@ -53,21 +55,21 @@ const TaskCardModel =
 };
 
 
-const CardCheckListModel = {
+CardCheckListModel = {
   id : 1,
   todo: "What to do",
   addTime: 534576,
   finTime: 5645634,
   checked: 0
 };
-const CardSolutionModel = {
+CardSolutionModel = {
   id: 3,
   comment: "Super comment",
   added_at: 543645,
   owner: 1,
   ownerName : "Mark"
 }
-const CardStepModel = {
+CardStepModel = {
   id: 1,
   text : "Step text",
   startTime : 75675,
@@ -75,10 +77,26 @@ const CardStepModel = {
   duration: 0
 };
 
-const StackTaskModel = {
-    id : 0,
-    functionName: "demo",
-    functionParams : [],
+QueueTaskModel = {
+    id : "qts_" + (Math.random() * (9999999 - 1000) + 1000).toFixed(),
+    function: "demo",
+    params : {},
+    object: {},
     status : 0,
-    attempts : 0
+    attempts : 0,
+    timestamp: new Date().getTime(),
 }
+  /**
+   * 
+   * @param {*function_name} string (create, update, remove, move, step)
+   * @returns Object of QueueTask Model with new ID 
+   */
+  getQTM(functionName = 'demo') {
+    let qts = structuredClone(this.QueueTaskModel);
+    qts.id = "qts_" + (Math.random() * (9999999 - 1000) + 1000).toFixed();
+    qts.function = functionName;
+    qts.timestamp = new Date().getTime();
+    return qts;
+  }
+
+};

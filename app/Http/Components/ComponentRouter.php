@@ -25,7 +25,7 @@ class ComponentRouter extends BaseController
 
         // set user public routes for components
 
-        Route::prefix('components')->group(function(){
+        Route::prefix('com')->group(function(){
 
 
 

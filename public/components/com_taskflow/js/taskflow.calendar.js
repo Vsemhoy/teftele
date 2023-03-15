@@ -20,6 +20,7 @@ var dataToInsert = [
 ];
 
 const TFTEMPLATE = new TaskFlowTemplates();
+const TFMODELS = new TaskFlowModels();
 
 class flowCalendarVisual 
 {
@@ -32,8 +33,7 @@ class flowCalendarVisual
                 element.addEventListener('dblclick', (e) => {
                   this.targetCell_id = element.id;
                     if (e.target.innerHTML == ""){
-                      element.insertAdjacentHTML('beforeend', TFTEMPLATE.getTaskCardInCalendar());
-                      this.cardReload();
+
                       this.updateModalSelectorValues();
                         UIkit.modal("#tf_modal_task_editor").show();
                         this.flushInputs();
@@ -151,6 +151,7 @@ class flowCalendarVisual
     }
 
     constructor() {
+      this.activeRunner = false;
       this.targetCell = null;
       this.rowCollection = document.querySelector('#rowCollection');
       this.renderStartRows();
@@ -176,8 +177,8 @@ class flowCalendarVisual
       this.cond_emo = document.querySelector("#tf_t_emo_cond");
       this.cond_intel = document.querySelector("#tf_t_intel_cond");
       this.cond_color = document.querySelector("#tf_t_cond_color");
-       this.cond_phys.addEventListener('mousemove', (e)=>{ this.setConditionColor();}) 
-        this.cond_emo.addEventListener('mousemove', (e)=>{ this.setConditionColor();})
+      this.cond_phys.addEventListener('mousemove', (e)=>{ this.setConditionColor();}) 
+      this.cond_emo.addEventListener('mousemove', (e)=>{ this.setConditionColor();})
       this.cond_intel.addEventListener('mousemove', (e)=>{ this.setConditionColor();})
       this.cond_color.addEventListener('change', (e)=>{ this.setConditionsByColor();})
 
@@ -233,7 +234,20 @@ class flowCalendarVisual
       saveBtn.addEventListener('click', ()=>{
         this.harvestTaskSave();
       });
+
+      setInterval(() => {
+        // check if there is not completed tasks and try to complete em (TaskQueue)
+        this.taskRunner();
+      }, 3000);
     }
+
+
+    //
+    //
+    //
+    //
+    //
+    //
 
     renderStartRows(date = null) {
       this.day = (24 * 60 * 60 * 1000);
@@ -384,25 +398,39 @@ class flowCalendarVisual
 // MODAL WWINDOW TASK EDITOR //
 
 
-
+  /**
+   * Harvest data from Task modal and return in to queue
+   */
   harvestTaskSave(){
+    let temp_id = null;
+    let targetCell = null;
     if (this.task_id == null){
-      let temp_id = "temp_card_" + this.getRandomInt();
-      let targetCell = document.querySelector("#" + this.targetCell_id);
+      temp_id = "temp_card_" + this.getRandomInt();
+      targetCell = document.querySelector("#" + this.targetCell_id);
       targetCell.insertAdjacentHTML("beforeend", TFTEMPLATE.getTaskCardTempBlock(temp_id));
-      setTimeout(() => {
-        document.querySelector("#" + temp_id).remove();
-      }, 5000);
-    }
-    alert("YOU");
-    console.log(this.harvestTasModalData());
-    // this.task_ = document.querySelector("#tf_input_").value;
-    // this.task_ = document.querySelector("#tf_input_").value;
 
+    }
+ 
+    //console.log(this.harvestTasModalData());
+    // this.task_ = document.querySelector("#tf_input_").value;
+    // this.task_ = document.querySelector("#tf_input_").value;
+    let qts = TFMODELS.getQTM('create');
+    qts.object = this.harvestTasModalData();
+    qts.params = {
+      'temp_id' : temp_id, 
+      'target_cell_id' : targetCell.id
+    }
+    TaskQueue.push(qts);
+    console.log(qts);
   }
 
 
-  harvestTasModalData(id){
+  /**
+   * 
+   * @param {id} integer 
+   * @returns std object with data from Modal fields
+   */
+  harvestTasModalData(id = null){
     this.updateModalSelectorValues();
     let obj = {
       'task_id'            : id,
@@ -487,6 +515,90 @@ class flowCalendarVisual
     this.task_checklist.innerHTML = "";
   }
 
+
+  /* QUEUE HANDLERS */
+  timer = ms => new Promise(res => setTimeout(res, ms));
+  async taskRunner()
+  {
+    if (TaskQueue.length > 0){
+      this.activeRunner = true;
+      for (let i = 0; i < TaskQueue.length; i++){
+        console.log("len " + TaskQueue.length);
+        let t = TaskQueue[i];
+        //console.log(t);
+        switch (t.function) {
+          case 'create':
+            let result = this.t_CreateTask(t);
+            await this.timer(1000);
+            break;
+        
+          default:
+            break;
+        }
+      }
+
+    } else {
+      this.activeRunner = false;
+
+    }
+  }
+
+
+  // TASK HANDLERS //
+  async t_CreateTask(task){
+    let code = 120;
+    let anchorList = [];
+
+    let response = await fetch(path + code, {
+    method: 'POST',
+    credentials: 'same-origin',
+    headers: {
+        "Content-Type": "application/json;charset=utf-8",
+        "Accept": "application/json",
+        "X-Requested-With": "XMLHttpRequest",
+        "X-CSRF-TOKEN": token
+    },
+    body: JSON.stringify(task.object)
+    });
+    let done = false;
+    response.json().then(data => {
+        if (task.object.id == null){
+          // new task  
+          console.log(data.message);
+          if (data.code == 0 && data.item_id > 0){
+            document.querySelector("#" + task.params.temp_id).remove();
+
+            let element = document.querySelector("#" + task.params.target_cell_id);
+            element.insertAdjacentHTML('beforeend', TFTEMPLATE.getTaskCardInCalendar());
+            this.cardReload();
+
+            for (let i = 0; i < TaskQueue.length; i++) {
+              let element = TaskQueue[i];
+              if (element.id == task.id){
+                TaskQueue.splice(i, 1);
+                break;
+              }
+            }
+            done = true;
+          }
+        } else {
+          console.log(data);
+        }
+        
+      });
+      
+      // setTimeout(() => {
+        //   document.querySelector("#" + task.params.temp_id).remove();
+        // }, 5000);
+        console.log(done);
+        if (done){
+          return true;
+
+        } else {
+          return false;
+
+        }
+  }
 
 }
 

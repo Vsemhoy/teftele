@@ -4,7 +4,8 @@ use App\Http\Components\com_taskflow\ComDefinitions;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use App\Http\Components\com_taskflow\Pub\MainController;
-
+use App\Http\Components\com_taskflow\Pub\PostController;
+use Illuminate\Http\Request;
 
 
 Route::prefix(ComDefinitions::$com_name)->group(function(){
@@ -42,5 +43,8 @@ Route::prefix(ComDefinitions::$com_name)->group(function(){
     Route::get('/settings', function () {
         return view(ComDefinitions::getViewPath()  . '.settings');
     })->name(ComDefinitions::$com_name . ".settings");
+
+    Route::post('/post/{code}', [PostController::class, 'catchRequest']);
+    
 
 });
