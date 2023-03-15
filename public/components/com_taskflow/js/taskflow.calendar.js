@@ -235,10 +235,21 @@ class flowCalendarVisual
         this.harvestTaskSave();
       });
 
+      let tsmcounterinbottom = document.querySelector('#tsm_counter');
       setInterval(() => {
         // check if there is not completed tasks and try to complete em (TaskQueue)
         this.taskRunner();
       }, 3000);
+      setInterval(() => {
+        // change control value in the bottom bar
+        if (TaskQueue.length > 0){
+          tsmcounterinbottom.classList.remove('tsm-hidden');
+          tsmcounterinbottom.querySelector('.tsm-counter-value').innerHTML = TaskQueue.length;
+        } else {
+          tsmcounterinbottom.classList.add('tsm-hidden');
+          tsmcounterinbottom.querySelector('.tsm-counter-value').innerHTML = 0;
+        }
+      }, 1000);
     }
 
 

@@ -534,6 +534,20 @@
   column-gap: 3px;
 }
 
+.tsm-active-counter {
+  display: flex !important;
+  align-items: center;
+  justify-content: space-around;
+  font-size: x-large;
+}
+.tsm-active-counter > * {
+  padding: 3px;
+  color: #0085ff;
+}
+.tsm-hidden {
+  display: none !important;
+}
+
 @keyframes AnimateBG { 
   0%{background-position:0% 50%}
   50%{background-position:100% 50%}
