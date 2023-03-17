@@ -64,12 +64,32 @@ let result = `  <tr class='tf-t-checklist-item ${finClass}'>
     }
 
 
-    getTaskCardInCalendar(){
-        let id = "item_" + Math.floor(Math.random() * 9999999);
-        let result = `<div class='tsm-card tsm-status-done dragitem tsm-vis-hidden'
+    encodeHTMLEntities(text) {
+      let textArea = document.createElement('textarea');
+      textArea.innerText = text;
+      let encodedOutput=textArea.innerHTML;
+      let arr=encodedOutput.split('<br>');
+      encodedOutput=arr.join('\n');
+      return encodedOutput;
+    }
+
+    getTaskCardInCalendar(id, visual_state, name, description, result_text){
+        id = "item_" + id;
+        let visClass = "";
+        if (visual_state == 0){
+          visClass = "tsm-vis-hidden";
+        } else if (visual_state == 1){
+          visClass = "tsm-vis-middle";
+        };
+        name = this.encodeHTMLEntities(name);
+        description = this.encodeHTMLEntities(description);
+        result_text = this.encodeHTMLEntities(result_text);
+        description = description.replace(/\n/g, "<br>");
+        result_text = result_text.replace(/\n/g, "<br>");
+        let result = `<div class='tsm-card tsm-status-done dragitem ${visClass}'
          draggable="true" ondragstart="drag(event)" id="${id}">
         <div class='tsm-card-row'>
-        <div class='tsm-card-pre-header'>
+        <div class='tsm-card-pre-header' title='${name}'>
     <div class='tsm-card-padding'>
         ST
             </div>
@@ -77,7 +97,7 @@ let result = `  <tr class='tf-t-checklist-item ${finClass}'>
 
     <div class='tsm-card-header hide-m'>
         <div class='tsm-card-padding'>
-            <div class='tsm-card-name'>The super pooper task...</div>
+            <div class='tsm-card-name'>${name}</div>
         </div>
         <div class='tsm-card-topbuttons'>
             <div class='tsm-card-button tf_card_event_minifycard' title='hide all'>_</div>
@@ -85,26 +105,47 @@ let result = `  <tr class='tf-t-checklist-item ${finClass}'>
             <div class='tsm-card-button tf_card_event_expandcard' title='toggle events'>E</div>
         </div>
     </div>
-</div>
+</div>`;
 
+if (description != ""){
+result += `
 <div class='tsm-card-row '>
     <div class='tsm-card-pre-body hide-m'>
         <div class='tsm-card-padding'>
-            <div>MS</div>
+            <div title='description'><i class='bi-box-arrow-in-down'></i></div>
         </div>
-        <div>EDT</div>
+        <div></div>
     </div>
 
     <div class='tsm-card-body hide-m'>
         <div class='tsm-card-padding tsm-card-content'>
-            <div class='uk-text'>And The super pooper task... The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.</div>
-                <br>
-                <div class='uk-text'>Next day i will go to church and see a mitropolis</div>
-                <div class='uk-text'>The super pooper truck...</div>
+            <div class='uk-text'>
+              ${description}
+            </div>
         </div>
     </div>
-</div>    
+</div>`;    
+};
+if (result_text != ""){
+  result += `
+  <div class='tsm-card-row '>
+      <div class='tsm-card-pre-body hide-m'>
+          <div class='tsm-card-padding'>
+              <div title='result'><i class='bi-box-arrow-up'></i></div>
+          </div>
+          <div></div>
+      </div>
   
+      <div class='tsm-card-body hide-m'>
+          <div class='tsm-card-padding tsm-card-content'>
+              <div class='uk-text'>
+                ${result_text}
+              </div>
+          </div>
+      </div>
+  </div>`;    
+  };
+result += `
 <div class='tsm-card-row tsm-mid-mark'>
     <div class='tsm-card-padding'>
         <div>1</div>

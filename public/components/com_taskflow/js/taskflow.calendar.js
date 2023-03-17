@@ -60,7 +60,7 @@ class flowCalendarVisual
                         let dragitems = element.querySelectorAll('.dragitem');
                         let moX = e.clientX;
                         let moY = e.clientY;
-                        console.log(moX);
+                    
                         // get position and size of each element and make sure that no one element is clicked
                         for (let i = 0; i < dragitems.length; i++) {
                             var rect = dragitems[i].getBoundingClientRect();
@@ -78,12 +78,13 @@ class flowCalendarVisual
                             }
                         }
                         if (blockEvent_di == false){
-                            //alert("hello");
+                            // alert("blockEvent false");
                             UIkit.modal("#tf_modal_task_editor").show();
-                            element.insertAdjacentHTML('beforeend', TFTEMPLATE.getTaskCardInCalendar());
-                            this.cardReload();
+                            this.flushInputs();
+                            // element.insertAdjacentHTML('beforeend', TFTEMPLATE.getTaskCardInCalendar());
+                            // this.cardReload();
                         } else {
-                          UIkit.modal("#tf_modal_task_editor").hide();
+                          //UIkit.modal("#tf_modal_task_editor").hide();
                         }
                     }
    
@@ -101,10 +102,20 @@ class flowCalendarVisual
               this.dragcitems[index].classList.add("tf-watch");
               let element = this.dragcitems[index];
               element.addEventListener('dblclick', (e) => {
-                  //UIkit.modal("#tf_modal_task_editor").show();
+                let idNum = (element.id).replace(/[^0-9]/g, '');
+                // load task from taskCollection
+                TaskCollection.forEach(taskrow => {
+                  console.log(taskrow.id);
+                  if (taskrow.id == idNum){
+                    //alert(taskrow.name);
+                    this.fillEditorInputs(taskrow);
+                    UIkit.modal("#tf_modal_task_editor").show();
+
+                    }
+                  });
+
                   e.preventDefault;
-                  UIkit.modal("#tf_modal_task_editor").hide();
-                  alert("Hello");
+                  //UIkit.modal("#tf_modal_task_editor").hide();
               });
 
               if (element.querySelector('.tf_card_event_minifycard') != null){
@@ -202,7 +213,7 @@ class flowCalendarVisual
 
       // add rows by scroll
       let blockTopScroll = false;
-      
+      this.lastInsertedDate = "";
       window.onscroll = (ev)=>{
         this.rowCollection = document.querySelector('#rowCollection');
         var rect = this.rowCollection.getBoundingClientRect();
@@ -212,6 +223,7 @@ class flowCalendarVisual
         let  viewportHeight = window.innerHeight;
         let topOffset = rect.height + this.rowCollection.offsetTop;
       //console.log("offtop is " + topOffset + " < vscroll is " + vscroll + " + viewportHeight is " +  viewportHeight);
+      // Scroll bottom
         if (topOffset < vscroll +  viewportHeight + 1){
           this.datetime = this.pastDate;
           for (let i = 0 ; i < 7; i++){
@@ -224,6 +236,7 @@ class flowCalendarVisual
           }
           
           //console.log(this.rowCollection.offsetTop);
+          // scroll top
           if (this.rowCollection.offsetTop > vscroll && !blockTopScroll){
               // console.log("scroll top");
               blockTopScroll = true;
@@ -231,12 +244,14 @@ class flowCalendarVisual
                       this.datetime = this.futDate;
                       for (let i = 0 ; i < 14; i++){
                       var additionalDate = new Date();
-                      var msr = document.querySelector("#master-row");
+                      var msr = document.querySelector("#master-row"); // This is a Top header row
                       additionalDate.setTime(this.datetime.getTime() + ((1 + i) * this.day));
                       this.futDate = additionalDate;
-                      this.rowCollection.insertAdjacentHTML('afterbegin', this.buildRow(additionalDate));
+                        // IF APPEARS Duplicated rows, prevent to load FIRST date as LAST INDEX i
+                        console.log(additionalDate.getDate() + " CLG_66783");
+                        this.rowCollection.insertAdjacentHTML('afterbegin', this.buildRow(additionalDate));
                       }
-                      this.rowCollection.prepend(msr);
+                      this.rowCollection.prepend(msr); // Transfer top header row
                       blockTopScroll = false;
                       this.reload();
                   }, 500);
@@ -433,6 +448,11 @@ class flowCalendarVisual
   harvestTaskSave(){
     let temp_id = null;
     let targetCell = null;
+    let tmp = this.harvestTasModalData();
+    if (tmp.task_name.trim() == ""){
+      alert('The name input should not be empty! Fill em now!');
+      return;
+    }
     if (this.task_id == null){
       temp_id = "temp_card_" + this.getRandomInt();
       targetCell = document.querySelector("#" + this.targetCell_id);
@@ -440,7 +460,6 @@ class flowCalendarVisual
     }
     let qts = TFMODELS.getQTM('create');
     qts.object = TFMODELS.getTCM(this.target_date, this.target_status);
-    let tmp = this.harvestTasModalData();
     qts.params = {
       'temp_id' : temp_id, 
       'target_cell_id' : targetCell.id
@@ -460,12 +479,15 @@ class flowCalendarVisual
     qts.object.duration      = tmp.task_duration      ;
     qts.object.setter        = tmp.task_setter        ;
     qts.object.executor      = tmp.task_executor      ;
+    qts.object.condition_phys       = tmp.task_condition_phys  ;
+    qts.object.condition_emo        = tmp.task_condition_emo   ;
+    qts.object.condition_intel      = tmp.task_condition_intel ;
     // qts.object.steplist      = task_steplist      ;
     // qts.object.solution_list = task_solution_list ;
     // qts.object.checklist     = task_checklist     ;
-
     TaskQueue.push(qts);
     console.log(qts);
+    UIkit.modal("#tf_modal_task_editor").hide();
   }
 
 
@@ -477,25 +499,28 @@ class flowCalendarVisual
   harvestTasModalData(id = null){
     this.updateModalSelectorValues();
     let obj = {
-      'task_id'            : id,
-      'task_name'          : this.task_name.value         ,
-      'task_description'   : this.task_description.value  ,
-      'task_result'        : this.task_result.value       ,
-      'task_status'        : this.task_status.value       ,
-      'task_board'         : this.task_board.value        ,
-      'task_group'         : this.task_group.value        ,
-      'task_type'          : this.task_type.value         ,
-      'task_category'      : this.task_category.value     ,
-      'task_tags'          : this.task_tags.value         ,
-      'task_days'          : this.task_days.value         ,
-      'task_hours'         : this.task_hours.value        ,
-      'task_minutes'       : this.task_minutes.value      ,
-      'task_duration'      : this.task_duration.value     ,
-      'task_setter'        : this.task_setter.value       ,
-      'task_executor'      : this.task_executor.value     ,
-      'task_steplist'      : this.task_steplist.value     ,
-      'task_solution_list' : this.task_solution_list.value,
-      'task_checklist'     : this.task_checklist.value    ,
+      'task_id'             : id,
+      'task_name'           : this.task_name.value         ,
+      'task_description'    : this.task_description.value  ,
+      'task_result'         : this.task_result.value       ,
+      'task_status'         : this.task_status.value       ,
+      'task_board'          : this.task_board.value        ,
+      'task_group'          : this.task_group.value        ,
+      'task_type'           : this.task_type.value         ,
+      'task_category'       : this.task_category.value     ,
+      'task_tags'           : this.task_tags.value         ,
+      'task_days'           : this.task_days.value         ,
+      'task_hours'          : this.task_hours.value        ,
+      'task_minutes'        : this.task_minutes.value      ,
+      'task_duration'       : this.task_duration.value     ,
+      'task_setter'         : this.task_setter.value       ,
+      'task_executor'       : this.task_executor.value     ,
+      'task_steplist'       : this.task_steplist.value     ,
+      'task_solution_list'  : this.task_solution_list.value,
+      'task_checklist'      : this.task_checklist.value    ,
+      'task_condition_phys' : this.task_phys_condition.value,
+      'task_condition_emo'  : this.task_emo_condition.value,
+      'task_condition_intel': this.task_intel_condition.value,
     }
     return obj;
   }
@@ -519,6 +544,9 @@ class flowCalendarVisual
     this.task_steplist      = document.querySelector("#tf_t_steplist");
     this.task_solution_list = document.querySelector("#tf_t_solution_list");
     this.task_checklist     = document.querySelector("#tf_checks_list");
+    this.task_phys_condition  = document.querySelector("#tf_t_phys_cond");
+    this.task_emo_condition   = document.querySelector("#tf_t_emo_cond");
+    this.task_intel_condition = document.querySelector("#tf_t_intel_cond");
   }
 
 
@@ -546,7 +574,7 @@ class flowCalendarVisual
   flushInputs(){
     this.task_name.value = "";
     this.task_description.value = "";
-    this.task_description.result = "";
+    this.task_result.value = "";
     this.task_status.value = "";
     this.task_board.value = "";
     this.task_group.value = "";
@@ -558,11 +586,33 @@ class flowCalendarVisual
     this.task_minutes.value = "";
     this.task_duration.value = "";
     this.task_executor.value = "";
+    this.task_setter.value = "";
     this.task_steplist.innerHTML = "";
     this.task_solution_list.innerHTML = "";
     this.task_checklist.innerHTML = "";
   }
 
+  fillEditorInputs(obj){
+    console.log("filleditorinputs", obj);
+    this.task_name.value        = obj.name;
+    this.task_description.value = obj.description;
+    this.task_result.value      = obj.result;
+    this.task_status.value      = obj.status;
+    this.task_board.value       = obj.board;
+    this.task_group.value       = obj.group;
+    this.task_type.value        = obj.type;
+    this.task_category.value    = obj.category;
+    this.task_tags.value        = obj.tags;
+    this.task_days.value        = obj.days;
+    this.task_hours.value       = obj.hours;
+    this.task_minutes.value     = obj.minutes;
+    this.task_duration.value    = obj.duration;
+    this.task_executor.value    = obj.executor;
+    this.task_setter.value      = obj.setter;
+    this.task_steplist.innerHTML = "";
+    this.task_solution_list.innerHTML = "";
+    this.task_checklist.innerHTML = "";
+  }
 
   /* QUEUE HANDLERS */
   timer = ms => new Promise(res => setTimeout(res, ms));
@@ -621,10 +671,18 @@ class flowCalendarVisual
             if (document.querySelector("#" + task.params.temp_id) != null){
 
               document.querySelector("#" + task.params.temp_id).remove();
+
+              // temp data
+              let id = Math.floor(Math.random() * 9999999);
+              task.object.id = id;
               let element = document.querySelector("#" + task.params.target_cell_id);
-              element.insertAdjacentHTML('beforeend', TFTEMPLATE.getTaskCardInCalendar());
+              element.insertAdjacentHTML('beforeend', 
+              TFTEMPLATE.getTaskCardInCalendar(id, 0, task.object.name, task.object.description, task.object.result));
               this.cardReload();
-  
+              
+              // Insert object into global task collection
+              TaskCollection.push(task.object);
+
               for (let i = 0; i < TaskQueue.length; i++) {
                 let element = TaskQueue[i];
                 if (element.id == task.id){

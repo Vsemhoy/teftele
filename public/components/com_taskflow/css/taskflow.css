@@ -547,7 +547,11 @@
 .tsm-hidden {
   display: none !important;
 }
+.tsm-card-pre-body  i{
 
+  font-size: 1.3rem;
+}
+ 
 @keyframes AnimateBG { 
   0%{background-position:0% 50%}
   50%{background-position:100% 50%}
