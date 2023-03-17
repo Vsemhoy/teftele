@@ -29,7 +29,7 @@ class ComponentRouter extends BaseController
 
 
 
-            $folder = $_SERVER["DOCUMENT_ROOT"] . "app" . DIRECTORY_SEPARATOR . "Http" . DIRECTORY_SEPARATOR . "Components";
+            $folder = $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "app" . DIRECTORY_SEPARATOR . "Http" . DIRECTORY_SEPARATOR . "Components";
             $result = "";
             if ($handle = opendir($folder)) {
         

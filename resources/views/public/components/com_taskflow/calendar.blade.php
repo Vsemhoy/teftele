@@ -100,7 +100,11 @@
         </div>
         <div class='uk-margin'>
           <label class='uk-text'>Description</label>
-          <textarea class="uk-textarea" rows='8'  id='tf_input_description'></textarea>
+          <textarea class="uk-textarea" rows='5'  id='tf_input_description'></textarea>
+        </div>
+        <div class='uk-margin'>
+          <label class='uk-text'>Result</label>
+          <textarea class="uk-textarea" rows='5'  id='tf_input_result'></textarea>
         </div>
         <div class='uk-margin'>
           <label class='uk-text'>Status</label>

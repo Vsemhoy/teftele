@@ -15,3 +15,11 @@ $topMenu = $controller->getAllTopMenuItems();
     <link rel="stylesheet" href="{{ asset('/public/vendor/bootstrap/icons/bootstrap-icons.css')}}"/>
 
 @endsection
+
+@section('system-scripts')
+<script>
+    function authRelogger(){
+        alert('Session is Expired!');
+    }
+</script>
+@endsection

@@ -136,3 +136,13 @@
 .u-sticky-bottom-bar > div > div:hover {
     opacity: 0.7;
 }
+
+.uk-input, .uk-select, .uk-textarea {
+    color: #444444;
+    border: 1px solid #cfcfcf;
+    border-radius: 6px;
+}
+.uk-input:focus, .uk-select:focus, .uk-textarea:focus {
+    box-shadow: 0px 3px 7px #00000080;
+}
+

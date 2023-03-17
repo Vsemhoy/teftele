@@ -20,6 +20,7 @@
     @yield('component-assets')
     <!-- end component assets -->
 
+    @yield('system-scripts')
     <!-- define js variables from component page -->
     @yield('script-definitions')
   </head>
