@@ -28,7 +28,7 @@
 
 @section('script-definitions')
 <script>
-  var currentTaskBoard = <?php DATA->board->id ?>;
+  var currentTaskBoard = '<?php echo DATA->board->id ?>';
   var pageCommandStack = [];
   var currentUser = 1;
   const TaskCollection = [];
