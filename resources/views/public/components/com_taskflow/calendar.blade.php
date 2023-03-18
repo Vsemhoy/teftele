@@ -28,7 +28,7 @@
 
 @section('script-definitions')
 <script>
-  var currentTaskBoard = 1; <?php // loaded from PHP ?>
+  var currentTaskBoard = <?php DATA->board->id ?>;
   var pageCommandStack = [];
   var currentUser = 1;
   const TaskCollection = [];
@@ -112,11 +112,11 @@
         <div class='uk-margin'>
           <label class='uk-text'>Status</label>
           <select class="uk-select" id='tf_input_status'>
-            <option value='0'>Waiting</option>
-            <option value='1'>Running</option>
-            <option value='2'>Paused</option>
-            <option value='3'>Finished</option>
-            <option value='4'>Removed</option>
+            <option value='1'>Waiting</option>
+            <option value='2'>Running</option>
+            <option value='3'>Paused</option>
+            <option value='4'>Finished</option>
+            <option value='5'>Removed</option>
             <option></option>
           </select>
         </div>

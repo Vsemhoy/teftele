@@ -49,6 +49,7 @@ class flowCalendarVisual
                   this.target_date  = this.normalizeDateFromId(element.parentElement.id);
                   this.target_status = this.getSectionNumberFromElem(element);
                   this.targetCell_id = element.id;
+                  this.current_status = this.getCurrentStateNumber(element.id);
                     if (e.target.innerHTML == ""){
 
                       this.updateModalSelectorValues();
@@ -184,6 +185,7 @@ class flowCalendarVisual
     constructor() {
       // id of task
       this.current_id = null;
+      this.current_status = 1;
       this.activeRunner = false;
       this.targetCell = null;
       this.rowCollection = document.querySelector('#rowCollection');
@@ -441,6 +443,27 @@ class flowCalendarVisual
   return result;
 }
 
+getCurrentStateNumber(cell_id)
+{
+  let element = document.querySelector('#' + cell_id);
+  if (element != null){
+    if (element.classList.contains("col-que")){
+      return 1;
+    } else if (element.classList.contains("col-exec")){
+      return 2;
+    } else if (element.classList.contains("col-paus")){
+      return 3;
+    } else if (element.classList.contains("col-fin")){
+      return 4;
+    } else if (element.classList.contains("col-drop")){
+      return 5;
+    } else {
+      return 1;
+    }
+  }
+  return 1;
+}
+
 getCardVisualState(raw_id){
   let element = document.querySelector('#' + raw_id);
   if (element != null){
@@ -610,8 +633,8 @@ getCardVisualState(raw_id){
     this.task_name.value = "";
     this.task_description.value = "";
     this.task_result.value = "";
-    //this.task_status.value = "";
-    //this.task_board.value = "";
+    this.task_status.value = this.current_status;
+    this.task_board.value = currentTaskBoard;
     //this.task_group.value = "";
     //this.task_type.value = "";
     //this.task_category.value = "";
