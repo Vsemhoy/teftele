@@ -52,7 +52,7 @@ TaskCardModel =
   condition_phys: 100,
   condition_emo: 100,
   condition_intel: 100,
-  viewMode_calendar : 0,
+  visual_state : 0,
   date_set : null,
   date_start_real: null,
   date_finish_real: null,

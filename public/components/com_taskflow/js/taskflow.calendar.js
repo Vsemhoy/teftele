@@ -54,13 +54,14 @@ class flowCalendarVisual
                       this.updateModalSelectorValues();
                         UIkit.modal("#tf_modal_task_editor").show();
                         this.flushInputs();
+                        this.current_id = null;
                         //alert("hello");
                     } else {
                         let blockEvent_di = false;
                         let dragitems = element.querySelectorAll('.dragitem');
                         let moX = e.clientX;
                         let moY = e.clientY;
-                    
+                      
                         // get position and size of each element and make sure that no one element is clicked
                         for (let i = 0; i < dragitems.length; i++) {
                             var rect = dragitems[i].getBoundingClientRect();
@@ -78,6 +79,7 @@ class flowCalendarVisual
                             }
                         }
                         if (blockEvent_di == false){
+                            this.current_id = null;
                             // alert("blockEvent false");
                             UIkit.modal("#tf_modal_task_editor").show();
                             this.flushInputs();
@@ -103,6 +105,7 @@ class flowCalendarVisual
               let element = this.dragcitems[index];
               element.addEventListener('dblclick', (e) => {
                 let idNum = (element.id).replace(/[^0-9]/g, '');
+                this.current_id = idNum;
                 // load task from taskCollection
                 TaskCollection.forEach(taskrow => {
                   console.log(taskrow.id);
@@ -179,6 +182,8 @@ class flowCalendarVisual
     }
 
     constructor() {
+      // id of task
+      this.current_id = null;
       this.activeRunner = false;
       this.targetCell = null;
       this.rowCollection = document.querySelector('#rowCollection');
@@ -261,7 +266,6 @@ class flowCalendarVisual
       this.initModalSelectors();
 
       // MODAL HANDLE
-      this.task_id = null;
       let saveBtn = document.querySelector("#tf_btn_savetask");
       saveBtn.addEventListener('click', ()=>{
         this.harvestTaskSave();
@@ -437,6 +441,20 @@ class flowCalendarVisual
   return result;
 }
 
+getCardVisualState(raw_id){
+  let element = document.querySelector('#' + raw_id);
+  if (element != null){
+    if (element.classList.contains("tsm-vis-hidden")){
+      return 0;
+    } else if (element.classList.contains("tsm-vis-middle")){
+      return 1;
+    } else {
+      return 2;
+    }
+  }
+  return 0;
+}
+
 
 // MODAL WWINDOW TASK EDITOR //
 
@@ -449,21 +467,38 @@ class flowCalendarVisual
     let temp_id = null;
     let targetCell = null;
     let tmp = this.harvestTasModalData();
+    targetCell = document.querySelector("#" + this.targetCell_id);
     if (tmp.task_name.trim() == ""){
       alert('The name input should not be empty! Fill em now!');
       return;
     }
-    if (this.task_id == null){
+    if (this.current_id == null){
       temp_id = "temp_card_" + this.getRandomInt();
-      targetCell = document.querySelector("#" + this.targetCell_id);
       targetCell.insertAdjacentHTML("beforeend", TFTEMPLATE.getTaskCardTempBlock(temp_id));
     }
     let qts = TFMODELS.getQTM('create');
-    qts.object = TFMODELS.getTCM(this.target_date, this.target_status);
+    if (this.current_id != null){
+      qts.function = 'update';
+      for (let i = 0; i < TaskCollection.length; i++) {
+        if (TaskCollection[i].id == this.current_id){
+          qts.object = TaskCollection[i];
+          break;
+        } 
+      }
+      temp_id = this.current_id;
+      document.querySelector("#item_" + temp_id).classList.add("tf-temp-updated-card");
+      document.querySelector("#item_" + temp_id).setAttribute('draggable', false);
+    } else {
+      qts.object = TFMODELS.getTCM(this.target_date, this.target_status);
+    }
     qts.params = {
       'temp_id' : temp_id, 
       'target_cell_id' : targetCell.id
     }
+    if (this.current_id != null){
+      qts.object.visual_state = this.getCardVisualState("item_" + temp_id);
+    }
+    qts.object.id            = this.current_id        ;
     qts.object.name          = tmp.task_name          ;
     qts.object.description   = tmp.task_description   ;
     qts.object.result        = tmp.task_result        ;
@@ -575,11 +610,11 @@ class flowCalendarVisual
     this.task_name.value = "";
     this.task_description.value = "";
     this.task_result.value = "";
-    this.task_status.value = "";
-    this.task_board.value = "";
-    this.task_group.value = "";
-    this.task_type.value = "";
-    this.task_category.value = "";
+    //this.task_status.value = "";
+    //this.task_board.value = "";
+    //this.task_group.value = "";
+    //this.task_type.value = "";
+    //this.task_category.value = "";
     this.task_tags.value = "";
     this.task_days.value = "";
     this.task_hours.value = "";
@@ -626,9 +661,15 @@ class flowCalendarVisual
         //console.log(t);
         switch (t.function) {
           case 'create':
-            let result = this.t_CreateTask(t);
+            this.t_CreateTask(t);
             await this.timer(1000);
             break;
+
+            case 'update':
+              // let result = this.t_CreateTask(t);
+              this.t_UpdateTask(t);
+              await this.timer(1000);
+              break; 
         
           default:
             break;
@@ -643,8 +684,13 @@ class flowCalendarVisual
 
 
   // TASK HANDLERS //
+
+  /**
+   * Inserts a new task object into database
+   * @param {TaskCardModel} task object
+   */
   async t_CreateTask(task){
-    let code = 120;
+    let code = 300;
     let anchorList = [];
 
     let response = await fetch(path + code, {
@@ -658,9 +704,7 @@ class flowCalendarVisual
     },
     body: JSON.stringify(task.object)
     });
-    let done = false;
     response.json().then(data => {
-        if (task.object.id == null){
           // new task  
           console.log(data.message);
           if (data.message == "CSRF token mismatch."){
@@ -679,10 +723,8 @@ class flowCalendarVisual
               element.insertAdjacentHTML('beforeend', 
               TFTEMPLATE.getTaskCardInCalendar(id, 0, task.object.name, task.object.description, task.object.result));
               this.cardReload();
-              
               // Insert object into global task collection
               TaskCollection.push(task.object);
-
               for (let i = 0; i < TaskQueue.length; i++) {
                 let element = TaskQueue[i];
                 if (element.id == task.id){
@@ -691,27 +733,70 @@ class flowCalendarVisual
                 }
               }
             }
-
-            done = true;
+          } else {
+            console.log(data.message);
           }
-        } else {
-          console.log(data);
-        }
-        
       });
-      
-      // setTimeout(() => {
-        //   document.querySelector("#" + task.params.temp_id).remove();
-        // }, 5000);
-        console.log(done);
-        if (done){
-          return true;
-
-        } else {
-          return false;
-
-        }
   }
+
+  /**
+   * Inserts a new task object into database
+   * @param {TaskCardModel} task object
+   */
+  async t_UpdateTask(task){
+    let code = 400;
+    let anchorList = [];
+
+    let response = await fetch(path + code, {
+    method: 'POST',
+    credentials: 'same-origin',
+    headers: {
+        "Content-Type": "application/json;charset=utf-8",
+        "Accept": "application/json",
+        "X-Requested-With": "XMLHttpRequest",
+        "X-CSRF-TOKEN": token
+    },
+    body: JSON.stringify(task.object)
+    });
+    response.json().then(data => {
+          // new task  
+          console.log(data.message);
+          if (data.message == "CSRF token mismatch."){
+            // placed in main template as script section
+            authRelogger();
+          }
+          if (data.code == 0){
+            if (document.querySelector("#item_" + task.params.temp_id) != null){
+              document.querySelector("#item_" + task.params.temp_id).classList.remove("tf-temp-updated-card");
+              document.querySelector("#item_" + task.params.temp_id).setAttribute('draggable', true);
+              document.querySelector("#item_" + task.params.temp_id).remove();
+              let element = document.querySelector("#" + task.params.target_cell_id);
+              console.log(task.object.visual_state);
+              element.insertAdjacentHTML('beforeend', 
+              TFTEMPLATE.getTaskCardInCalendar(task.object.id, task.object.visual_state, task.object.name, task.object.description, task.object.result));
+              this.cardReload();
+              // Insert object into global task collection
+              TaskCollection.push(task.object);
+              for (let index = 0; index < TaskCollection.length; index++) {
+                if (TaskCollection[index].id = task.object.id){
+                  TaskCollection[index] = task.object;
+                  break;
+                }
+              }
+              for (let i = 0; i < TaskQueue.length; i++) {
+                let element = TaskQueue[i];
+                if (element.id == task.id){
+                  TaskQueue.splice(i, 1);
+                  break;
+                }
+              }
+            }
+          } else {
+            console.log(data.message);
+          }
+      });
+  }
+
 
 }
 

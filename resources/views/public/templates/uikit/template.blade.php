@@ -1,4 +1,5 @@
-<!DOCTYPE html lang='en'>
+<!DOCTYPE html>
+<html lang="en">
 <html>
   <head>
     <meta charset="UTF-8">
@@ -24,9 +25,9 @@
     <!-- define js variables from component page -->
     @yield('script-definitions')
   </head>
-  <body class='u-custom-gradient-bg'>
+  <body class=''>
 
-  <nav class="uk-navbar-container u-custom-head" id='go_top' uk-navbar>
+  <nav class="uk-navbar-container u-custom-head " id='go_top' uk-navbar>
   <div class="uk-navbar-left">
     
     <div class="uk-navbar-item uk-logo u-custom-uk-logo" href="#">
@@ -58,14 +59,35 @@
             @endforeach
         @endisset
       <li class=' u-custom-menu-item'><a href="#">Home</a></li>
-      <li class=' u-custom-menu-item'><a href="#">Contact</a></li>
+      <li class=' u-custom-menu-item'>
+        <a class="uk-button uk-button-link" href="#modal_quick_login" uk-toggle>Login</a>
+        </li>
     </ul>
   </div>
   <div class="uk-navbar-right">
     <ul class="uk-navbar-nav uk-visible@m">
         <li ><a href="#">Home</a></li>
         <li><a href="#">Contact</a></li>
-      </ul>
+        <li>
+            @if(Auth::user())
+            <a class="uk-button uk-button-link" href="#">{{ Auth::user()->name }}</a>
+            <div class="uk-navbar-dropdown">
+                            <ul class="uk-nav uk-navbar-dropdown-nav">
+                                <li class="uk-active"><a href="#">Active</a></li>
+                                <li><a href="#">Item</a></li>
+                                <li class="uk-nav-header">Header</li>
+                                <li><a href="#">Item</a></li>
+                                <li><a href="#">Item</a></li>
+                                <li class="uk-nav-divider"></li>
+                                <li><a href="{{ route('logout') }}">Logout</a></li>
+                            </ul>
+                        </div>
+            @else
+            <a class="uk-button uk-button-link" href="#modal_quick_login" uk-toggle>Login</a>
+            @endif
+            </li>
+        </ul>
+        <div></div>
     <button class="uk-button uk-button-default uk-hidden@m" type="button" uk-toggle="target: #offcanvas-flip"><span uk-icon="icon: menu"></span></button>
   </div>
 
@@ -106,7 +128,9 @@
 <section>    
     @yield('page-menu')
 </section>
-
+@if($errors->any())
+<h4>{{$errors->first()}}</h4>
+@endif
 <section>    
     @yield('page-content')
 </section>
@@ -121,6 +145,48 @@
         <a href='#go_down'>DN</a>
     </div>
 </div>
+
+
+
+
+
+
+
+
+<div id="modal_quick_login" uk-modal>
+    <div class="uk-modal-dialog">
+        <form action='{{ route("login.post")}}' method="POST" >
+        <button class="uk-modal-close-default" type="button" uk-close></button>
+        <div class="uk-modal-header">
+            <h2 class="uk-modal-title">Welcome Back, Bro!</h2>
+        </div>
+        <div class="uk-modal-body">
+
+<div class="uk-margin">
+    <label class="uk-form-label" for="form-stacked-text">Email</label>
+    <div class="uk-form-controls">
+        <input class="uk-input" name='email' id="form-stacked-email" type="email" placeholder="mail@watch.me">
+    </div>
+</div>
+
+<div class="uk-margin">
+    <label class="uk-form-label" for="form-stacked-text">Password</label>
+    <div class="uk-form-controls">
+        <input class="uk-input" name='password' id="form-stacked-password" type="password" placeholder="secret">
+    </div>
+</div>
+
+
+</div>
+<div class="uk-modal-footer uk-text-right">
+    <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
+    <input type='submit' class="uk-button uk-button-primary"/>
+    <input type="hidden" name="_token" value="{{ csrf_token() }}" />
+</div>
+</form>
+</div>
+</div>
+
 <div id='go_down'></div>
 
     @yield('component-scripts')

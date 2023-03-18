@@ -50,11 +50,19 @@ class PostController extends BaseController
 
     private function route($code, $object){
 
-        if ($code == 120 && $this->user->role > 0){
+        if ($code == 300 && $this->user->role > 0){
             $result = new PostResult($this->user->id);
             $result->message =  "I hear YOu, my boy!";
             $result->code = 0;
             $result->item_id = 2;
+            return json_encode($result);
+        }
+
+        if ($code == 400 && $this->user->role > 0){
+            $result = new PostResult($this->user->id);
+            $result->message =  "I hear YOu, my bro!";
+            $result->code = 0;
+            $result->item_id = $object->id;
             return json_encode($result);
         }
     }

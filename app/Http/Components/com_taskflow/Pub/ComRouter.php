@@ -22,7 +22,8 @@ Route::prefix(ComDefinitions::$com_name)->group(function(){
         return view(ComDefinitions::getViewPath() . '.index');
     })->name(ComDefinitions::$com_name . ".index");
 
-    Route::get('/calendar', [MainController::class, 'getCalendarPage'])->name(ComDefinitions::$com_name . ".calendar");
+    Route::get('/calendar/{board}', [MainController::class, 'getCalendarPage'])->name(ComDefinitions::$com_name . ".calendar_board");
+    Route::get('/calendar/', [MainController::class, 'getCalendarPageDefault'])->name(ComDefinitions::$com_name . ".calendar");
 
     // Route::get('/calendar', function () {
     //     //return view('welcome');

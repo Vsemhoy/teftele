@@ -12,6 +12,8 @@ class VerifyCsrfToken extends Middleware
      * @var array<int, string>
      */
     protected $except = [
-        //
+        '/session/relogin',
+        '/session/relogin/*',
+        'session/relogin/*/*',
     ];
 }

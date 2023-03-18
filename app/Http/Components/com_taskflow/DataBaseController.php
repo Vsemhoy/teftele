@@ -8,6 +8,7 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use App\Models\Component;
 use Illuminate\Support\Facades\DB;
 use App\Vendor\Joomla\Filter\InputFilter;
+use App\Http\Components\com_taskflow\ComDefinitions;
 
 
 /**
@@ -39,6 +40,22 @@ class DataBaseController
         return $val;
     }
 
+
+    public static function getAllUserBoards($user)
+    {
+        $boards = DB::table(self::TB_BOARDS)->where('user', $user->id)->orderBy('ordered')->get();
+        return $boards;
+    }
+    public static function getBoard($user, $board_id = 0)
+    {
+        $board = null;
+        if ($board_id == 0){
+            $board = DB::table(self::TB_BOARDS)->where('user', $user->id)->orderBy('ordered')->first();
+        } else {
+            $board = DB::table(self::TB_BOARDS)->where('user', $user->id)->where('id', $board_id)->orderBy('ordered')->first();
+        }
+        return $board;
+    }
 }
 
 ?>

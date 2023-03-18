@@ -1,5 +1,8 @@
 <?php
-
+  /**
+   * $data - is a combined object created at MainController
+   */
+  define('DATA', $data);
   $taskTypes = [];
 
   for ($i = 1; $i <= 20; $i++) {
@@ -12,7 +15,7 @@
     ];
     array_push($taskTypes, $obj);
 }
-
+  //print_r($data);
 ?>
 
 @extends('public.components.com_taskflow.template')
@@ -31,7 +34,7 @@
   const TaskCollection = [];
 
   const TaskQueue = [];
-  var token = "<?php echo csrf_token(); ?>";
+
   var path = "/com/taskflow/post/";
 </script>
 @endsection
@@ -120,8 +123,18 @@
         <div class='uk-margin'>
           <label class='uk-text'>Board</label>
           <select class="uk-select"  id='tf_input_board'>
-            <option>Board 1</option>
-            <option>Board 2</option>
+            <?php
+            $result = "";
+            foreach(DATA->board_list AS $board)
+            {
+              $selected = "";
+              if ($board->id == DATA->board->id){
+                $selected = "selected='selected'";
+              }
+              $result .= "<option value='{$board->id}' {$selected}>{$board->name}</option>";
+            }
+            echo $result;
+            ?>
           </select>
         </div>
         <div class='uk-margin'>
