@@ -56,6 +56,7 @@ class MainController{
         $objectResult = (object) array();
         $objectResult->board_list = $this->board_list;
         $objectResult->board = $this->board;
+        $objectResult->user = $this->user;
 
         return view(ComDefinitions::getViewPath()  . '.calendar')->with('data', $objectResult);
     }

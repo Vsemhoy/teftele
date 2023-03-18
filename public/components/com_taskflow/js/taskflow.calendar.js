@@ -643,8 +643,8 @@ getCardVisualState(raw_id){
     this.task_hours.value = "";
     this.task_minutes.value = "";
     this.task_duration.value = "";
-    this.task_executor.value = "";
-    this.task_setter.value = "";
+    this.task_executor.value = currentUser;
+    this.task_setter.value = currentUser;
     this.task_steplist.innerHTML = "";
     this.task_solution_list.innerHTML = "";
     this.task_checklist.innerHTML = "";

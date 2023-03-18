@@ -28,9 +28,9 @@
 
 @section('script-definitions')
 <script>
-  var currentTaskBoard = '<?php echo DATA->board->id ?>';
+  var currentTaskBoard = '<?php echo DATA->board->id?>';
   var pageCommandStack = [];
-  var currentUser = 1;
+  const currentUser = '<?php echo DATA->user->id ; ?>';
   const TaskCollection = [];
 
   const TaskQueue = [];
@@ -140,6 +140,7 @@
         <div class='uk-margin'>
           <label class='uk-text'>Group</label>
           <select class="uk-select"  id='tf_input_group'>
+            <option value='0'>No Group</option>
             <option>Group 1</option>
             <option>Group 2</option>
           </select>
@@ -147,16 +148,18 @@
         <div class='uk-margin'>
           <label class='uk-text'>Type</label>
           <select class="uk-select" id='tf_input_type'>
+            <option value='0'>No Type</option>
             <?php 
               foreach ($taskTypes as $value) {
                 echo "<option value='" .  $value->id . "'>" . $value->name . "</option>";
               };
-            ?>
+              ?>
           </select>
         </div>
         <div class='uk-margin'>
           <label class='uk-text'>Category</label>
           <select class="uk-select"  id='tf_input_category'>
+            <option value='0'>No Category</option>
             <option>Cat 1</option>
             <option>cat 2</option>
           </select>
@@ -188,6 +191,9 @@
         <div class='uk-margin'>
           <label class='uk-text'>Setter</label>
           <select class="uk-select" id='tf_input_setter'>
+            <?php 
+            echo "<option value='" . DATA->user->id . "'>" . DATA->user->name . "</option>";
+            ?>
             <option></option>
             <option></option>
           </select>
@@ -196,6 +202,9 @@
         <div class='uk-margin'>
           <label class='uk-text'>Maker</label>
           <select class="uk-select" id='tf_input_executor'>
+          <?php 
+            echo "<option value='" . DATA->user->id . "'>" . DATA->user->name . "</option>";
+            ?>
             <option></option>
             <option></option>
           </select>
