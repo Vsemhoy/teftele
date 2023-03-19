@@ -23,6 +23,7 @@ class User extends Authenticatable
         'password',
         'is_email_verified',
         'status',
+        'last_session_key'
     ];
 
     /**

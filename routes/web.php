@@ -23,7 +23,7 @@ Route::post('post-login', [AuthController::class, 'postLogin'])->name('login.pos
 Route::get('registration', [AuthController::class, 'registration'])->name('register');
 Route::post('post-registration', [AuthController::class, 'postRegistration'])->name('register.post'); 
 Route::get('logout', [AuthController::class, 'logout'])->name('logout');
-
+Route::post('post-relogin/{id}/{key}', [AuthController::class, 'postRelogin']);
 
 Route::get('/', function () {
     //return view('welcome');
@@ -36,7 +36,7 @@ Route::get('/components/taskflow', function () {
 });
 
 
-Route::get('/session/relogin/{user_id}/{old_token}/', function (Request $request, $user_id, $old_token) {
+Route::get('/session/relogin/{user_id}/{key}/', function (Request $request, $user_id, $old_token) {
     $result = (object) array();
     $result->message = "OK";
     $result->token = csrf_token();

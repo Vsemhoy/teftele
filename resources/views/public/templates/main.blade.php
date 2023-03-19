@@ -31,18 +31,22 @@ $topMenu = $controller->getAllTopMenuItems();
 
     async function authRelogger(){
         
-        let data_ = {'user': '1', 'token' : token};
 
-        let response = await fetch('/session/relogin/' + data_.user + '/' + data_.token + '/', {
+        const fdata = new FormData();
+            // fdata.append('id', user.id);
+            // fdata.append('last_session_key', token);
+
+        let response = await fetch('/post-relogin/' + user.id + '/' + token, {
         method: 'POST',
         credentials: 'same-origin',
         headers: {
-            "Content-Type": "application/json;charset=utf-8",
+            //"Content-Type": "application/json;charset=utf-8",
+            "Content-Type": "multipart/form-data",
             "Accept": "application/json",
-            "X-Requested-With": "XMLHttpRequest",
+            // "X-Requested-With": "XMLHttpRequest",
             "X-CSRF-TOKEN": token
         },
-        body: JSON.stringify(data_)
+        body: fdata
         });
         response.json().then(data => {
         if (data.message == "OK"){

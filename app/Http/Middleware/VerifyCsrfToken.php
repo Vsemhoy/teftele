@@ -15,5 +15,7 @@ class VerifyCsrfToken extends Middleware
         '/session/relogin',
         '/session/relogin/*',
         'session/relogin/*/*',
+        'post-relogin',
+        '/post-relogin/*',
     ];
 }

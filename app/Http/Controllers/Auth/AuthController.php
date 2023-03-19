@@ -9,7 +9,7 @@ use App\Models\UserVerify;
 use Hash;
 use Illuminate\Support\Str;
 use Mail;
-use App\Http\Components\com_users\UsersDB;
+use App\Http\Controllers\Auth\UsersDB;
 use App\Http\Controllers\BaseHelpers\Input;
 use Redirect;
 
@@ -81,7 +81,8 @@ class AuthController extends Controller
             $credentials = ['login' => $username, 'password' => $credentials['password']];
         }
         if (Auth::attempt($credentials)) {
-            //UsersDB::IncreaseUserLogins(Auth::id());
+            UsersDB::IncreaseUserLogins(Auth::id());
+            UsersDB::UpdateSessionKey(Auth::id(), csrf_token());
             return back()->withSuccess(['msg' => 'You okay!']);
             //     return redirect()->intended('apps/splmod/downloads/')
             // ->withSuccess('You have Successfully loggedin');
@@ -230,4 +231,29 @@ class AuthController extends Controller
         return json_encode($response);
     }
 
+
+    public function postReLogin(Request $request, $id, $key)
+    {
+        // $request->validate([
+        // 'id' => 'required|string',
+        // 'last_session_key' => 'required|string',
+        // ]);
+        // $credentials = $request->only('id', 'last_session_key');
+        $id = filter_var($id, FILTER_VALIDATE_INT);
+        $key = filter_var($key, FILTER_SANITIZE_STRING);
+        $credentials = ['id' => $id, 'last_session_key' => $key];
+        if (Auth::attempt($credentials)) {
+            $token = csrf_token();
+            UsersDB::UpdateSessionKey(Auth::id(), $token);
+            $resp = (object) array();
+            $resp->message = 'OK';
+            $resp->token = $token;
+            return json_encode($resp);
+        } else {
+            $resp = (object) array();
+            $resp->message = 'ERROR';
+            $resp->token = '';
+            return json_encode($resp);
+        }
+    }
 }
