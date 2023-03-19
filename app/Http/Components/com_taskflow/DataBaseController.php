@@ -56,6 +56,24 @@ class DataBaseController
         }
         return $board;
     }
+
+    public static function getAllUserCategories($user)
+    {
+        $boards = DB::table(self::TB_CATEGORIES)->where('user', $user->id)->orderBy('ordered')->get();
+        return $boards;
+    }
+
+    public static function getAllUserGroups($user)
+    {
+        $boards = DB::table(self::TB_GROUPS)->where('user', $user->id)->orderBy('ordered')->get();
+        return $boards;
+    }
+
+    public static function getAllUserTypes($user)
+    {
+        $boards = DB::table(self::TB_TYPES)->where('user', $user->id)->orderBy('ordered')->get();
+        return $boards;
+    }
 }
 
 ?>

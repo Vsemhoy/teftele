@@ -141,8 +141,11 @@
           <label class='uk-text'>Group</label>
           <select class="uk-select"  id='tf_input_group'>
             <option value='0'>No Group</option>
-            <option>Group 1</option>
-            <option>Group 2</option>
+            <?php 
+              foreach (DATA->group_list as $value) {
+                echo "<option value='" .  $value->id . "'>" . $value->name . "</option>";
+              };
+              ?>
           </select>
         </div>
         <div class='uk-margin'>
@@ -150,7 +153,7 @@
           <select class="uk-select" id='tf_input_type'>
             <option value='0'>No Type</option>
             <?php 
-              foreach ($taskTypes as $value) {
+              foreach (DATA->type_list as $value) {
                 echo "<option value='" .  $value->id . "'>" . $value->name . "</option>";
               };
               ?>
@@ -160,8 +163,11 @@
           <label class='uk-text'>Category</label>
           <select class="uk-select"  id='tf_input_category'>
             <option value='0'>No Category</option>
-            <option>Cat 1</option>
-            <option>cat 2</option>
+            <?php 
+              foreach (DATA->category_list as $value) {
+                echo "<option value='" .  $value->id . "'>" . $value->name . "</option>";
+              };
+              ?>
           </select>
         </div>
         <div class='uk-margin'>
@@ -194,8 +200,6 @@
             <?php 
             echo "<option value='" . DATA->user->id . "'>" . DATA->user->name . "</option>";
             ?>
-            <option></option>
-            <option></option>
           </select>
         </div>
 
@@ -205,8 +209,6 @@
           <?php 
             echo "<option value='" . DATA->user->id . "'>" . DATA->user->name . "</option>";
             ?>
-            <option></option>
-            <option></option>
           </select>
         </div>
 

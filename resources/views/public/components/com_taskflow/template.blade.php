@@ -47,12 +47,13 @@
     @yield('component-page-content')
 </div>
 
-<div id='component_bottom_bar' class='u-sticky-bottom-bar'>
+<div id='component_bottom_bar' class='u-sticky-bottom-bar'  style='background: rgb(131,58,180);
+    background: linear-gradient(90deg, rgba(131,58,180,0.7) 0%, rgba(163,34,182,0.7) 45%, rgba(252,69,69,0.7) 100%);'>
     <div uk-grid>
         <div class='uk-button '><span uk-icon='more-vertical'></span></div>
         <div class='uk-button uk-button-default'>Board: </div>
         <div>
-            <select class="uk-select">
+            <select class="uk-select uk-form-small">
                 <option>SPL-module</option>
                 <option>Tele-CRM</option>
                 <option>Personal Deals</option>

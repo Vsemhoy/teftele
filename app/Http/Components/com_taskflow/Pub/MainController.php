@@ -19,6 +19,9 @@ use Joomla\Filter\InputFilter;
  */
 class MainController{
     public $board_list;
+    public $category_list;
+    public $group_list;
+    public $type_list;
     public $board;
     public $date_start;
     public $date_end;
@@ -41,6 +44,9 @@ class MainController{
         }
         $this->board_list = DBC::getAllUserBoards($this->user);
         $this->board = DBC::getBoard($this->user, $this->get_board);
+        $this->category_list = DBC::getAllUserCategories($this->user);
+        $this->group_list = DBC::getAllUserGroups($this->user);
+        $this->type_list = DBC::getAllUserTypes($this->user);
     }
 
     
@@ -55,6 +61,9 @@ class MainController{
         
         $objectResult = (object) array();
         $objectResult->board_list = $this->board_list;
+        $objectResult->group_list = $this->group_list;
+        $objectResult->type_list = $this->type_list;
+        $objectResult->category_list = $this->category_list;
         $objectResult->board = $this->board;
         $objectResult->user = $this->user;
 
