@@ -7,6 +7,10 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
 use App\Http\Components\com_taskflow\Ext\PostResult;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Extensions\Logger\Logger;
+use App\Http\Components\com_taskflow\DataBaseController AS DB;
+use App\Http\Components\com_taskflow\ComDefinitions;
 
 class PostController extends BaseController
 {
@@ -32,6 +36,7 @@ class PostController extends BaseController
         // $this->user->role = $request->session()->get('admin_role');
         $this->user->id = 1;
         $this->user->role = 1;
+        $this->user = Auth::user();
 
         // First -> try to get file from form
         if ($request->post('formdata') != null){
@@ -49,21 +54,72 @@ class PostController extends BaseController
 
 
     private function route($code, $object){
-
-        if ($code == 300 && $this->user->role > 0){
+        if ($this->user == null){
             $result = new PostResult($this->user->id);
-            $result->message =  "I hear YOu, my boy!";
-            $result->code = 0;
-            $result->item_id = 2;
+            $result->message = "You are not logger in!";
+            $result->code = 1;
+            $result->status = "UNLOG";
             return json_encode($result);
         }
 
-        if ($code == 400 && $this->user->role > 0){
+        // Create task from calendar
+        if ($code == 300 && $this->user->status > 0){
             $result = new PostResult($this->user->id);
-            $result->message =  "I hear YOu, my bro!";
-            $result->code = 0;
-            $result->item_id = $object->id;
+            $result->log_action = Logger::ACTION_CREATE;
+            $result->log_section = ComDefinitions::$com_name;
+            $result->user = $this->user->id;
+            $result = $this->createTaskFromCalendar($result, $object, $this->user);
+            Logger::writeUserLog($result);
+            return json_encode($result);
+        }
+
+        // Update task from calendar
+        if ($code == 400 && $this->user->status > 0){
+            $result = new PostResult($this->user->id);
+            $result->log_action = Logger::ACTION_UPDATE;
+            $result->log_section = ComDefinitions::$com_name;
+            $result->user = $this->user->id;
+            $result = $this->createTaskFromCalendar($result, $object, $this->user);
+            Logger::writeUserLog($result);
             return json_encode($result);
         }
     }
+
+
+    private function createTaskFromCalendar($result, $obj, $user)
+    {
+        $exec = DB::createNewTask($obj, $user);
+        if (!is_object($exec)){
+            $result->status = "ERR";
+            $result->message = $exec;
+            $result->code = 1;
+            $result->item_id = -1;
+        } else {
+            $result->status = "OK";
+            $result->message = "";
+            $result->code = 0;
+            $result->item_id = $exec->id;
+            $result->object = $exec;
+        } 
+        return $result;
+    }
+
+    private function updateTaskFromCalendar($result, $obj, $user)
+    {
+        $exec = DB::updateCalendarTask($obj, $user);
+        if (!is_object($exec)){
+            $result->status = "ERR";
+            $result->message = $exec;
+            $result->code = 1;
+            $result->item_id = -1;
+        } else {
+            $result->status = "OK";
+            $result->message = "";
+            $result->code = 0;
+            $result->item_id = $exec->id;
+            $result->object = $exec;
+        } 
+        return $result;
+    }
+
 }

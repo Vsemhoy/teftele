@@ -529,7 +529,7 @@ getCardVisualState(raw_id){
     qts.object.board         = tmp.task_board         ;
     qts.object.group         = tmp.task_group         ;
     qts.object.type          = tmp.task_type          ;
-    qts.object.category      = tmp.task_category      ;
+    qts.object.project      = tmp.task_project      ;
     qts.object.tags          = tmp.task_tags          ;
     qts.object.days          = tmp.task_days          ;
     qts.object.hours         = tmp.task_hours         ;
@@ -565,7 +565,7 @@ getCardVisualState(raw_id){
       'task_board'          : this.task_board.value        ,
       'task_group'          : this.task_group.value        ,
       'task_type'           : this.task_type.value         ,
-      'task_category'       : this.task_category.value     ,
+      'task_project'       : this.task_project.value     ,
       'task_tags'           : this.task_tags.value         ,
       'task_days'           : this.task_days.value         ,
       'task_hours'          : this.task_hours.value        ,
@@ -591,7 +591,7 @@ getCardVisualState(raw_id){
     this.task_board         = document.querySelector("#tf_input_board");
     this.task_group         = document.querySelector("#tf_input_group");
     this.task_type          = document.querySelector("#tf_input_type");
-    this.task_category      = document.querySelector("#tf_input_category");
+    this.task_project      = document.querySelector("#tf_input_project");
     this.task_tags          = document.querySelector("#tf_input_tags");
     this.task_days          = document.querySelector("#tf_input_days");
     this.task_hours         = document.querySelector("#tf_input_hours");
@@ -616,7 +616,7 @@ getCardVisualState(raw_id){
     this.ms_task_board       = document.querySelector("#tf_input_board").value;
     this.ms_task_group       = document.querySelector("#tf_input_group").value;
     this.ms_task_type        = document.querySelector("#tf_input_type").value;
-    this.ms_task_category    = document.querySelector("#tf_input_category").value;
+    this.ms_task_project    = document.querySelector("#tf_input_project").value;
     this.ms_task_tags        = document.querySelector("#tf_input_tags").value;
     this.ms_task_days        = document.querySelector("#tf_input_days").value;
     this.ms_task_hours       = document.querySelector("#tf_input_hours").value;
@@ -637,7 +637,7 @@ getCardVisualState(raw_id){
     this.task_board.value = currentTaskBoard;
     //this.task_group.value = "";
     //this.task_type.value = "";
-    //this.task_category.value = "";
+    //this.task_project.value = "";
     this.task_tags.value = "";
     this.task_days.value = "";
     this.task_hours.value = "";
@@ -659,7 +659,7 @@ getCardVisualState(raw_id){
     this.task_board.value       = obj.board;
     this.task_group.value       = obj.group;
     this.task_type.value        = obj.type;
-    this.task_category.value    = obj.category;
+    this.task_project.value    = obj.project;
     this.task_tags.value        = obj.tags;
     this.task_days.value        = obj.days;
     this.task_hours.value       = obj.hours;

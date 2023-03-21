@@ -14,7 +14,7 @@ TaskCardModel =
   type: 3,
   group: 1,
   group_order : 1,
-  category: 0,
+  project: 0,
   tags: "",
   planned_time: 0,
   setter: 1,

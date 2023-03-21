@@ -205,10 +205,10 @@ class InputFilter
 	 *                                                      return an array of fully decoded and sanitised strings.
 	 *
 	 * @return  mixed  'Cleaned' version of the `$source` parameter
-	 *
+	 * @param mixed $limit set the length of result string or maximum number if numeric
 	 * @since   1.0
 	 */
-	public function clean($source, $type = 'string')
+	public function clean($source, $type = 'string', int $limit = -1)
 	{
 		$type = ucfirst(strtolower($type));
 
@@ -219,6 +219,9 @@ class InputFilter
 
 		if ($type === 'Raw')
 		{
+			if ($limit > 0){
+				return mb_substr( $source, 0 , $limit);
+			}
 			return $source;
 		}
 
@@ -248,13 +251,22 @@ class InputFilter
 
 		if (method_exists($this, $method))
 		{
-			return $this->$method((string) $source);
+			$result = $this->$method((string) $source);
+			if (is_numeric($result) && $limit < $result){
+				$result = $limit;
+			} else if (is_string($result) && mb_strlen($result) > $limit){
+				$result = mb_substr($result, 0 , $limit);
+			}
+			$result;
 		}
 
 		// Unknown filter method
 		if (\is_string($source) && !empty($source))
 		{
 			// Filter source for XSS and other 'bad' code etc.
+			if ($limit > 0){
+				return mb_substr($this->cleanString($source), 0 , $limit);
+			}
 			return $this->cleanString($source);
 		}
 

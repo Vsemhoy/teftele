@@ -9,7 +9,7 @@ class PostResult
     public int $code;
     public int $user;
     public int $item_id;
-    public int $log_section;
+    public string $log_section;
     public int $log_action;
     public stdClass $object;
     public string $message;
@@ -19,7 +19,7 @@ class PostResult
         $this->code = 1;
         $this->user = $uid;
         $this->item_id = -1;
-        $this->log_section = 0;
+        $this->log_section = 'none';
         $this->log_section = 0;
         $this->object = (object) array();
         $this->message = "";

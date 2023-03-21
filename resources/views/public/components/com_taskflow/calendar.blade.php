@@ -110,6 +110,17 @@
           <textarea class="uk-textarea" rows='5'  id='tf_input_result'></textarea>
         </div>
         <div class='uk-margin'>
+          <label class='uk-text'>Type</label>
+          <select class="uk-select" id='tf_input_type'>
+            <option value='0'>No Type</option>
+            <?php 
+              foreach (DATA->type_list as $value) {
+                echo "<option value='" .  $value->id . "'>" . $value->name . "</option>";
+              };
+              ?>
+          </select>
+        </div>
+        <div class='uk-margin'>
           <label class='uk-text'>Status</label>
           <select class="uk-select" id='tf_input_status'>
             <option value='1'>Waiting</option>
@@ -148,23 +159,13 @@
               ?>
           </select>
         </div>
+
         <div class='uk-margin'>
-          <label class='uk-text'>Type</label>
-          <select class="uk-select" id='tf_input_type'>
-            <option value='0'>No Type</option>
+          <label class='uk-text'>Project</label>
+          <select class="uk-select"  id='tf_input_project'>
+            <option value='0'>No project</option>
             <?php 
-              foreach (DATA->type_list as $value) {
-                echo "<option value='" .  $value->id . "'>" . $value->name . "</option>";
-              };
-              ?>
-          </select>
-        </div>
-        <div class='uk-margin'>
-          <label class='uk-text'>Category</label>
-          <select class="uk-select"  id='tf_input_category'>
-            <option value='0'>No Category</option>
-            <?php 
-              foreach (DATA->category_list as $value) {
+              foreach (DATA->project_list as $value) {
                 echo "<option value='" .  $value->id . "'>" . $value->name . "</option>";
               };
               ?>
