@@ -30,6 +30,11 @@ class DataBaseController
     const TB_TASKS = self::TB_PREFIX . "tasks";
     const TB_SOLUTIONS = self::TB_PREFIX . "solutions";
 
+    private static function normalizeDate($date){
+        $mytime = strtotime($date);
+        $newDate = date('Y-m-d', $mytime);
+        return $newDate;
+    }
 
     public static function test(){
 
@@ -40,6 +45,27 @@ class DataBaseController
         return $val;
     }
 
+
+    public static function loadCalendarTasks($object, $user)
+    {
+        $fil = new InputFilter();
+        $startDate = self::normalizeDate($object->startdate);
+        $finDate = self::normalizeDate($object->findate);
+        $boards = [];
+        if (is_array($object->boards))
+        {
+            foreach ($object->boards AS $brd)
+            {
+                array_push($boards, $fil->clean($brd, 'int'));
+            }
+        } else {
+            array_push($boards, $fil->clean($object->boards, 'int'));
+        }
+        $boards = DB::table(self::TB_TASKS)->where('user', $user->id)->whereDate('date_set', '>=', $startDate)->whereDate('date_set', '<=', $finDate)->whereIn('board_id',  $boards )->get();
+
+        $object->boards = $boards;
+        return $object;
+    }
 
     public static function getAllUserBoards($user)
     {
@@ -89,9 +115,7 @@ class DataBaseController
         if (is_array($solutions)){ $solutions = json_encode($solutions);} else {$solutions = "[]";};
         if (is_array($checklist)){ $checklist = json_encode($checklist);} else {$checklist = "[]";};
 
-        $mytime = strtotime($object->date_set);
-        $newDate = date('Y-m-d', $mytime);
-        //echo $newDate;
+        $newDate = self::normalizeDate($object->date_set);
 
         $data = array(
             'user'              => $user->id,
@@ -99,10 +123,10 @@ class DataBaseController
             'description'       => $fil->clean($object->description, 'string', 990),
             'result'            => $fil->clean($object->result, 'string', 990),
             'status'            => $fil->clean($object->status, 'int'),
-            'board_id'             => $fil->clean($object->board, 'int'),
-            'type_id'              => $fil->clean($object->type, 'int'),
-            'group_id'             => $fil->clean($object->group, 'int'),
-            'project_id'           => $fil->clean($object->project, 'int'),
+            'board_id'          => $fil->clean($object->board, 'int'),
+            'type_id'           => $fil->clean($object->type, 'int'),
+            'group_id'          => $fil->clean($object->group, 'int'),
+            'project_id'        => $fil->clean($object->project, 'int'),
             'tags'              => $fil->clean($object->tags, 'string', 190),
             'duration_planned'  => $fil->clean($object->planned_time, 'int'),
             'setter'            => $fil->clean($object->setter, 'int'),    

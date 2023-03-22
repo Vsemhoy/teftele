@@ -12,6 +12,7 @@ class PostResult
     public string $log_section;
     public int $log_action;
     public stdClass $object;
+    public $objects;
     public string $message;
 
     public function __construct($uid){

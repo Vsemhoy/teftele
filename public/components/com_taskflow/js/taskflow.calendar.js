@@ -288,6 +288,11 @@ class flowCalendarVisual
           tsmcounterinbottom.querySelector('.tsm-counter-value').innerHTML = 0;
         }
       }, 1000);
+
+      window.onload = (event) => {
+        console.log("page is fully loaded");
+        this.loadTasksIntoBoard(this.pastDate, this.futDate, currentTaskBoard);
+      };
     }
 
 
@@ -819,6 +824,68 @@ getCardVisualState(raw_id){
           }
       });
   }
+
+
+  async loadTasksIntoBoard(pastDate, futDate, boards)
+  {
+      let code = 200;
+      let obj = {
+        'startdate' : pastDate,
+        'findate'   : futDate,
+        'boards'    : boards
+      }
+
+      let response = await fetch(path + code, {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: {
+          "Content-Type": "application/json;charset=utf-8",
+          "Accept": "application/json",
+          "X-Requested-With": "XMLHttpRequest",
+          "X-CSRF-TOKEN": token
+      },
+      body: JSON.stringify(obj)
+      });
+      response.json().then(data => {
+            // new task  
+            console.log(data.message);
+            if (data.message == "CSRF token mismatch."){
+              // placed in main template as script section
+              authRelogger();
+            }
+            if (data.code == 0){
+              console.log(data.objects);
+              // if (document.querySelector("#item_" + task.params.temp_id) != null){
+              //   document.querySelector("#item_" + task.params.temp_id).classList.remove("tf-temp-updated-card");
+              //   document.querySelector("#item_" + task.params.temp_id).setAttribute('draggable', true);
+              //   document.querySelector("#item_" + task.params.temp_id).remove();
+              //   let element = document.querySelector("#" + task.params.target_cell_id);
+              //   console.log(task.object.visual_state);
+              //   element.insertAdjacentHTML('beforeend', 
+              //   TFTEMPLATE.getTaskCardInCalendar(task.object.id, task.object.visual_state, task.object.name, task.object.description, task.object.result));
+              //   this.cardReload();
+              //   // Insert object into global task collection
+              //   TaskCollection.push(task.object);
+              //   for (let index = 0; index < TaskCollection.length; index++) {
+              //     if (TaskCollection[index].id = task.object.id){
+              //       TaskCollection[index] = task.object;
+              //       break;
+              //     }
+              //   }
+              //   for (let i = 0; i < TaskQueue.length; i++) {
+              //     let element = TaskQueue[i];
+              //     if (element.id == task.id){
+              //       TaskQueue.splice(i, 1);
+              //       break;
+              //     }
+              //   }
+              // }
+            } else {
+              console.log(data.message);
+            }
+        });
+  }
+
 
 
 }

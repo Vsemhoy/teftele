@@ -62,6 +62,18 @@ class PostController extends BaseController
             return json_encode($result);
         }
 
+
+        // Create task from calendar
+        if ($code == 200 && $this->user->status > 0){
+            $result = new PostResult($this->user->id);
+            $result->log_action = Logger::ACTION_READ;
+            $result->log_section = ComDefinitions::$com_name;
+            $result->user = $this->user->id;
+            $result = $this->loadTaskIntoCalendar($result, $object, $this->user);
+            Logger::writeUserLog($result);
+            return json_encode($result);
+        }
+
         // Create task from calendar
         if ($code == 300 && $this->user->status > 0){
             $result = new PostResult($this->user->id);
@@ -85,6 +97,24 @@ class PostController extends BaseController
         }
     }
 
+
+    private function loadTaskIntoCalendar($result, $obj, $user)
+    {
+        $exec = DB::loadCalendarTasks($obj, $user);
+        if (!is_object($exec)){
+            $result->status = "ERR";
+            $result->message = $exec;
+            $result->code = 1;
+            $result->item_id = -1;
+        } else {
+            $result->status = "OK";
+            $result->message = "";
+            $result->code = 0;
+            $result->item_id = 0;
+            $result->objects = $exec->boards;
+        } 
+        return $result;
+    }
 
     private function createTaskFromCalendar($result, $obj, $user)
     {
@@ -121,5 +151,7 @@ class PostController extends BaseController
         } 
         return $result;
     }
+
+
 
 }
