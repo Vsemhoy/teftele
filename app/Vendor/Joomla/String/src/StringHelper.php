@@ -6,10 +6,25 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-namespace App\Vendor\Joomla\String;
+namespace App\Vendor\Joomla\String\src;
 
 // PHP mbstring and iconv local configuration
 @ini_set('default_charset', 'UTF-8');
+
+/*
+$dir_path = $_SERVER['DOCUMENT_ROOT'] . 'app' .
+ DIRECTORY_SEPARATOR . 'Http' . DIRECTORY_SEPARATOR . 
+ 'Vendor' . DIRECTORY_SEPARATOR . 'Joomla' . DIRECTORY_SEPARATOR . 
+ 'String' . DIRECTORY_SEPARATOR . 'src' . 'phputf8';
+
+ // Retrieve an array of file names matching the "*.php" pattern
+$php_files = glob($dir_path . "/*.php");
+
+// Loop through each file and include it
+foreach ($php_files as $php_file) {
+    include_once($php_file);
+}
+*/
 
 /**
  * String handling class for UTF-8 data wrapping the phputf8 library. All functions assume the validity of UTF-8 strings.
@@ -156,10 +171,10 @@ abstract class StringHelper
 	{
 		if ($offset === false)
 		{
-			return utf8_strpos($str, $search);
+			return self::utf8_strpos($str, $search);
 		}
 
-		return utf8_strpos($str, $search, $offset);
+		return self::utf8_strpos($str, $search, $offset);
 	}
 
 	/**
@@ -810,5 +825,35 @@ abstract class StringHelper
 		}
 
 		return $str;
+	}
+
+
+	// ADD
+	public static function utf8_strpos($str, $needle, $offset = NULL) {
+
+		if ( is_null($offset) ) {
+	
+			$ar = explode($needle, $str, 2);
+			if ( count($ar) > 1 ) {
+				return utf8_strlen($ar[0]);
+			}
+			return FALSE;
+	
+		} else {
+	
+			if ( !is_int($offset) ) {
+				trigger_error('utf8_strpos: Offset must be an integer',E_USER_ERROR);
+				return FALSE;
+			}
+	
+			$str = utf8_substr($str, $offset);
+	
+			if ( FALSE !== ( $pos = utf8_strpos($str, $needle) ) ) {
+				return $pos + $offset;
+			}
+	
+			return FALSE;
+		}
+	
 	}
 }

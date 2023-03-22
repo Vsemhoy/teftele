@@ -521,25 +521,25 @@ getCardVisualState(raw_id){
     if (this.current_id != null){
       qts.object.visual_state = this.getCardVisualState("item_" + temp_id);
     }
-    qts.object.id            = this.current_id        ;
-    qts.object.name          = tmp.task_name          ;
-    qts.object.description   = tmp.task_description   ;
-    qts.object.result        = tmp.task_result        ;
-    qts.object.status        = tmp.task_status        ;
-    qts.object.board         = tmp.task_board         ;
-    qts.object.group         = tmp.task_group         ;
-    qts.object.type          = tmp.task_type          ;
-    qts.object.project      = tmp.task_project      ;
-    qts.object.tags          = tmp.task_tags          ;
-    qts.object.days          = tmp.task_days          ;
-    qts.object.hours         = tmp.task_hours         ;
-    qts.object.minutes       = tmp.task_minutes       ;
-    qts.object.duration      = tmp.task_duration      ;
-    qts.object.setter        = tmp.task_setter        ;
-    qts.object.executor      = tmp.task_executor      ;
-    qts.object.condition_phys       = tmp.task_condition_phys  ;
-    qts.object.condition_emo        = tmp.task_condition_emo   ;
-    qts.object.condition_intel      = tmp.task_condition_intel ;
+    qts.object.id                 = this.current_id        ;
+    qts.object.name               = tmp.task_name          ;
+    qts.object.description        = tmp.task_description   ;
+    qts.object.result             = tmp.task_result        ;
+    qts.object.status             = tmp.task_status        ;
+    qts.object.board              = tmp.task_board         ;
+    qts.object.group              = tmp.task_group         ;
+    qts.object.type               = tmp.task_type          ;
+    qts.object.project            = tmp.task_project      ;
+    qts.object.tags               = tmp.task_tags          ;
+    qts.object.days               = tmp.task_days          ;
+    qts.object.hours              = tmp.task_hours         ;
+    qts.object.minutes            = tmp.task_minutes       ;
+    qts.object.duration           = tmp.task_duration_planned      ;
+    qts.object.setter             = tmp.task_setter        ;
+    qts.object.executor           = tmp.task_executor      ;
+    qts.object.condition_phys     = tmp.task_condition_phys  ;
+    qts.object.condition_emo      = tmp.task_condition_emo   ;
+    qts.object.condition_intel    = tmp.task_condition_intel ;
     // qts.object.steplist      = task_steplist      ;
     // qts.object.solution_list = task_solution_list ;
     // qts.object.checklist     = task_checklist     ;
@@ -557,73 +557,73 @@ getCardVisualState(raw_id){
   harvestTasModalData(id = null){
     this.updateModalSelectorValues();
     let obj = {
-      'task_id'             : id,
-      'task_name'           : this.task_name.value         ,
-      'task_description'    : this.task_description.value  ,
-      'task_result'         : this.task_result.value       ,
-      'task_status'         : this.task_status.value       ,
-      'task_board'          : this.task_board.value        ,
-      'task_group'          : this.task_group.value        ,
-      'task_type'           : this.task_type.value         ,
-      'task_project'       : this.task_project.value     ,
-      'task_tags'           : this.task_tags.value         ,
-      'task_days'           : this.task_days.value         ,
-      'task_hours'          : this.task_hours.value        ,
-      'task_minutes'        : this.task_minutes.value      ,
-      'task_duration'       : this.task_duration.value     ,
-      'task_setter'         : this.task_setter.value       ,
-      'task_executor'       : this.task_executor.value     ,
-      'task_steplist'       : this.task_steplist.value     ,
-      'task_solution_list'  : this.task_solution_list.value,
-      'task_checklist'      : this.task_checklist.value    ,
-      'task_condition_phys' : this.task_phys_condition.value,
-      'task_condition_emo'  : this.task_emo_condition.value,
-      'task_condition_intel': this.task_intel_condition.value,
+      'task_id'                : id,
+      'task_name'              : this.task_name.value         ,
+      'task_description'       : this.task_description.value  ,
+      'task_result'            : this.task_result.value       ,
+      'task_status'            : this.task_status.value       ,
+      'task_board'             : this.task_board.value        ,
+      'task_group'             : this.task_group.value        ,
+      'task_type'              : this.task_type.value         ,
+      'task_project'           : this.task_project.value     ,
+      'task_tags'              : this.task_tags.value         ,
+      'task_days'              : this.task_days.value         ,
+      'task_hours'             : this.task_hours.value        ,
+      'task_minutes'           : this.task_minutes.value      ,
+      'task_duration_planned'  : this.task_duration_planned.value     ,
+      'task_setter'            : this.task_setter.value       ,
+      'task_executor'          : this.task_executor.value     ,
+      'task_steplist'          : this.task_steplist.value     ,
+      'task_solution_list'     : this.task_solution_list.value,
+      'task_checklist'         : this.task_checklist.value    ,
+      'task_condition_phys'    : this.task_phys_condition.value,
+      'task_condition_emo'     : this.task_emo_condition.value,
+      'task_condition_intel'   : this.task_intel_condition.value,
     }
     return obj;
   }
   
   initModalSelectors(){  
-    this.task_name          = document.querySelector("#tf_input_name");
-    this.task_description   = document.querySelector("#tf_input_description");
-    this.task_result        = document.querySelector("#tf_input_result");
-    this.task_status        = document.querySelector("#tf_input_status");
-    this.task_board         = document.querySelector("#tf_input_board");
-    this.task_group         = document.querySelector("#tf_input_group");
-    this.task_type          = document.querySelector("#tf_input_type");
-    this.task_project      = document.querySelector("#tf_input_project");
-    this.task_tags          = document.querySelector("#tf_input_tags");
-    this.task_days          = document.querySelector("#tf_input_days");
-    this.task_hours         = document.querySelector("#tf_input_hours");
-    this.task_minutes       = document.querySelector("#tf_input_minutes");
-    this.task_duration      = document.querySelector("#tf_input_duration");
-    this.task_setter        = document.querySelector("#tf_input_setter");
-    this.task_executor      = document.querySelector("#tf_input_executor");
-    this.task_steplist      = document.querySelector("#tf_t_steplist");
-    this.task_solution_list = document.querySelector("#tf_t_solution_list");
-    this.task_checklist     = document.querySelector("#tf_checks_list");
-    this.task_phys_condition  = document.querySelector("#tf_t_phys_cond");
-    this.task_emo_condition   = document.querySelector("#tf_t_emo_cond");
-    this.task_intel_condition = document.querySelector("#tf_t_intel_cond");
+    this.task_name              = document.querySelector("#tf_input_name");
+    this.task_description       = document.querySelector("#tf_input_description");
+    this.task_result            = document.querySelector("#tf_input_result");
+    this.task_status            = document.querySelector("#tf_input_status");
+    this.task_board             = document.querySelector("#tf_input_board");
+    this.task_group             = document.querySelector("#tf_input_group");
+    this.task_type              = document.querySelector("#tf_input_type");
+    this.task_project           = document.querySelector("#tf_input_project");
+    this.task_tags              = document.querySelector("#tf_input_tags");
+    this.task_days              = document.querySelector("#tf_input_days");
+    this.task_hours             = document.querySelector("#tf_input_hours");
+    this.task_minutes           = document.querySelector("#tf_input_minutes");
+    this.task_duration_planned  = document.querySelector("#tf_input_duration_p");
+    this.task_setter            = document.querySelector("#tf_input_setter");
+    this.task_executor          = document.querySelector("#tf_input_executor");
+    this.task_steplist          = document.querySelector("#tf_t_steplist");
+    this.task_solution_list     = document.querySelector("#tf_t_solution_list");
+    this.task_checklist         = document.querySelector("#tf_checks_list");
+    this.task_phys_condition    = document.querySelector("#tf_t_phys_cond");
+    this.task_emo_condition     = document.querySelector("#tf_t_emo_cond");
+    this.task_intel_condition   = document.querySelector("#tf_t_intel_cond");
   }
 
 
   updateModalSelectorValues(){
-    this.ms_task_name        = document.querySelector("#tf_input_name").value;
-    this.ms_task_description = document.querySelector("#tf_input_description").value;
-    this.ms_task_result      = document.querySelector("#tf_input_result").value;
-    this.ms_task_status      = document.querySelector("#tf_input_status").value;
-    this.ms_task_board       = document.querySelector("#tf_input_board").value;
-    this.ms_task_group       = document.querySelector("#tf_input_group").value;
-    this.ms_task_type        = document.querySelector("#tf_input_type").value;
-    this.ms_task_project    = document.querySelector("#tf_input_project").value;
-    this.ms_task_tags        = document.querySelector("#tf_input_tags").value;
-    this.ms_task_days        = document.querySelector("#tf_input_days").value;
-    this.ms_task_hours       = document.querySelector("#tf_input_hours").value;
-    this.ms_task_minutes     = document.querySelector("#tf_input_minutes").value;
-    this.ms_task_duration    = document.querySelector("#tf_input_duration").value;
-    this.ms_task_setter      = document.querySelector("#tf_input_setter").value;
-    this.ms_task_executor    = document.querySelector("#tf_input_executor").value;
+    this.ms_task_name               = document.querySelector("#tf_input_name").value;
+    this.ms_task_description        = document.querySelector("#tf_input_description").value;
+    this.ms_task_result             = document.querySelector("#tf_input_result").value;
+    this.ms_task_status             = document.querySelector("#tf_input_status").value;
+    this.ms_task_board              = document.querySelector("#tf_input_board").value;
+    this.ms_task_group              = document.querySelector("#tf_input_group").value;
+    this.ms_task_type               = document.querySelector("#tf_input_type").value;
+    this.ms_task_project            = document.querySelector("#tf_input_project").value;
+    this.ms_task_tags               = document.querySelector("#tf_input_tags").value;
+    this.ms_task_days               = document.querySelector("#tf_input_days").value;
+    this.ms_task_hours              = document.querySelector("#tf_input_hours").value;
+    this.ms_task_minutes            = document.querySelector("#tf_input_minutes").value;
+    this.ms_task_duration_planned   = document.querySelector("#tf_input_duration_p").value;
+    this.ms_task_setter             = document.querySelector("#tf_input_setter").value;
+    this.ms_task_executor           = document.querySelector("#tf_input_executor").value;
     // this.ms_task_steplist    = document.querySelector("#tf_t_steplist");
     // this.ms_task_solution_list = document.querySelector("#tf_t_solution_list").value;
     // this.ms_task_checklist  = document.querySelector("#tf_checks_list").value;
@@ -642,7 +642,7 @@ getCardVisualState(raw_id){
     this.task_days.value = "";
     this.task_hours.value = "";
     this.task_minutes.value = "";
-    this.task_duration.value = "";
+    this.task_duration_planned.value = "";
     this.task_executor.value = currentUser;
     this.task_setter.value = currentUser;
     this.task_steplist.innerHTML = "";
@@ -664,7 +664,7 @@ getCardVisualState(raw_id){
     this.task_days.value        = obj.days;
     this.task_hours.value       = obj.hours;
     this.task_minutes.value     = obj.minutes;
-    this.task_duration.value    = obj.duration;
+    this.task_duration_planned.value    = obj.duration;
     this.task_executor.value    = obj.executor;
     this.task_setter.value      = obj.setter;
     this.task_steplist.innerHTML = "";

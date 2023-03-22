@@ -31,7 +31,7 @@ TaskCardModel =
       duration: 0
     },
   ],
-  total_duration : 75896,
+  duration_real : 75896,
   solutions : [{
     id: 3,
     comment: "Super comment",

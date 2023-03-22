@@ -191,7 +191,7 @@
           </div>
           <div class='uk-hidden'>
             <label class='uk-text'>Totaltime in seconds<span class='uk-text-muted'>planned</span></label>
-            <input class="uk-input" type="number" min='0' max='9999' id='tf_input_duration'>
+            <input class="uk-input" type="number" min='0' max='9999' id='tf_input_duration_p'>
           </div>
         </div>
         

@@ -6,9 +6,9 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-namespace App\Vendor\Joomla\Filter;
+namespace App\Vendor\Joomla\Filter\src;
 
-use App\Vendor\Joomla\String\StringHelper;
+use App\Vendor\Joomla\String\src\StringHelper;
 
 /**
  * InputFilter is a class for filtering input from any data source

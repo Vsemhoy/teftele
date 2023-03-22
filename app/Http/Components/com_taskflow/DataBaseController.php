@@ -7,7 +7,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use App\Models\Component;
 use Illuminate\Support\Facades\DB;
-use App\Vendor\Joomla\Filter\InputFilter;
+use App\Vendor\Joomla\Filter\src\InputFilter;
 use App\Http\Components\com_taskflow\ComDefinitions;
 
 
@@ -80,37 +80,46 @@ class DataBaseController
     public static function createNewTask($object, $user)
     {
         $fil = new InputFilter();
-        $val = $fil->clean($object, "int");
+        $schedule  = $object->schedule;
+        $steps     = $object->steps;
+        $solutions = $object->solutions;
+        $checklist = $object->checklist;
+        if (is_array($schedule)){ $schedule = json_encode($schedule);} else {$schedule = "[]";};
+        if (is_array($steps)){ $steps = json_encode($steps);} else {$steps = "[]";};
+        if (is_array($solutions)){ $solutions = json_encode($solutions);} else {$solutions = "[]";};
+        if (is_array($checklist)){ $checklist = json_encode($checklist);} else {$checklist = "[]";};
 
+        $mytime = strtotime($object->date_set);
+        $newDate = date('Y-m-d', $mytime);
+        //echo $newDate;
 
         $data = array(
-            'name'              => $fil->clean($object->name, 'string'),
-            'description'       => $fil->clean($object->description, 'string'),
-            'result'            => $fil->clean($object->result, 'string'),
-            'status'            => $fil->clean($object->status, 'string'),
-            'board'             => $fil->clean($object->board, 'int'),
-            'type'              => $fil->clean($object->type, 'int'),
-            'group'             => $fil->clean($object->group, 'int'),
-            'project'           => $fil->clean($object->project, 'int'),
-            'tags'              => $fil->clean($object->tags, 'int'),
-            'planned_time'      => $fil->clean($object->planned_time, 'int'),
+            'user'              => $user->id,
+            'name'              => $fil->clean($object->name, 'string', 200),
+            'description'       => $fil->clean($object->description, 'string', 990),
+            'result'            => $fil->clean($object->result, 'string', 990),
+            'status'            => $fil->clean($object->status, 'int'),
+            'board_id'             => $fil->clean($object->board, 'int'),
+            'type_id'              => $fil->clean($object->type, 'int'),
+            'group_id'             => $fil->clean($object->group, 'int'),
+            'project_id'           => $fil->clean($object->project, 'int'),
+            'tags'              => $fil->clean($object->tags, 'string', 190),
+            'duration_planned'  => $fil->clean($object->planned_time, 'int'),
             'setter'            => $fil->clean($object->setter, 'int'),    
             'executor'          => $fil->clean($object->executor, 'int'),
-            'schedule'          => stripcslashes($object->schedule),
-            'steps'             => stripcslashes($object->steps),
-            'solutions'         => stripcslashes($object->solutions),
-            'checklist'         => stripcslashes($object->checklist),
-            'total_duration'    => $fil->clean($object->total_duration, 'int'),
+            'schedule'          => stripcslashes($schedule),
+            'steps'             => stripcslashes($steps),
+            'solutions'         => stripcslashes($solutions),
+            'checklist'         => stripcslashes($checklist),
+  //          'duration_real'     => $fil->clean($object->duration_real, 'int'),
             'checks_total'      => $fil->clean($object->checks_total, 'int'),
             'checks_checked'    => $fil->clean($object->checks_checked, 'int'),
-            'checks_percent'    => $fil->clean($object->checks_percent, 'int'),
             'visual_state'      => $fil->clean($object->visual_state, 'int'),
-            'date_set'          => $fil->clean($object->date_set, 'int'),
+            'date_set'          => $newDate,
             'date_start_real'   => $fil->clean($object->date_start_real, 'int'),
             'date_finish_real'  => $fil->clean($object->date_finish_real, 'int'),
             'date_start_plan'   => $fil->clean($object->date_start_plan, 'int'),
             'date_finish_plan'  => $fil->clean($object->date_finish_plan, 'int'),
-            'duration'          => $fil->clean($object->duration, 'int')
         );
         $id = DB::table(self::TB_TASKS)->insertGetId($data);
         $object->id = $id;
