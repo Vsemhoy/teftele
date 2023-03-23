@@ -91,7 +91,7 @@ class PostController extends BaseController
             $result->log_action = Logger::ACTION_UPDATE;
             $result->log_section = ComDefinitions::$com_name;
             $result->user = $this->user->id;
-            $result = $this->createTaskFromCalendar($result, $object, $this->user);
+            $result = $this->updateTaskFromCalendar($result, $object, $this->user);
             Logger::writeUserLog($result);
             return json_encode($result);
         }
