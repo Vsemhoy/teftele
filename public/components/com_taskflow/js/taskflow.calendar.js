@@ -469,6 +469,24 @@ getCurrentStateNumber(cell_id)
   return 1;
 }
 
+getStateClass(number)
+{
+  let classe = "";
+    if (number == 1){
+      classe = "col-que" ; 
+    } else if (number == 2){
+      classe = "col-exec"; 
+    } else if (number == 3){
+      classe = "col-paus"; 
+    } else if (number == 4){
+      classe = "col-fin" ; 
+    } else if (number == 5){
+      classe = "col-drop"; 
+    }
+    return classe;
+  }
+
+
 getCardVisualState(raw_id){
   let element = document.querySelector('#' + raw_id);
   if (element != null){
@@ -855,7 +873,55 @@ getCardVisualState(raw_id){
             }
             if (data.code == 0){
               console.log(data.objects);
+              if (data.objects.length > 0){
+                data.objects.forEach((taskobj) =>{
+                  let date = new Date(taskobj.date_set);
+                  let formattedDate = date.getDate();
+                  let row_id = "R_" + formattedDate + "_" + date.getMonth() + "_" + date.getFullYear();
+                  let set_row = document.querySelector("#" + row_id);
+                  if (set_row != null){
+                    let set_cell = set_row.querySelectorAll("." + this.getStateClass(taskobj.status));
+                    if (set_cell.length > 0){
+                      set_cell[0].insertAdjacentHTML("beforeend", 
+                      TFTEMPLATE.getTaskCardInCalendar(taskobj.id, taskobj.visual_state, taskobj.name, taskobj.description, taskobj.result));
+
+                      let newobject = TFMODELS.getTCM(taskobj.date_set, taskobj.status);
+                      newobject.id                 = taskobj.id        ;
+                      newobject.name               = taskobj.name          ;
+                      newobject.description        = taskobj.description   ;
+                      newobject.result             = taskobj.result        ;
+                      newobject.status             = taskobj.status        ;
+                      newobject.board              = taskobj.board_id        ;
+                      newobject.group              = taskobj.group_id         ;
+                      newobject.type               = taskobj.type_id          ;
+                      newobject.project            = taskobj.project_id      ;
+                      newobject.tags               = taskobj.tags          ;
+                      // newobject.days               = taskobj.days          ;
+                      // newobject.hours              = taskobj.hours         ;
+                      // newobject.minutes            = taskobj.minutes       ;
+                      newobject.duration           = taskobj.duration_planned;
+                      newobject.setter             = taskobj.setter        ;
+                      newobject.executor           = taskobj.executor      ;
+                      newobject.condition_phys     = taskobj.condition_phys  ;
+                      newobject.condition_emo      = taskobj.condition_emo   ;
+                      newobject.condition_intel    = taskobj.condition_intel ;
+                      // qts.object.steplist      = task_steplist      ;
+                      // qts.object.solution_list = task_solution_list ;
+                      // qts.object.checklist     = task_checklist     ;
+                      TaskCollection.push(newobject);
+                    }
+                    //TFTEMPLATE.
+                  }
+                  
+                  console.log(row_id);
+                  
+                  
+                  
+                });
+                this.cardReload();
+              }
               // if (document.querySelector("#item_" + task.params.temp_id) != null){
+                // let formattedMonth = date.toLocaleString('default', { month: 'long' });
               //   document.querySelector("#item_" + task.params.temp_id).classList.remove("tf-temp-updated-card");
               //   document.querySelector("#item_" + task.params.temp_id).setAttribute('draggable', true);
               //   document.querySelector("#item_" + task.params.temp_id).remove();
