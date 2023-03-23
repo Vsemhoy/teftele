@@ -26,3 +26,5 @@ class PostResult
         $this->message = "";
     }
 }
+
+public/components/com_taskflow/js/taskflow.calendar.js
