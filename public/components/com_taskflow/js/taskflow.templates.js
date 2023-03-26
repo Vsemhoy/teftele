@@ -14,12 +14,12 @@ class TaskFlowTemplates
       let time = min.toFixed() + "min";
       if (min / 60 > 1){
         let hr  = Math.floor(min / 60);
-        min = min - (hr * 60);
+        min = Math.floor(min - (hr * 60));
         time = hr + "h " + min + "min";
         if (hr / 24 > 1){
           let dy  = Math.floor(hr / 24);
           hr = hr - (dy * 24);
-          min = min - (hr * 60);
+          min = Math.floor(min - (hr * 60));
           time = dy + "d " +  hr + "h " + min + "min";
         }
       }
@@ -203,7 +203,7 @@ result += `
         <div class='tsm-label lilo'>project</div>
         <div class='tsm-label tsm-label-duration'>${this.getDurationTime(duration)}</div>
         <div class='tsm-label'>${sessions}</div>
-          <div class='tsm-card-date'>12-01-2045</div>
+        <div class='tsm-card-date uk-hidden'>12-01-2045</div>
         </div>
   </div>
 </div>

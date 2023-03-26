@@ -52,7 +52,7 @@ class flowCalendarVisual
                   this.current_status = this.getCurrentStateNumber(element.id);
                     if (e.target.innerHTML == ""){
 
-                      this.updateModalSelectorValues();
+                      //this.updateModalSelectorValues();
                         UIkit.modal("#tf_modal_task_editor").show();
                         this.flushInputs();
                         this.current_id = null;

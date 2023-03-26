@@ -114,8 +114,14 @@
           <select class="uk-select" id='tf_input_type'>
             <option value='0'>No Type</option>
             <?php 
+              $lastGroup = "";
               foreach (DATA->type_list as $value) {
-                echo "<option value='" .  $value->id . "'>" . $value->name . "</option>";
+                if ($lastGroup != $value->group_name){
+                  
+                  echo "<option class='uk-text-bold' disabled value='" .  $value->id . "'>" . $value->group_name . "</option>";
+                }
+                echo "<option value='" .  $value->id . "'>  " . $value->name . "</option>";
+                $lastGroup = $value->group_name;
               };
               ?>
           </select>
