@@ -16,7 +16,6 @@ TaskCardModel =
   group_order : 1,
   project: 0,
   tags: "",
-  planned_time: 0,
   setter: 1,
   executor: 1,
   created_at : null,
@@ -25,13 +24,15 @@ TaskCardModel =
   steps: [
     {
       id: 1,
+      event_code: [0, 1],
       text : "Step text",
       start_time : 75675,
       end_time: 456345,
       duration: 0
     },
   ],
-  duration_real : 75896,
+  duration_real : 0,
+  duration_planned: 0,
   solutions : [{
     id: 3,
     comment: "Super comment",
@@ -92,13 +93,45 @@ CardSolutionModel = {
   owner: 1,
   ownerName : "Mark"
 }
+// CardStepModel = {
+//   id: 1,
+//   event_codes: [0, 1],
+//   event_dates: [0, 0],
+//   event_times: [0, 0],
+//   text : "Step text",
+//   duration: 0 // in seconds
+// };
+// getCSM(id, codes, dates, times, text = "", duration = 0)
+// {
+//   let csm = structuredClone(this.CardStepModel);
+//   csm.id = id;
+//   csm.event_codes = codes;
+//   csm.event_dates = dates;
+//   csm.event_times = times;
+//   csm.text = text,
+//   csm.duration = duration;
+//   return csm;
+// }
+
 CardStepModel = {
   id: 1,
+  event_code: 0,
+  event_date: 0,
+  event_time: 0,
   text : "Step text",
-  startTime : 75675,
-  endTime: 456345,
-  duration: 0
+  duration: 0 // in seconds related to parent event
 };
+getCSM(id, code, date, time, text = "", duration = 0)
+{
+  let csm = structuredClone(this.CardStepModel);
+  csm.id = id;
+  csm.event_code = code;
+  csm.event_date = date;
+  csm.event_time = time;
+  csm.text = text,
+  csm.duration = duration;
+  return csm;
+}
 
 QueueTaskModel = {
     id : "qts_" + (Math.random() * (9999999 - 1000) + 1000).toFixed(),

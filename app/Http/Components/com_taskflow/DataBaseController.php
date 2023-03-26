@@ -111,11 +111,21 @@ class DataBaseController
         $solutions = $object->solutions;
         $checklist = $object->checklist;
         if (is_array($schedule)){ $schedule = json_encode($schedule);} else {$schedule = "[]";};
-        if (is_array($steps)){ $steps = json_encode($steps);} else {$steps = "[]";};
+        //if (is_array($steps)){ $steps = json_encode($steps);} else {$steps = "[]";};
         if (is_array($solutions)){ $solutions = json_encode($solutions);} else {$solutions = "[]";};
         if (is_array($checklist)){ $checklist = json_encode($checklist);} else {$checklist = "[]";};
 
+ 
+
         $newDate = self::normalizeDate($object->date_set);
+        $dsr = null;
+        $dfr = null;
+        if ($object->date_start_real != null){
+            $dsr = self::normalizeDate($object->date_start_real);
+        }
+        if ($object->date_finish_real != null){
+            $dsr = self::normalizeDate($object->date_start_real);
+        }
 
         $data = array(
             'user'              => $user->id,
@@ -128,11 +138,12 @@ class DataBaseController
             'group_id'          => $fil->clean($object->group, 'int'),
             'project_id'        => $fil->clean($object->project, 'int'),
             'tags'              => $fil->clean($object->tags, 'string', 190),
-            'duration_planned'  => $fil->clean($object->planned_time, 'int'),
+            'duration_planned'  => $fil->clean($object->duration_planned, 'int'),
+            'duration_real'     => $fil->clean($object->duration_real, 'int'),
             'setter'            => $fil->clean($object->setter, 'int'),    
             'executor'          => $fil->clean($object->executor, 'int'),
             'schedule'          => stripcslashes($schedule),
-            'steps'             => stripcslashes($steps),
+            'steps'             => json_encode($steps),
             'solutions'         => stripcslashes($solutions),
             'checklist'         => stripcslashes($checklist),
   //          'duration_real'     => $fil->clean($object->duration_real, 'int'),
@@ -140,8 +151,8 @@ class DataBaseController
             'checks_checked'    => $fil->clean($object->checks_checked, 'int'),
             'visual_state'      => $fil->clean($object->visual_state, 'int'),
             'date_set'          => $newDate,
-            'date_start_real'   => $fil->clean($object->date_start_real, 'int'),
-            'date_finish_real'  => $fil->clean($object->date_finish_real, 'int'),
+            'date_start_real'   => $dsr,
+            'date_finish_real'  => $dfr,
             'date_start_plan'   => $fil->clean($object->date_start_plan, 'int'),
             'date_finish_plan'  => $fil->clean($object->date_finish_plan, 'int'),
         );
@@ -158,11 +169,20 @@ class DataBaseController
         $solutions = $object->solutions;
         $checklist = $object->checklist;
         if (is_array($schedule)){ $schedule = json_encode($schedule);} else {$schedule = "[]";};
-        if (is_array($steps)){ $steps = json_encode($steps);} else {$steps = "[]";};
+        if (!is_array($steps)){$steps = "";} else { $steps = json_encode($steps);};
         if (is_array($solutions)){ $solutions = json_encode($solutions);} else {$solutions = "[]";};
         if (is_array($checklist)){ $checklist = json_encode($checklist);} else {$checklist = "[]";};
 
         $newDate = self::normalizeDate($object->date_set);
+        $dsr = null;
+        $dfr = null;
+        if ($object->date_start_real != null){
+            $dsr = self::normalizeDate($object->date_start_real);
+        }
+        if ($object->date_finish_real != null){
+            $dsr = self::normalizeDate($object->date_start_real);
+        }
+
 
         $data = array(
             'user'              => $user->id,
@@ -175,11 +195,12 @@ class DataBaseController
             'group_id'          => $fil->clean($object->group, 'int'),
             'project_id'        => $fil->clean($object->project, 'int'),
             'tags'              => $fil->clean($object->tags, 'string', 190),
-            'duration_planned'  => $fil->clean($object->planned_time, 'int'),
+            'duration_planned'  => $fil->clean($object->duration_planned, 'int'),
+            'duration_real'     => $fil->clean($object->duration_real, 'int'),
             'setter'            => $fil->clean($object->setter, 'int'),    
             'executor'          => $fil->clean($object->executor, 'int'),
             'schedule'          => stripcslashes($schedule),
-            'steps'             => stripcslashes($steps),
+            'steps'             => $steps,
             'solutions'         => stripcslashes($solutions),
             'checklist'         => stripcslashes($checklist),
   //          'duration_real'     => $fil->clean($object->duration_real, 'int'),
@@ -187,8 +208,8 @@ class DataBaseController
             'checks_checked'    => $fil->clean($object->checks_checked, 'int'),
             'visual_state'      => $fil->clean($object->visual_state, 'int'),
             'date_set'          => $newDate,
-            'date_start_real'   => $fil->clean($object->date_start_real, 'int'),
-            'date_finish_real'  => $fil->clean($object->date_finish_real, 'int'),
+            'date_start_real'   => $dsr,
+            'date_finish_real'  => $dfr,
             'date_start_plan'   => $fil->clean($object->date_start_plan, 'int'),
             'date_finish_plan'  => $fil->clean($object->date_finish_plan, 'int'),
         );

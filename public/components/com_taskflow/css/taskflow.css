@@ -474,10 +474,12 @@
   padding-left: 6px;
 }
 .tsm-card-topbuttons {
-  display: flex;
+  display: grid;
+    grid-template-rows: auto auto;
+    grid-template-columns: auto auto;
 }
 .tsm-card-topbuttons > .tsm-card-button {
-  padding: 6px 12px;
+  padding: 2px 8px;
   cursor: pointer;
   transition: all ease 0.2s;
 }

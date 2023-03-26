@@ -293,11 +293,69 @@ class flowCalendarVisual
         console.log("page is fully loaded");
         this.loadTasksIntoBoard(this.pastDate, this.futDate, currentTaskBoard);
       };
+
+      console.log("start drag load");
+      // START DRAGGING
+      this.sourceCell = null;
+      // function allowDrop(ev) {
+      //   ev.preventDefault();
+      // }
+          
+      //     // Start dragging
+      //     function drag(ev) {
+      //       ev.dataTransfer.setData("text", ev.target.id);
+      //       sourceCell = ev.target.parentElement;
+      //     }
+          
+      //   function drop(ev) {
+      //     ev.preventDefault();
+      //     var data = ev.dataTransfer.getData("text");
+      //     let element = document.getElementById(data);
+      //     if (!ev.target.classList.contains("dragsection")){ 
+      //       return false; };
+      //       FLOWC.updateTaskState(element, sourceCell, ev.target);
+      //       ev.target.appendChild(element);
+      //     }
+
+      document.addEventListener("dragover", (event) => {
+       if (event.target.classList.contains('dragsection'))
+       {
+         event.preventDefault();
+         //console.log("predef");
+       }
+      });
+       document.addEventListener("dragstart", (event)=>{
+        const elementBeingDragged = event.target;
+        //if ()
+        if (elementBeingDragged.classList.contains('dragitem'))
+        {
+          console.log(elementBeingDragged.id);
+          event.dataTransfer.setData("text", event.target.id);
+          this.sourceCell = event.target.parentElement;
+        }
+       });   
+
+       document.addEventListener("drop", (event) => {
+        if (event.target.classList.contains('dragsection'))
+        {
+          event.preventDefault();
+          let data = event.dataTransfer.getData("text");
+          let element = document.getElementById(data);
+          if (!event.target.classList.contains("dragsection")){ return false; };
+            this.updateTaskState(element, this.sourceCell, event.target);
+            event.target.appendChild(element);
+          }
+       });
+
     }
 
 
     //
-    //
+    //ondrop='drop(event)' ondragover='allowDrop(event)'
+// ondrop='drop(event)' ondragover='allowDrop(event)'
+// ondrop='drop(event)' ondragover='allowDrop(event)'
+// ondrop='drop(event)' ondragover='allowDrop(event)'
+// ondrop='drop(event)' ondragover='allowDrop(event)'
     //
     //
     //
@@ -421,18 +479,28 @@ class flowCalendarVisual
     let id = "R_" + formattedDate + "_" + date.getMonth() + "_" + date.getFullYear();
     let result = "<div class='col-row" + currentDate + weekend + "' id='" + id +"'>";
     result += "<div " + currentDateId + " class='col-item col-date'><div class='uk-text-medium content-mid-reverse'><span class='hide-m'>  " + formattedMonth + "</span> <span class='uk-text-bold'>" + formattedDate + "</span></div></div>";
-    result += "<div class='col-item col-que dragsection'    id='cell_" + this.getRandomInt() + "' ondrop='drop(event)' ondragover='allowDrop(event)' >" + que + "</div>";
-    result += "<div class='col-item col-exec dragsection' id='cell_" + this.getRandomInt() + "' ondrop='drop(event)' ondragover='allowDrop(event)' >" + exec + "</div>";
-    result += "<div class='col-item col-paus dragsection' id='cell_" + this.getRandomInt() + "' ondrop='drop(event)' ondragover='allowDrop(event)' >" + paus + "</div>";
-    result += "<div class='col-item col-fin dragsection'  id='cell_" + this.getRandomInt() + "' ondrop='drop(event)' ondragover='allowDrop(event)' >" + fin + "</div>";
-    result += "<div class='col-item col-drop dragsection' id='cell_" + this.getRandomInt() + "' ondrop='drop(event)' ondragover='allowDrop(event)' >" + drop + "</div>";
+    result += "<div class='col-item col-que dragsection'  condition='1' id='cell_" + this.getRandomInt() + "'  >" + que + "</div>";
+    result += "<div class='col-item col-exec dragsection' condition='2' id='cell_" + this.getRandomInt() + "'  >" + exec + "</div>";
+    result += "<div class='col-item col-paus dragsection' condition='3' id='cell_" + this.getRandomInt() + "'  >" + paus + "</div>";
+    result += "<div class='col-item col-fin dragsection'  condition='4' id='cell_" + this.getRandomInt() + "'  >" + fin + "</div>";
+    result += "<div class='col-item col-drop dragsection' condition='5' id='cell_" + this.getRandomInt() + "'  >" + drop + "</div>";
     result += "";
     result += "</div>" + newMonthRow;
     return result;
   }
 
 
-  
+  getSessionCount(steps){
+    if (steps.length == 0){ return ""};
+    let counter = 0;
+    steps.forEach((stp) => {
+      console.log(stp.event_code + " evc");
+      if (stp.event_code == 2){
+        counter++;
+      }
+    });
+    return counter;
+  }
 
   
 
@@ -501,6 +569,89 @@ getCardVisualState(raw_id){
   return 0;
 }
 
+// DROP STATE TASKE EVENTS
+
+updateTaskState(task, sourceCell, targetCell){
+  console.log("sourceCell = " + sourceCell.id);
+ console.log(targetCell.id);
+ // get conditions:
+ let firstCondition = +sourceCell.getAttribute('condition');
+ let secondCondition = +targetCell.getAttribute('condition');
+ console.log(firstCondition);
+ let num_id = task.id.replace("item_", "");
+ console.log(num_id);
+
+ // get task object
+ let index = -1;
+ for (let i = 0; i < TaskCollection.length; i++) {
+   const element = TaskCollection[i];
+   if (element.id == num_id){
+     index = i;
+     //alert(i);
+     break;
+   }
+ }
+ if (index == -1){
+   console.log("can't find target task in collection");
+   return false;
+ }
+ console.log(TaskCollection[index].steps);
+ // get row date and current timestamp
+ // we're set duration only if task moved from "2" status to other
+ let count = TaskCollection[index].steps.length;
+ let now = Date.now();
+ let dat = this.normalizeDateFromId(targetCell.parentElement.id)
+ let stepnow = TFMODELS.getCSM(count, secondCondition, dat, now);
+ console.log(firstCondition, secondCondition);
+ if (count > 0 && secondCondition != 2 && firstCondition == 2)
+ {
+  stepnow.duration = now  - TaskCollection[index].steps[TaskCollection[index].steps.length - 1].event_time;
+  if (TaskCollection[index].date_start_real == null){
+    // real start date can set once
+    TaskCollection[index].date_start_real = dat;
+  }
+ }
+ if (count > 0 && secondCondition == 4 && firstCondition != 4){
+  TaskCollection[index].date_finish_real = dat;
+ }
+ TaskCollection[index].steps.push(stepnow);
+ if (count > 0 && secondCondition != 2 && firstCondition == 2)
+ {
+  // count total duration
+  let todur = 0;
+  TaskCollection[index].steps.forEach((stp)=>{
+    todur += stp.duration;
+  });
+  // get visual state
+  TaskCollection[index].duration_real = todur;
+  
+}
+  TaskCollection[index].date_set = dat;
+  TaskCollection[index].status = secondCondition;
+  TaskCollection[index].visual_state = this.getCardVisualState(task.id);
+  
+  // push it to task STACK
+  let qts = TFMODELS.getQTM('update');
+  qts.object = TaskCollection[index];
+  qts.params = {
+    'temp_id' : num_id, 
+    'target_cell_id' : targetCell.id
+  }
+  let replaced = false;
+  // it STACK already has a task with this ID, rewrite em
+  for (let i = 0; i < TaskQueue.length; i++) {
+    if (TaskQueue[i].object.id == num_id){
+      qts.object = TaskCollection[index];
+      replaced = true;
+      break;
+    } 
+  }
+  if (replaced == false){
+    TaskQueue.push(qts);
+  }
+  console.log(TaskCollection[index]);
+}
+
 
 // MODAL WWINDOW TASK EDITOR //
 
@@ -512,6 +663,8 @@ getCardVisualState(raw_id){
   harvestTaskSave(){
     let temp_id = null;
     let targetCell = null;
+    let t_duration = 0;
+    let t_duration_p = 0;
     let tmp = this.harvestTasModalData();
     targetCell = document.querySelector("#" + this.targetCell_id);
     if (tmp.task_name.trim() == ""){
@@ -528,6 +681,8 @@ getCardVisualState(raw_id){
       for (let i = 0; i < TaskCollection.length; i++) {
         if (TaskCollection[i].id == this.current_id){
           qts.object = TaskCollection[i];
+          t_duration = TaskCollection[i].duration_real;
+          t_duration_p = TaskCollection[i].duration_planned;
           break;
         } 
       }
@@ -557,7 +712,8 @@ getCardVisualState(raw_id){
     qts.object.days               = tmp.task_days          ;
     qts.object.hours              = tmp.task_hours         ;
     qts.object.minutes            = tmp.task_minutes       ;
-    qts.object.duration           = tmp.task_duration_planned      ;
+    qts.object.duration_planned   = tmp.task_duration_planned;
+    qts.object.duration_real      = t_duration;
     qts.object.setter             = tmp.task_setter        ;
     qts.object.executor           = tmp.task_executor      ;
     qts.object.condition_phys     = tmp.task_condition_phys  ;
@@ -578,7 +734,6 @@ getCardVisualState(raw_id){
    * @returns std object with data from Modal fields
    */
   harvestTasModalData(id = null){
-    this.updateModalSelectorValues();
     let obj = {
       'task_id'                : id,
       'task_name'              : this.task_name.value         ,
@@ -590,10 +745,7 @@ getCardVisualState(raw_id){
       'task_type'              : this.task_type.value         ,
       'task_project'           : this.task_project.value     ,
       'task_tags'              : this.task_tags.value         ,
-      'task_days'              : this.task_days.value         ,
-      'task_hours'             : this.task_hours.value        ,
-      'task_minutes'           : this.task_minutes.value      ,
-      'task_duration_planned'  : this.task_duration_planned.value     ,
+      'task_duration_planned'  : this.task_duration_planned.value,
       'task_setter'            : this.task_setter.value       ,
       'task_executor'          : this.task_executor.value     ,
       'task_steplist'          : this.task_steplist.value     ,
@@ -602,7 +754,14 @@ getCardVisualState(raw_id){
       'task_condition_phys'    : this.task_phys_condition.value,
       'task_condition_emo'     : this.task_emo_condition.value,
       'task_condition_intel'   : this.task_intel_condition.value,
+      'task_days'              : this.task_days.value         ,
+      'task_hours'             : this.task_hours.value        ,
+      'task_minutes'           : this.task_minutes.value      ,
     }
+    let days    = this.task_days.value     ;
+    let hours   = this.task_hours.value    ;
+    let minutes = this.task_minutes.value  ;
+    obj.task_duration_planned = (days * 24 * 60 * 60 * 1000) + (hours * 60 * 60 * 1000) + (minutes * 60 * 1000);
     return obj;
   }
   
@@ -631,41 +790,36 @@ getCardVisualState(raw_id){
   }
 
 
-  updateModalSelectorValues(){
-    this.ms_task_name               = document.querySelector("#tf_input_name").value;
-    this.ms_task_description        = document.querySelector("#tf_input_description").value;
-    this.ms_task_result             = document.querySelector("#tf_input_result").value;
-    this.ms_task_status             = document.querySelector("#tf_input_status").value;
-    this.ms_task_board              = document.querySelector("#tf_input_board").value;
-    this.ms_task_group              = document.querySelector("#tf_input_group").value;
-    this.ms_task_type               = document.querySelector("#tf_input_type").value;
-    this.ms_task_project            = document.querySelector("#tf_input_project").value;
-    this.ms_task_tags               = document.querySelector("#tf_input_tags").value;
-    this.ms_task_days               = document.querySelector("#tf_input_days").value;
-    this.ms_task_hours              = document.querySelector("#tf_input_hours").value;
-    this.ms_task_minutes            = document.querySelector("#tf_input_minutes").value;
-    this.ms_task_duration_planned   = document.querySelector("#tf_input_duration_p").value;
-    this.ms_task_setter             = document.querySelector("#tf_input_setter").value;
-    this.ms_task_executor           = document.querySelector("#tf_input_executor").value;
-    // this.ms_task_steplist    = document.querySelector("#tf_t_steplist");
-    // this.ms_task_solution_list = document.querySelector("#tf_t_solution_list").value;
-    // this.ms_task_checklist  = document.querySelector("#tf_checks_list").value;
-  }
+  // updateModalSelectorValues(){
+  //   this.ms_task_name               = document.querySelector("#tf_input_name").value;
+  //   this.ms_task_description        = document.querySelector("#tf_input_description").value;
+  //   this.ms_task_result             = document.querySelector("#tf_input_result").value;
+  //   this.ms_task_status             = document.querySelector("#tf_input_status").value;
+  //   this.ms_task_board              = document.querySelector("#tf_input_board").value;
+  //   this.ms_task_group              = document.querySelector("#tf_input_group").value;
+  //   this.ms_task_type               = document.querySelector("#tf_input_type").value;
+  //   this.ms_task_project            = document.querySelector("#tf_input_project").value;
+  //   this.ms_task_tags               = document.querySelector("#tf_input_tags").value;
+  //   this.ms_task_days               = document.querySelector("#tf_input_days").value;
+  //   this.ms_task_hours              = document.querySelector("#tf_input_hours").value;
+  //   this.ms_task_minutes            = document.querySelector("#tf_input_minutes").value;
+  //   this.ms_task_duration_planned   = document.querySelector("#tf_input_duration_p").value;
+  //   this.ms_task_setter             = document.querySelector("#tf_input_setter").value;
+  //   this.ms_task_executor           = document.querySelector("#tf_input_executor").value;
+
+  //   this.ms_task_duration_planned = 0;
+  //   // this.ms_task_steplist    = document.querySelector("#tf_t_steplist");
+  //   // this.ms_task_solution_list = document.querySelector("#tf_t_solution_list").value;
+  //   // this.ms_task_checklist  = document.querySelector("#tf_checks_list").value;
+  // }
 
   flushInputs(){
     this.task_name.value = "";
     this.task_description.value = "";
     this.task_result.value = "";
     this.task_status.value = this.current_status;
-    this.task_board.value = currentTaskBoard;
-    //this.task_group.value = "";
-    //this.task_type.value = "";
-    //this.task_project.value = "";
-    this.task_tags.value = "";
-    this.task_days.value = "";
-    this.task_hours.value = "";
-    this.task_minutes.value = "";
-    this.task_duration_planned.value = "";
+
+    this.task_duration_planned.value = 0;
     this.task_executor.value = currentUser;
     this.task_setter.value = currentUser;
     this.task_steplist.innerHTML = "";
@@ -684,15 +838,30 @@ getCardVisualState(raw_id){
     this.task_type.value        = obj.type;
     this.task_project.value    = obj.project;
     this.task_tags.value        = obj.tags;
-    this.task_days.value        = obj.days;
-    this.task_hours.value       = obj.hours;
-    this.task_minutes.value     = obj.minutes;
-    this.task_duration_planned.value    = obj.duration;
     this.task_executor.value    = obj.executor;
     this.task_setter.value      = obj.setter;
     this.task_steplist.innerHTML = "";
     this.task_solution_list.innerHTML = "";
     this.task_checklist.innerHTML = "";
+    this.task_duration_planned.value = obj.duration_planned;
+    let m = 0;
+    let h = 0;
+    let d = 0;
+    if (obj.duration_planned > 0){
+      let oper = obj.duration_planned / 1000;
+      m = Math.floor(oper / 60);
+      if (m > 60){
+        h = Math.floor(m / 60);
+        m = (m % 60);
+      }
+      if (h > 24){
+        d = (h / 24).floor();
+        h = (h % 24);
+      }
+    }
+    this.task_days.value        = d;
+    this.task_hours.value       = h;
+    this.task_minutes.value     = m;
   }
 
   /* QUEUE HANDLERS */
@@ -767,7 +936,8 @@ getCardVisualState(raw_id){
               task.object.id = id;
               let element = document.querySelector("#" + task.params.target_cell_id);
               element.insertAdjacentHTML('beforeend', 
-              TFTEMPLATE.getTaskCardInCalendar(id, 0, task.object.name, task.object.description, task.object.result));
+              TFTEMPLATE.getTaskCardInCalendar(id, 0, task.object.name, task.object.description,
+                 task.object.result));
               this.cardReload();
               // Insert object into global task collection
               TaskCollection.push(task.object);
@@ -817,21 +987,24 @@ getCardVisualState(raw_id){
               document.querySelector("#item_" + task.params.temp_id).setAttribute('draggable', true);
               document.querySelector("#item_" + task.params.temp_id).remove();
               let element = document.querySelector("#" + task.params.target_cell_id);
-              console.log(task.object.visual_state);
+
+              let sesscount = this.getSessionCount(task.object.steps);
               element.insertAdjacentHTML('beforeend', 
-              TFTEMPLATE.getTaskCardInCalendar(task.object.id, task.object.visual_state, task.object.name, task.object.description, task.object.result));
+              TFTEMPLATE.getTaskCardInCalendar(task.object.id, task.object.visual_state, 
+                task.object.name, task.object.description, task.object.result, 
+                task.object.duration_real, sesscount));
               this.cardReload();
               // Insert object into global task collection
-              TaskCollection.push(task.object);
+              //TaskCollection.push(task.object);
               for (let index = 0; index < TaskCollection.length; index++) {
-                if (TaskCollection[index].id = task.object.id){
+                if (TaskCollection[index].id == task.object.id){
                   TaskCollection[index] = task.object;
                   break;
                 }
               }
               for (let i = 0; i < TaskQueue.length; i++) {
                 let element = TaskQueue[i];
-                if (element.id == task.id){
+                if (element.params.temp_id == task.params.temp_id){
                   TaskQueue.splice(i, 1);
                   break;
                 }
@@ -882,8 +1055,10 @@ getCardVisualState(raw_id){
                   if (set_row != null){
                     let set_cell = set_row.querySelectorAll("." + this.getStateClass(taskobj.status));
                     if (set_cell.length > 0){
+                      let sesscount = this.getSessionCount(JSON.parse(taskobj.steps));
                       set_cell[0].insertAdjacentHTML("beforeend", 
-                      TFTEMPLATE.getTaskCardInCalendar(taskobj.id, taskobj.visual_state, taskobj.name, taskobj.description, taskobj.result));
+                      TFTEMPLATE.getTaskCardInCalendar(taskobj.id, taskobj.visual_state, taskobj.name,
+                         taskobj.description, taskobj.result, taskobj.duration_real, sesscount));
 
                       let newobject = TFMODELS.getTCM(taskobj.date_set, taskobj.status);
                       newobject.id                 = taskobj.id        ;
@@ -899,15 +1074,17 @@ getCardVisualState(raw_id){
                       // newobject.days               = taskobj.days          ;
                       // newobject.hours              = taskobj.hours         ;
                       // newobject.minutes            = taskobj.minutes       ;
-                      newobject.duration           = taskobj.duration_planned;
+                      newobject.duration_planned   = taskobj.duration_planned;
+                      newobject.duration_real      = taskobj.duration_real;
                       newobject.setter             = taskobj.setter        ;
                       newobject.executor           = taskobj.executor      ;
                       newobject.condition_phys     = taskobj.condition_phys  ;
                       newobject.condition_emo      = taskobj.condition_emo   ;
                       newobject.condition_intel    = taskobj.condition_intel ;
-                      // qts.object.steplist      = task_steplist      ;
+                      newobject.steps              = JSON.parse(taskobj.steps)   ;
                       // qts.object.solution_list = task_solution_list ;
                       // qts.object.checklist     = task_checklist     ;
+                      // console.log(taskobj.steps);
                       TaskCollection.push(newobject);
                     }
                     //TFTEMPLATE.
@@ -953,12 +1130,15 @@ getCardVisualState(raw_id){
   }
 
 
-
 }
 
 const FLOWCV = new flowCalendarVisual();
 
 
+      
+      
+      
+      
 
 
 
@@ -967,28 +1147,6 @@ const FLOWCV = new flowCalendarVisual();
 
 
 
-
-
-
-
- function allowDrop(ev) {
-      ev.preventDefault();
-    }
-    
-    function drag(ev) {
-      ev.dataTransfer.setData("text", ev.target.id);
-    }
-    
-    function drop(ev) {
-      ev.preventDefault();
-      var data = ev.dataTransfer.getData("text");
-    //  console.log(data);
-    //  console.log("HELLO");
-      if (!ev.target.classList.contains("dragsection")){ 
-        //console.log("STOP!");
-        return false; };
-      ev.target.appendChild(document.getElementById(data));
-    }
 
 
 

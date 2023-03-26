@@ -8,6 +8,23 @@ class TaskFlowTemplates
 
     }
 
+    getDurationTime($time){
+      if ($time == 0){ return "...";}
+      let min =  $time / 1000 / 60;
+      let time = min.toFixed() + "min";
+      if (min / 60 > 1){
+        let hr  = Math.floor(min / 60);
+        min = min - (hr * 60);
+        time = hr + "h " + min + "min";
+        if (hr / 24 > 1){
+          let dy  = Math.floor(hr / 24);
+          hr = hr - (dy * 24);
+          min = min - (hr * 60);
+          time = dy + "d " +  hr + "h " + min + "min";
+        }
+      }
+      return time;
+    }
 
     getTaskListTableCheckListTableRow(){
         let text = "NewChekItem";
@@ -73,7 +90,7 @@ let result = `  <tr class='tf-t-checklist-item ${finClass}'>
       return encodedOutput;
     }
 
-    getTaskCardInCalendar(id, visual_state, name, description, result_text){
+    getTaskCardInCalendar(id, visual_state, name, description, result_text, duration = 0, countSessions = 0){
         id = "item_" + id;
         let visClass = "";
         if (visual_state == 0){
@@ -81,13 +98,18 @@ let result = `  <tr class='tf-t-checklist-item ${finClass}'>
         } else if (visual_state == 1){
           visClass = "tsm-vis-middle";
         };
+        let sessions = "";
+        if (countSessions > 0){
+          sessions = countSessions + " steps";
+        }
+        // ondragstart="drag(event)"
         name = this.encodeHTMLEntities(name);
         description = this.encodeHTMLEntities(description);
         result_text = this.encodeHTMLEntities(result_text);
         description = description.replace(/\n/g, "<br>");
         result_text = result_text.replace(/\n/g, "<br>");
         let result = `<div class='tsm-card tsm-status-done dragitem ${visClass}'
-         draggable="true" ondragstart="drag(event)" id="${id}">
+         draggable="true"  id="${id}">
         <div class='tsm-card-row'>
         <div class='tsm-card-pre-header' title='${name}'>
     <div class='tsm-card-padding'>
@@ -102,6 +124,7 @@ let result = `  <tr class='tf-t-checklist-item ${finClass}'>
         <div class='tsm-card-topbuttons'>
             <div class='tsm-card-button tf_card_event_minifycard' title='hide all'>_</div>
             <div class='tsm-card-button tf_card_event_midifycard' title='toggle content'>=</div>
+            <div class='tsm-card-button tf_card_event_checkified' title='toggle content'>C</div>
             <div class='tsm-card-button tf_card_event_expandcard' title='toggle events'>E</div>
         </div>
     </div>
@@ -173,13 +196,13 @@ result += `
 </div>
   
 <div class='tsm-card-row'>
-  <div class='tsm-card-padding'>INFO</div>
+  <div class='tsm-card-padding'></div>
   <div class='hide-m'>
     <div class='tsm-card-footer tsm-card-padding'>
         <div class='tsm-label'>Group</div>
         <div class='tsm-label lilo'>project</div>
-        <div class='tsm-label'>Duration: 132h 32m</div>
-        <div class='tsm-label'>Sessions: 19</div>
+        <div class='tsm-label tsm-label-duration'>${this.getDurationTime(duration)}</div>
+        <div class='tsm-label'>${sessions}</div>
           <div class='tsm-card-date'>12-01-2045</div>
         </div>
   </div>
