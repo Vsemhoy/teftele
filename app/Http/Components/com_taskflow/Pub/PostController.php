@@ -35,7 +35,7 @@ class PostController extends BaseController
         // $this->user->id = $request->session()->get('LoggedAdmin');
         // $this->user->role = $request->session()->get('admin_role');
         $this->user->id = 1;
-        $this->user->role = 1;
+        $this->user->status = 1;
         $this->user = Auth::user();
 
         // First -> try to get file from form
@@ -54,9 +54,9 @@ class PostController extends BaseController
 
 
     private function route($code, $object){
-        if ($this->user == null){
+        if ($this->user == null || $this->user->status == 0){
             $result = new PostResult($this->user->id);
-            $result->message = "You are not logger in!";
+            $result->message = "You are not logger in or not activated!";
             $result->code = 1;
             $result->status = "UNLOG";
             return json_encode($result);

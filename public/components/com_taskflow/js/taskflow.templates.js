@@ -16,11 +16,20 @@ class TaskFlowTemplates
         let hr  = Math.floor(min / 60);
         min = Math.floor(min - (hr * 60));
         time = hr + "h " + min + "min";
+        if (min == 0){
+          time = hr + "h ";
+        }
         if (hr / 24 > 1){
           let dy  = Math.floor(hr / 24);
           hr = hr - (dy * 24);
-          min = Math.floor(min - (hr * 60));
+          min = Math.floor(min );
           time = dy + "d " +  hr + "h " + min + "min";
+          if (min == 0){
+            time = dy + "d " +  hr + "h ";
+          }
+          if (min == 0 && hr == 0){
+            time = dy + "d";
+          }
         }
       }
       return time;

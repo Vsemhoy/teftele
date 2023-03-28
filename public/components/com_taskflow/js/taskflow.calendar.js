@@ -1037,6 +1037,7 @@ updateTaskState(task, sourceCell, targetCell){
       },
       body: JSON.stringify(obj)
       });
+      
       response.json().then(data => {
             // new task  
             console.log(data.message);
@@ -1097,36 +1098,11 @@ updateTaskState(task, sourceCell, targetCell){
                 });
                 this.cardReload();
               }
-              // if (document.querySelector("#item_" + task.params.temp_id) != null){
-                // let formattedMonth = date.toLocaleString('default', { month: 'long' });
-              //   document.querySelector("#item_" + task.params.temp_id).classList.remove("tf-temp-updated-card");
-              //   document.querySelector("#item_" + task.params.temp_id).setAttribute('draggable', true);
-              //   document.querySelector("#item_" + task.params.temp_id).remove();
-              //   let element = document.querySelector("#" + task.params.target_cell_id);
-              //   console.log(task.object.visual_state);
-              //   element.insertAdjacentHTML('beforeend', 
-              //   TFTEMPLATE.getTaskCardInCalendar(task.object.id, task.object.visual_state, task.object.name, task.object.description, task.object.result));
-              //   this.cardReload();
-              //   // Insert object into global task collection
-              //   TaskCollection.push(task.object);
-              //   for (let index = 0; index < TaskCollection.length; index++) {
-              //     if (TaskCollection[index].id = task.object.id){
-              //       TaskCollection[index] = task.object;
-              //       break;
-              //     }
-              //   }
-              //   for (let i = 0; i < TaskQueue.length; i++) {
-              //     let element = TaskQueue[i];
-              //     if (element.id == task.id){
-              //       TaskQueue.splice(i, 1);
-              //       break;
-              //     }
-              //   }
-              // }
             } else {
               console.log(data.message);
             }
         });
+        
   }
 
 
