@@ -125,6 +125,8 @@
     backdrop-filter: blur(6px);
     display: flex;
     justify-content: space-between;
+    height: 36px;
+
 }
 .u-sticky-bottom-bar > div > * {
     display: grid;

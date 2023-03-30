@@ -103,11 +103,11 @@
         </div>
         <div class='uk-margin'>
           <label class='uk-text'>Description</label>
-          <textarea class="uk-textarea" rows='5'  id='tf_input_description'></textarea>
+          <textarea class="uk-textarea" rows='5'  maxlength='5000' id='tf_input_description'></textarea>
         </div>
         <div class='uk-margin'>
           <label class='uk-text'>Result</label>
-          <textarea class="uk-textarea" rows='5'  id='tf_input_result'></textarea>
+          <textarea class="uk-textarea" rows='5' maxlength='5000' id='tf_input_result'></textarea>
         </div>
         <div class='uk-margin'>
           <label class='uk-text'>Type</label>
@@ -325,6 +325,55 @@
 </div>
 
 @endsection
+
+
+@section('component-bottom-bar')
+<div id='component_bottom_bar' class='u-sticky-bottom-bar'  style='background: rgb(131,58,180);
+    background: linear-gradient(90deg, rgba(131,58,180,0.7) 0%, rgba(163,34,182,0.7) 45%, rgba(252,69,69,0.7) 100%);'>
+    <div uk-grid>
+        <div class='uk-button '><span uk-icon='more-vertical'></span></div>
+        <form >
+        <select class="uk-select uk-form-small" id='tf_select_to_go' style='padding-right: 18px; background: none;
+    color: white;
+    font-size: medium;
+    font-weight: 900;
+    line-height: 1.9rem;'>
+            <?php
+            $result = "";
+            foreach(DATA->board_list AS $board)
+            {
+              $selected = "";
+              if ($board->id == DATA->board->id){
+                $selected = "selected='selected'";
+              }
+              $result .= "<option value='{$board->id}' {$selected}>{$board->name}</option>";
+            }
+            echo $result;
+            ?>
+          </select>
+            </form>
+        <div>
+            <div class='tsm-active-counter tsm-hidden' id='tsm_counter'>
+                <div class='tsm-counter-preloader'><span class='tf-t-c-clock bi-arrow-clockwise'></span></div> <span class='tsm-counter-value'>0</span>
+            </div>
+        </div>
+    </div>
+
+
+    <div>
+        <div class='uk-button '><span uk-icon='more-vertical'></span></div>
+    </div>
+</div>
+<script>
+  let boardChanger = document.querySelector('#tf_select_to_go');
+  boardChanger.addEventListener('change', (ev)=> {
+    let val = boardChanger.options[boardChanger.selectedIndex].value;
+    window.location.href = "{{ route('taskflow.calendar')}}/" + val;
+ 
+  });
+</script>
+@endsection
+
 
 @section('page-scripts')
 <script src="{{ asset('/public/components/com_taskflow/js/taskflow.calendar.js')}}"></script>

@@ -202,7 +202,7 @@ class flowCalendarVisual
             document.querySelector("#tf_checks_list").insertAdjacentHTML('beforeend', TFTEMPLATE.getTaskListTableCheckListTableRow());
             setTimeout(() => {
               this.checkListReload();
-            }, 1000);
+            }, 500);
           });
       }
       this.sectionMap = this.buildSectionMap();
@@ -233,13 +233,24 @@ class flowCalendarVisual
       // Scroll bottom
         if (topOffset < vscroll +  viewportHeight + 1){
           this.datetime = this.pastDate;
+          let lastLoadedDate = this.pastDate;
+          let lastRestrictDate = this.pastDate;
           for (let i = 0 ; i < 7; i++){
               var additionalDate = new Date();
               additionalDate.setTime(this.datetime.getTime() - ((1 + i) * this.day));
               this.pastDate = additionalDate;
+                        // get last day of the month
+                        const firstDayOfNextMonth = new Date(additionalDate.getYear(), additionalDate.getMonth() + 1, 1);
+                        const lastDayOfMonth = new Date(firstDayOfNextMonth - 1);
+                        if (lastDayOfMonth.getDate() == additionalDate.getDate()){
+                          this.rowCollection.insertAdjacentHTML('beforeend', this.buildSeparateRow(additionalDate));
+                        }
               this.rowCollection.insertAdjacentHTML('beforeend', this.buildRow(additionalDate));
-              }
+              lastRestrictDate = additionalDate;
+              };
+              console.log(lastLoadedDate, lastRestrictDate);
               this.reload();
+              this.loadTasksIntoBoard( lastRestrictDate, lastLoadedDate, currentTaskBoard);
           }
           
           //console.log(this.rowCollection.offsetTop);
@@ -249,18 +260,33 @@ class flowCalendarVisual
               blockTopScroll = true;
                   setTimeout(() => {
                       this.datetime = this.futDate;
+                      let lastRestrictDate = this.futDate;
+                      lastRestrictDate.setTime(lastRestrictDate.getTime() + ((1) * this.day));
+                      let lastLoadedDate = this.futDate;
                       for (let i = 0 ; i < 14; i++){
                       var additionalDate = new Date();
                       var msr = document.querySelector("#master-row"); // This is a Top header row
                       additionalDate.setTime(this.datetime.getTime() + ((1 + i) * this.day));
                       this.futDate = additionalDate;
-                        // IF APPEARS Duplicated rows, prevent to load FIRST date as LAST INDEX i
-                        console.log(additionalDate.getDate() + " CLG_66783");
+                        // get last day of the month and if it is first date, draw separator
+                        const firstDayOfNextMonth = new Date(additionalDate.getYear(), additionalDate.getMonth() + 1, 1);
+                        const lastDayOfMonth = new Date(firstDayOfNextMonth - 1);
+                        // draw calendar row
                         this.rowCollection.insertAdjacentHTML('afterbegin', this.buildRow(additionalDate));
+                        lastLoadedDate = additionalDate;
+                        // Draw separator!
+                        if (lastDayOfMonth.getDate() == additionalDate.getDate()){
+                          this.rowCollection.insertAdjacentHTML('afterbegin', this.buildSeparateRow(additionalDate));
+                        }
                       }
+                      
                       this.rowCollection.prepend(msr); // Transfer top header row
                       blockTopScroll = false;
                       this.reload();
+                      setTimeout(() => {
+                        this.loadTasksIntoBoard( lastRestrictDate, lastLoadedDate, currentTaskBoard);
+                        
+                      }, 1000);
                   }, 500);
         }
       }
@@ -287,7 +313,7 @@ class flowCalendarVisual
           tsmcounterinbottom.classList.add('tsm-hidden');
           tsmcounterinbottom.querySelector('.tsm-counter-value').innerHTML = 0;
         }
-      }, 1000);
+      }, 500);
 
       window.onload = (event) => {
         console.log("page is fully loaded");
@@ -378,6 +404,12 @@ class flowCalendarVisual
         var additionalDate = new Date();
           additionalDate.setTime(this.datetime.getTime() - (i * this.day));
           this.pastDate = additionalDate;
+          // get last day of the month
+          const firstDayOfNextMonth = new Date(additionalDate.getYear(), additionalDate.getMonth() + 1, 1);
+          const lastDayOfMonth = new Date(firstDayOfNextMonth - 1);
+          if (lastDayOfMonth.getDate() == additionalDate.getDate()){
+            this.rowCollection.insertAdjacentHTML('beforeend', this.buildSeparateRow(additionalDate));
+          }
         this.rowCollection.insertAdjacentHTML('beforeend', this.buildRow(additionalDate));
       }
     }
@@ -469,14 +501,8 @@ class flowCalendarVisual
       currentDateId = "id='row-current-date'";
       }
     
-    let newMonthRow = "";
-    if (formattedDate == 1){
-      date.setTime(date.getTime() - (1 * day));
-      newMonthRow = "<div class='col-row col-row-delimeter uk-padding-small'>" + date.toLocaleString('default', { month: 'long'}) + " - " + date.getFullYear() + "</div>";
-    }
-    
-  
     let id = "R_" + formattedDate + "_" + date.getMonth() + "_" + date.getFullYear();
+
     let result = "<div class='col-row" + currentDate + weekend + "' id='" + id +"'>";
     result += "<div " + currentDateId + " class='col-item col-date'><div class='uk-text-medium content-mid-reverse'><span class='hide-m'>  " + formattedMonth + "</span> <span class='uk-text-bold'>" + formattedDate + "</span></div></div>";
     result += "<div class='col-item col-que dragsection'  condition='1' id='cell_" + this.getRandomInt() + "'  >" + que + "</div>";
@@ -485,8 +511,14 @@ class flowCalendarVisual
     result += "<div class='col-item col-fin dragsection'  condition='4' id='cell_" + this.getRandomInt() + "'  >" + fin + "</div>";
     result += "<div class='col-item col-drop dragsection' condition='5' id='cell_" + this.getRandomInt() + "'  >" + drop + "</div>";
     result += "";
-    result += "</div>" + newMonthRow;
+    result += "</div>";
     return result;
+  }
+
+  buildSeparateRow(date)
+  {
+    if (date.getFullYear() < 2023){return "";};
+    return "<div class='col-row col-row-delimeter uk-padding-small'>" + date.toLocaleString('default', { month: 'long'}) + " - " + date.getFullYear() + "</div>";
   }
 
 
@@ -877,13 +909,13 @@ updateTaskState(task, sourceCell, targetCell){
         switch (t.function) {
           case 'create':
             this.t_CreateTask(t);
-            await this.timer(1000);
+            await this.timer(500);
             break;
 
             case 'update':
               // let result = this.t_CreateTask(t);
               this.t_UpdateTask(t);
-              await this.timer(1000);
+              await this.timer(500);
               break; 
         
           default:
@@ -1017,8 +1049,10 @@ updateTaskState(task, sourceCell, targetCell){
   }
 
 
+  
   async loadTasksIntoBoard(pastDate, futDate, boards)
   {
+    console.log("past = " + pastDate, "fut = " + futDate);
       let code = 200;
       let obj = {
         'startdate' : pastDate,
