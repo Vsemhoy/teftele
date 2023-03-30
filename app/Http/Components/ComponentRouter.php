@@ -18,6 +18,8 @@ class ComponentRouter extends BaseController
     public static string $com_publicFolder = "Pub";
     public static string $com_adminFolder = "Admin";
 
+    public const COM_REFER = "com";
+
     public const VIEW_COM_PATH = "public.components";
 
     public static function getComponentRoutes()

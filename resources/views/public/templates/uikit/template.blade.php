@@ -65,9 +65,7 @@
     </ul>
   </div>
   <div class="uk-navbar-right">
-    <ul class="uk-navbar-nav uk-visible@m">
-        <li ><a href="#">Home</a></li>
-        <li><a href="#">Contact</a></li>
+    <ul class="uk-navbar-nav">  <!-- uk-visible@m -->
         <li>
             @if(Auth::user())
             <a class="uk-button uk-button-link" href="#">{{ Auth::user()->name }}</a>

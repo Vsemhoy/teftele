@@ -21,4 +21,8 @@ class ComDefinitions extends BaseController
     public static function getViewPath(){
         return ComponentRouter::VIEW_COM_PATH . "." . self::$com_folder ;
     }
+
+    public static function getReferencePath(){
+        return "/" . ComponentRouter::COM_REFER . "/" . self::$com_name . "/";
+    }
 }

@@ -70,4 +70,19 @@ class MainController{
         return view(ComDefinitions::getViewPath()  . '.calendar')->with('data', $objectResult);
     }
 
+    public function getBoardsManager() {
+        // local-construct
+        $this->user = null;
+        if (Auth::check()){
+            $this->user = Auth::user();
+        }
+        $this->board_list = DBC::getAllUserBoards($this->user);
+        // local construct end
+        $objectResult = (object) array();
+        $objectResult->board_list = $this->board_list;
+        $objectResult->user = $this->user;
+        $objectResult->route = ComDefinitions::getReferencePath();
+        return view(ComDefinitions::getViewPath()  . '.boards')->with('data', $objectResult);
+    }
+
 }

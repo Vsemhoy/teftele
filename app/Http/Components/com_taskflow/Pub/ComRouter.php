@@ -31,10 +31,11 @@ Route::prefix(ComDefinitions::$com_name)->group(function(){
     // })->name(ComDefinitions::$com_name . ".calendar");
     
     
-    Route::get('/boards', function () {
-        return view(ComDefinitions::getViewPath()  . '.boards');
-    })->name(ComDefinitions::$com_name . ".boards");
+    // Route::get('/boards', function () {
+    //     return view(ComDefinitions::getViewPath()  . '.boards');
+    // })->name(ComDefinitions::$com_name . ".boards");getBoardsManager
 
+    Route::get('/boards/', [MainController::class, 'getBoardsManager'])->name(ComDefinitions::$com_name . ".boards");
 
     Route::get('/board', function () {
         return view(ComDefinitions::getViewPath()  . '.board');
