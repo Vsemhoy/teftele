@@ -357,13 +357,16 @@
                 <div class='tsm-counter-preloader'><span class='tf-t-c-clock bi-arrow-clockwise'></span></div> <span class='tsm-counter-value'>0</span>
             </div>
         </div>
-    </div>
-
-
-    <div>
+      </div>
+      
+      
+      <div>
         <div class='uk-button '><span uk-icon='more-vertical'></span></div>
+      </div>
     </div>
-</div>
+    <div id='tf_task_remover' class='dragsection tf_task_trashbin uk-hidden' style='color: white;'>
+      <span class='bi-trash dragsection'></span>
+    </div>
 <script>
   let boardChanger = document.querySelector('#tf_select_to_go');
   boardChanger.addEventListener('change', (ev)=> {

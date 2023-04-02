@@ -342,36 +342,57 @@ class flowCalendarVisual
       //       FLOWC.updateTaskState(element, sourceCell, ev.target);
       //       ev.target.appendChild(element);
       //     }
-
+      const trashBin = document.getElementById('tf_task_remover');
       document.addEventListener("dragover", (event) => {
        if (event.target.classList.contains('dragsection'))
        {
+        //console.log("You dragged!");
          event.preventDefault();
-         //console.log("predef");
+         trashBin.classList.remove('uk-hidden');
        }
       });
+
+
        document.addEventListener("dragstart", (event)=>{
         const elementBeingDragged = event.target;
-        //if ()
         if (elementBeingDragged.classList.contains('dragitem'))
         {
-          console.log(elementBeingDragged.id);
-          event.dataTransfer.setData("text", event.target.id);
+          //console.log(elementBeingDragged.id);
+          event.dataTransfer.setData("text/plain", event.target.id);
           this.sourceCell = event.target.parentElement;
         }
-       });   
+      });
+      
+      document.addEventListener('dragleave', () => {
+      });
+      
+      
+      document.addEventListener("drop", (event) => {
+         trashBin.classList.add('uk-hidden');
+        const draggedElementId = event.dataTransfer.getData('text/plain');
+        const draggedElement = document.getElementById(draggedElementId);
+        const trashbinElement = event.target.closest('.tf_task_trashbin');
+        
+        if (trashbinElement) {
+          // Remove the dragged element
+          draggedElement.parentNode.removeChild(draggedElement);
+          return true;
+        }
 
-       document.addEventListener("drop", (event) => {
         if (event.target.classList.contains('dragsection'))
         {
           event.preventDefault();
           let data = event.dataTransfer.getData("text");
           let element = document.getElementById(data);
+          
           if (!event.target.classList.contains("dragsection")){ return false; };
+
             this.updateTaskState(element, this.sourceCell, event.target);
             event.target.appendChild(element);
           }
        });
+
+
 
     }
 
@@ -604,8 +625,8 @@ getCardVisualState(raw_id){
 // DROP STATE TASKE EVENTS
 
 updateTaskState(task, sourceCell, targetCell){
-  console.log("sourceCell = " + sourceCell.id);
- console.log(targetCell.id);
+//   console.log("sourceCell = " + sourceCell.id);
+//  console.log(targetCell.id);
  // get conditions:
  let firstCondition = +sourceCell.getAttribute('condition');
  let secondCondition = +targetCell.getAttribute('condition');
@@ -822,29 +843,6 @@ updateTaskState(task, sourceCell, targetCell){
   }
 
 
-  // updateModalSelectorValues(){
-  //   this.ms_task_name               = document.querySelector("#tf_input_name").value;
-  //   this.ms_task_description        = document.querySelector("#tf_input_description").value;
-  //   this.ms_task_result             = document.querySelector("#tf_input_result").value;
-  //   this.ms_task_status             = document.querySelector("#tf_input_status").value;
-  //   this.ms_task_board              = document.querySelector("#tf_input_board").value;
-  //   this.ms_task_group              = document.querySelector("#tf_input_group").value;
-  //   this.ms_task_type               = document.querySelector("#tf_input_type").value;
-  //   this.ms_task_project            = document.querySelector("#tf_input_project").value;
-  //   this.ms_task_tags               = document.querySelector("#tf_input_tags").value;
-  //   this.ms_task_days               = document.querySelector("#tf_input_days").value;
-  //   this.ms_task_hours              = document.querySelector("#tf_input_hours").value;
-  //   this.ms_task_minutes            = document.querySelector("#tf_input_minutes").value;
-  //   this.ms_task_duration_planned   = document.querySelector("#tf_input_duration_p").value;
-  //   this.ms_task_setter             = document.querySelector("#tf_input_setter").value;
-  //   this.ms_task_executor           = document.querySelector("#tf_input_executor").value;
-
-  //   this.ms_task_duration_planned = 0;
-  //   // this.ms_task_steplist    = document.querySelector("#tf_t_steplist");
-  //   // this.ms_task_solution_list = document.querySelector("#tf_t_solution_list").value;
-  //   // this.ms_task_checklist  = document.querySelector("#tf_checks_list").value;
-  // }
-
   flushInputs(){
     this.task_name.value = "";
     this.task_description.value = "";
@@ -1048,6 +1046,63 @@ updateTaskState(task, sourceCell, targetCell){
       });
   }
 
+
+  async t_RemoveTask(task){
+    let code = 900;
+    let anchorList = [];
+
+    let response = await fetch(path + code, {
+    method: 'POST',
+    credentials: 'same-origin',
+    headers: {
+        "Content-Type": "application/json;charset=utf-8",
+        "Accept": "application/json",
+        "X-Requested-With": "XMLHttpRequest",
+        "X-CSRF-TOKEN": token
+    },
+    body: JSON.stringify(task.object)
+    });
+    response.json().then(data => {
+          // new task  
+          console.log(data.message);
+          if (data.message == "CSRF token mismatch."){
+            // placed in main template as script section
+            authRelogger();
+          }
+          if (data.code == 0){
+            if (document.querySelector("#item_" + task.params.temp_id) != null){
+              document.querySelector("#item_" + task.params.temp_id).classList.remove("tf-temp-updated-card");
+              document.querySelector("#item_" + task.params.temp_id).setAttribute('draggable', true);
+              document.querySelector("#item_" + task.params.temp_id).remove();
+              let element = document.querySelector("#" + task.params.target_cell_id);
+
+              let sesscount = this.getSessionCount(task.object.steps);
+              element.insertAdjacentHTML('beforeend', 
+              TFTEMPLATE.getTaskCardInCalendar(task.object.id, task.object.visual_state, 
+                task.object.name, task.object.description, task.object.result, 
+                task.object.duration_real, sesscount));
+              this.cardReload();
+              // Insert object into global task collection
+              //TaskCollection.push(task.object);
+              for (let index = 0; index < TaskCollection.length; index++) {
+                if (TaskCollection[index].id == task.object.id){
+                  TaskCollection[index] = task.object;
+                  break;
+                }
+              }
+              for (let i = 0; i < TaskQueue.length; i++) {
+                let element = TaskQueue[i];
+                if (element.params.temp_id == task.params.temp_id){
+                  TaskQueue.splice(i, 1);
+                  break;
+                }
+              }
+            }
+          } else {
+            console.log(data.message);
+          }
+      });
+  }
 
   
   async loadTasksIntoBoard(pastDate, futDate, boards)
