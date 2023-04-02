@@ -964,7 +964,7 @@ updateTaskState(task, sourceCell, targetCell){
               document.querySelector("#" + task.params.temp_id).remove();
 
               // temp data
-              let id = Math.floor(Math.random() * 9999999);
+              let id = data.item_id;
               task.object.id = id;
               let element = document.querySelector("#" + task.params.target_cell_id);
               element.insertAdjacentHTML('beforeend', 
