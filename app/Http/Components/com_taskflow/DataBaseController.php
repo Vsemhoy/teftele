@@ -115,8 +115,6 @@ class DataBaseController
         if (is_array($solutions)){ $solutions = json_encode($solutions);} else {$solutions = "[]";};
         if (is_array($checklist)){ $checklist = json_encode($checklist);} else {$checklist = "[]";};
 
- 
-
         $newDate = self::normalizeDate($object->date_set);
         $dsr = null;
         $dfr = null;
@@ -183,9 +181,7 @@ class DataBaseController
             $dsr = self::normalizeDate($object->date_start_real);
         }
 
-
         $data = array(
-            'user'              => $user->id,
             'name'              => $fil->clean($object->name, 'string', 200),
             'description'       => $fil->clean($object->description, 'string', 990),
             'result'            => $fil->clean($object->result, 'string', 990),
@@ -221,6 +217,14 @@ class DataBaseController
         return $object;
     }
     
+
+    public static function deleteTaskFromCalendar($object, $user)
+    {
+        $fil = new InputFilter();
+        $id = $fil->clean($object->id, 'int');
+        $affected = DB::table(self::TB_TASKS)->where('user', $user->id)->where('id', $id)->delete();
+        return $object;
+    }
 }
 
 ?>

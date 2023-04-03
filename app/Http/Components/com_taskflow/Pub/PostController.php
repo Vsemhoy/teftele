@@ -16,19 +16,95 @@ class PostController extends BaseController
 {
     use AuthorizesRequests, ValidatesRequests;
 
-
-    public $file;
-    public $files;
-    public $user;
-    public $data;
-    public $result;
-    private $log;
     private $json;
+    private $user;
+    private $data;
     function __construct()
     {
         //$this->log = new Logger();
     }
 
+    public function catchRequest(Request $request, $code)
+    {
+        $this->user = Auth::user();
+        $this->json = $request->post('formdata') ?? $request->getContent();
+        $this->data = json_decode($this->json);
+
+        if (!$this->user || !$this->user->status)
+        {
+            $result = new PostResult(-1);
+            $result->message = "You are not logger in or not activated!";
+            $result->code = 1;
+            $result->status = "UNLOG";
+            return json_encode($result);
+        }
+        $exec = null;
+
+        switch ($code) {
+            case 200:
+                $method = 'loadTaskIntoCalendar';
+                $action = Logger::ACTION_READ;
+                $exec = DB::loadCalendarTasks($this->data, $this->user);
+                break;
+            case 300:
+                $method = 'createTaskFromCalendar';
+                $action = Logger::ACTION_CREATE;
+                $exec = DB::createNewTask($this->data, $this->user);
+                break;
+            case 400:
+                $method = 'updateTaskFromCalendar';
+                $action = Logger::ACTION_UPDATE;
+                $exec = DB::updateCalendarTask($this->data, $this->user);
+                break;
+            case 900:
+                $method = 'updateTaskFromCalendar'; // NOPE
+                $action = Logger::ACTION_DELETE;
+                $exec = DB::deleteTaskFromCalendar($this->data, $this->user);
+                break;
+            default:
+                return;
+        }
+        
+        $result = new PostResult($this->user->id);
+        if (!is_object($exec)){
+            $result->status = "ERR";
+            $result->message = $exec == null ? "WRONG CODE" : $exec;
+            $result->code = 1;
+            $result->item_id = -1;
+        } else {
+            $result->status = "OK";
+            $result->message = "";
+            $result->code = 0;
+
+            switch ($code) {
+                case 200:
+                    $result->item_id = 0;
+                    $result->objects = $exec->boards;
+                    break;
+                case 300:
+                    $result->item_id = $exec->id;
+                    $result->object = $exec;
+                    break;
+                case 400:
+                    $result->item_id = $exec->id;
+                    $result->object = $exec;
+                    break;
+                case 900:
+                    $result->item_id = $exec->id;
+                    $result->object = $exec;
+                    break;
+                default:
+                    return;
+            } 
+        }
+        $result->log_action = $action;
+        $result->log_section = ComDefinitions::$com_name;
+        $result->method = $method;
+        Logger::writeUserLog($result);
+        return json_encode($result);
+    }
+}
+    /*
     function catchRequest(Request $request, $code)
     {
         $this->user = (object) array();
@@ -151,7 +227,8 @@ class PostController extends BaseController
         } 
         return $result;
     }
-
-
-
 }
+    */
+
+
+

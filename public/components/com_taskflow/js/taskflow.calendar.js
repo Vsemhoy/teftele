@@ -376,6 +376,7 @@ class flowCalendarVisual
         if (trashbinElement) {
           // Remove the dragged element
           draggedElement.parentNode.removeChild(draggedElement);
+          this.removeTaskForever(draggedElementId);
           return true;
         }
 
@@ -396,6 +397,26 @@ class flowCalendarVisual
 
     }
 
+
+
+    removeTaskForever(id_toremove)
+    {
+      let qts = TFMODELS.getQTM('remove');
+      let id = id_toremove.replace("item_", "");
+      qts.params = {
+        'temp_id' : id, 
+        'target_cell_id' : null
+      }
+      for (let index = 0; index < TaskCollection.length; index++) {
+        if (TaskCollection[index].id == id){
+          qts.object = TaskCollection[index];
+          //alert(qts.object.id);
+          break;
+        }
+      }
+      TaskQueue.push(qts);
+      //alert(id_toremove);
+    }
 
     //
     //ondrop='drop(event)' ondragover='allowDrop(event)'
@@ -866,7 +887,7 @@ updateTaskState(task, sourceCell, targetCell){
     this.task_board.value       = obj.board;
     this.task_group.value       = obj.group;
     this.task_type.value        = obj.type;
-    this.task_project.value    = obj.project;
+    this.task_project.value     = obj.project;
     this.task_tags.value        = obj.tags;
     this.task_executor.value    = obj.executor;
     this.task_setter.value      = obj.setter;
@@ -910,11 +931,17 @@ updateTaskState(task, sourceCell, targetCell){
             await this.timer(500);
             break;
 
-            case 'update':
-              // let result = this.t_CreateTask(t);
-              this.t_UpdateTask(t);
-              await this.timer(500);
-              break; 
+        case 'update':
+          // let result = this.t_CreateTask(t);
+          this.t_UpdateTask(t);
+          await this.timer(500);
+          break;
+
+        case 'remove':
+          // let result = this.t_CreateTask(t);
+          this.t_RemoveTask(t);
+          await this.timer(500);
+          break;
         
           default:
             break;
@@ -1070,34 +1097,16 @@ updateTaskState(task, sourceCell, targetCell){
             authRelogger();
           }
           if (data.code == 0){
-            if (document.querySelector("#item_" + task.params.temp_id) != null){
-              document.querySelector("#item_" + task.params.temp_id).classList.remove("tf-temp-updated-card");
-              document.querySelector("#item_" + task.params.temp_id).setAttribute('draggable', true);
-              document.querySelector("#item_" + task.params.temp_id).remove();
-              let element = document.querySelector("#" + task.params.target_cell_id);
-
-              let sesscount = this.getSessionCount(task.object.steps);
-              element.insertAdjacentHTML('beforeend', 
-              TFTEMPLATE.getTaskCardInCalendar(task.object.id, task.object.visual_state, 
-                task.object.name, task.object.description, task.object.result, 
-                task.object.duration_real, sesscount));
-              this.cardReload();
-              // Insert object into global task collection
-              //TaskCollection.push(task.object);
-              for (let index = 0; index < TaskCollection.length; index++) {
-                if (TaskCollection[index].id == task.object.id){
-                  TaskCollection[index] = task.object;
-                  break;
-                }
-              }
+            
               for (let i = 0; i < TaskQueue.length; i++) {
                 let element = TaskQueue[i];
-                if (element.params.temp_id == task.params.temp_id){
+                if (element.params.temp_id == data.object.id){
                   TaskQueue.splice(i, 1);
                   break;
+                  console.log("remved forever");
                 }
               }
-            }
+            
           } else {
             console.log(data.message);
           }

@@ -14,6 +14,7 @@ class PostResult
     public stdClass $object;
     public $objects;
     public string $message;
+    public string $method;
 
     public function __construct($uid){
         $this->status = "NOK";
@@ -23,6 +24,8 @@ class PostResult
         $this->log_section = 'none';
         $this->log_section = 0;
         $this->object = (object) array();
+        $this->objects = [];
         $this->message = "";
+        $this->method = "";
     }
 }
