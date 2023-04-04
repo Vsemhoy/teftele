@@ -64,7 +64,7 @@ TaskCardModel =
  * Create a task object model with default data
  * 
  */
-getTCM(date, status = 1, id = null){
+getTaskCardModel(date, status = 1, id = null){
   let qtm = structuredClone(this.TaskCardModel);
   qtm.id = null;
   qtm.steps = [];
@@ -81,11 +81,28 @@ getTCM(date, status = 1, id = null){
 
 CardCheckListModel = {
   id : 1,
-  todo: "What to do",
+  text: "What to do",
   addTime: 534576,
   finTime: 5645634,
   checked: 0
 };
+getCheckListItemModel(id = null, text = "", addtime = "", fintime = "", checked = 0)
+{
+  let chm = structuredClone(this.CardCheckListModel);
+  chm.id = id;
+  if (id == null){
+    chm.id = "checkitem_" + Date.now() + '' + (Math.random(0, 999999) * 10000).toFixed();
+  }
+  chm.text = text;
+  chm.addTime = addtime;
+  if (addtime == ""){
+    chm.addTime = this.getCurrentTimeString();
+  }
+  chm.finTime = fintime;
+  chm.checked = checked;
+  return chm;
+}
+
 CardSolutionModel = {
   id: 3,
   comment: "Super comment",
@@ -101,7 +118,7 @@ CardSolutionModel = {
 //   text : "Step text",
 //   duration: 0 // in seconds
 // };
-// getCSM(id, codes, dates, times, text = "", duration = 0)
+// getCardStepModel(id, codes, dates, times, text = "", duration = 0)
 // {
 //   let csm = structuredClone(this.CardStepModel);
 //   csm.id = id;
@@ -121,7 +138,7 @@ CardStepModel = {
   text : "Step text",
   duration: 0 // in seconds related to parent event
 };
-getCSM(id, code, date, time, text = "", duration = 0)
+getCardStepModel(id, code, date, time, text = "", duration = 0)
 {
   let csm = structuredClone(this.CardStepModel);
   csm.id = id;
@@ -147,7 +164,7 @@ QueueTaskModel = {
    * @param {*function_name} string (create, update, remove, move, step)
    * @returns Object of QueueTask Model with new ID 
    */
-  getQTM(functionName = 'demo') {
+  getQueueTaskModel(functionName = 'demo') {
     let qts = structuredClone(this.QueueTaskModel);
     qts.id = "qts_" + (Math.random() * (9999999 - 1000) + 1000).toFixed();
     qts.function = functionName;
@@ -155,4 +172,17 @@ QueueTaskModel = {
     return qts;
   }
 
+
+  getCurrentTimeString()
+  {
+    var currentdate = new Date(); 
+    var datetime = currentdate.getDate() + "/"
+                + (currentdate.getMonth()+1)  + "/" 
+                + currentdate.getFullYear() + " "  
+                + currentdate.getHours() + ":"  
+                + currentdate.getMinutes();
+                // + ":" 
+                //+ currentdate.getSeconds();
+                return datetime;
+  }
 };

@@ -199,7 +199,8 @@ class flowCalendarVisual
         this.btnAddCheckItem = document.querySelectorAll(".tf-event-addcheck");
         for (let index = 0; index < this.btnAddCheckItem.length; index++) {
           this.btnAddCheckItem[index].addEventListener('click', (e)=>{
-            document.querySelector("#tf_checks_list").insertAdjacentHTML('beforeend', TFTEMPLATE.getTaskListTableCheckListTableRow());
+            document.querySelector("#tf_checks_list").insertAdjacentHTML('beforeend', 
+            TFTEMPLATE.getTaskListTableCheckListTableRow(TFMODELS.getCheckListItemModel()));
             setTimeout(() => {
               this.checkListReload();
             }, 500);
@@ -401,7 +402,7 @@ class flowCalendarVisual
 
     removeTaskForever(id_toremove)
     {
-      let qts = TFMODELS.getQTM('remove');
+      let qts = TFMODELS.getQueueTaskModel('remove');
       let id = id_toremove.replace("item_", "");
       qts.params = {
         'temp_id' : id, 
@@ -675,7 +676,7 @@ updateTaskState(task, sourceCell, targetCell){
  let count = TaskCollection[index].steps.length;
  let now = Date.now();
  let dat = this.normalizeDateFromId(targetCell.parentElement.id)
- let stepnow = TFMODELS.getCSM(count, secondCondition, dat, now);
+ let stepnow = TFMODELS.getCardStepModel(count, secondCondition, dat, now);
  console.log(firstCondition, secondCondition);
  if (count > 0 && secondCondition != 2 && firstCondition == 2)
  {
@@ -705,7 +706,7 @@ updateTaskState(task, sourceCell, targetCell){
   TaskCollection[index].visual_state = this.getCardVisualState(task.id);
   
   // push it to task STACK
-  let qts = TFMODELS.getQTM('update');
+  let qts = TFMODELS.getQueueTaskModel('update');
   qts.object = TaskCollection[index];
   qts.params = {
     'temp_id' : num_id, 
@@ -749,7 +750,7 @@ updateTaskState(task, sourceCell, targetCell){
       temp_id = "temp_card_" + this.getRandomInt();
       targetCell.insertAdjacentHTML("beforeend", TFTEMPLATE.getTaskCardTempBlock(temp_id));
     }
-    let qts = TFMODELS.getQTM('create');
+    let qts = TFMODELS.getQueueTaskModel('create');
     if (this.current_id != null){
       qts.function = 'update';
       for (let i = 0; i < TaskCollection.length; i++) {
@@ -764,7 +765,7 @@ updateTaskState(task, sourceCell, targetCell){
       document.querySelector("#item_" + temp_id).classList.add("tf-temp-updated-card");
       document.querySelector("#item_" + temp_id).setAttribute('draggable', false);
     } else {
-      qts.object = TFMODELS.getTCM(this.target_date, this.target_status);
+      qts.object = TFMODELS.getTaskCardModel(this.target_date, this.target_status);
     }
     qts.params = {
       'temp_id' : temp_id, 
@@ -824,7 +825,7 @@ updateTaskState(task, sourceCell, targetCell){
       'task_executor'          : this.task_executor.value     ,
       'task_steplist'          : this.task_steplist.value     ,
       'task_solution_list'     : this.task_solution_list.value,
-      'task_checklist'         : this.task_checklist.value    ,
+      'task_checklist'         : []  ,
       'task_condition_phys'    : this.task_phys_condition.value,
       'task_condition_emo'     : this.task_emo_condition.value,
       'task_condition_intel'   : this.task_intel_condition.value,
@@ -832,10 +833,22 @@ updateTaskState(task, sourceCell, targetCell){
       'task_hours'             : this.task_hours.value        ,
       'task_minutes'           : this.task_minutes.value      ,
     }
+    let checks = this.task_checklist.querySelectorAll(".tf-t-checklist-item");
+    checks.forEach((item)=>{
+      let chk = TFMODELS.getCheckListItemModel();
+      chk.id = item.id;
+      chk.text = item.querySelector(".tf_t_check_editable").innerHTML;
+      chk.addTime = item.querySelector(".tf-t-c-addtime").innerHTML;
+      chk.finTime = item.querySelector(".tf-t-c-fintime").innerHTML;
+      chk.checked = item.querySelector(".tf-t-checkbox").checked ? 1 : 0;
+      obj.task_checklist.push(chk);
+    })
+
     let days    = this.task_days.value     ;
     let hours   = this.task_hours.value    ;
     let minutes = this.task_minutes.value  ;
     obj.task_duration_planned = (days * 24 * 60 * 60 * 1000) + (hours * 60 * 60 * 1000) + (minutes * 60 * 1000);
+    console.log("OBJECT IS ", obj);
     return obj;
   }
   
@@ -1159,7 +1172,7 @@ updateTaskState(task, sourceCell, targetCell){
                       TFTEMPLATE.getTaskCardInCalendar(taskobj.id, taskobj.visual_state, taskobj.name,
                          taskobj.description, taskobj.result, taskobj.duration_real, sesscount));
 
-                      let newobject = TFMODELS.getTCM(taskobj.date_set, taskobj.status);
+                      let newobject = TFMODELS.getTaskCardModel(taskobj.date_set, taskobj.status);
                       newobject.id                 = taskobj.id        ;
                       newobject.name               = taskobj.name          ;
                       newobject.description        = taskobj.description   ;

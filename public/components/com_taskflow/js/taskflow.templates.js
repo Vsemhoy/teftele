@@ -35,24 +35,35 @@ class TaskFlowTemplates
       return time;
     }
 
-    getTaskListTableCheckListTableRow(){
-        let text = "NewChekItem";
-        let addTime = new Date();
-        let finTime = "";
-        let finished = false;
-        let is_checked = "";
+    getCurrentTimeString()
+    {
+      var currentdate = new Date(); 
+      var datetime = currentdate.getDate() + "/"
+                  + (currentdate.getMonth()+1)  + "/" 
+                  + currentdate.getFullYear() + " "  
+                  + currentdate.getHours() + ":"  
+                  + currentdate.getMinutes();
+                  return datetime;
+    }
+
+    getTaskListTableCheckListTableRow(checkmodel){
+        let id = checkmodel.id;
+        let text = checkmodel.text;
+        let addTime = checkmodel.addTime;
+        let finTime = checkmodel.finTime;
+        let is_checked = checkmodel.checked;
         let finClass = "";
-        if (finished){
+        if (is_checked != 0){
             is_checked = "checked";
             finClass = "tf-t-check-fin";
         }
-let result = `  <tr class='tf-t-checklist-item ${finClass}'>
-        <td><input class="uk-checkbox" type="checkbox" aria-label="Checkbox" ${is_checked}></td>
+let result = `  <tr id='${id}' class='tf-t-checklist-item ${finClass}'>
+        <td><input class="uk-checkbox tf-t-checkbox" type="checkbox" aria-label="Checkbox" ${is_checked}></td>
         <td class="uk-table-link">
             <div class="tf_t_check_editable uk-padding-small">${text}</div>
         </td>
-        <td class="uk-text-truncate">${addTime}</td>
-        <td class="uk-text-nowrap">${finTime}</td>
+        <td class="uk-text-truncate tf-t-c-addtime">${addTime}</td>
+        <td class="uk-text-nowrap tf-t-c-fintime">${finTime}</td>
         <td class="uk-text-nowrap"><span class='tf-event-removecheck u-icon-std u-icon-event uk-text-muted bi-trash'></span></td>
     </tr>`;
     return result;
