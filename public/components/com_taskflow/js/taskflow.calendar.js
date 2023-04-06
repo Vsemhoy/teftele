@@ -126,18 +126,29 @@ class flowCalendarVisual
                 element.querySelector('.tf_card_event_minifycard').addEventListener('click', (e)=>{
                   element.classList.add('tsm-vis-hidden');
                   element.classList.remove('tsm-vis-middle');
+                  element.classList.remove('tsm-vis-cheddle');
                 });
               }
-
-              if (element.querySelector('.tf_card_event_minifycard') != null){
+              
+              if (element.querySelector('.tf_card_event_midifycard') != null){
                 element.querySelector('.tf_card_event_midifycard').addEventListener('click', (e)=>{
+                  element.classList.remove('tsm-vis-cheddle');
                   element.classList.remove('tsm-vis-hidden');
                   element.classList.add('tsm-vis-middle');
                 });                
               }
-
+              
+              if (element.querySelector('.tf_card_event_checkifycard') != null){
+                element.querySelector('.tf_card_event_checkifycard').addEventListener('click', (e)=>{
+                  element.classList.remove('tsm-vis-hidden');
+                  element.classList.remove('tsm-vis-middle');
+                  element.classList.add('tsm-vis-cheddle');
+                });                
+              }
+              
               if (element.querySelector('.tf_card_event_minifycard') != null){
                 element.querySelector('.tf_card_event_expandcard').addEventListener('click', (e)=>{
+                  element.classList.remove('tsm-vis-cheddle');
                   element.classList.remove('tsm-vis-hidden');
                   element.classList.remove('tsm-vis-middle');
                 });
@@ -394,7 +405,48 @@ class flowCalendarVisual
           }
        });
 
+       /// handle click to checkbox on the card face
+       document.addEventListener('click', (ev)=>{
+         if (ev.target.parentElement.classList.contains("tsm-check-selector")){
+          let chid = ev.target.parentElement.getAttribute("check-id");
+          let task = ev.target.closest('.tsm-card');
+          let tasknum = task.id.replace("item_", "");
+          let row = ev.target.closest('.tsm-check-row');
+          let checked = 1;
+          if (row.classList.contains('tsm-checked')){
+            checked = 0;
+          }
+          // update card object and send it to task
+          let taskToUpdate = null;
+          TaskCollection.forEach((tsk) => {
+            if (tsk.id == tasknum){
+              tsk.checklist.forEach((ckk) =>{
+                if (ckk.id == chid){
+                  ckk.checked = checked;
+                  if (checked == 1){
+                    ckk.finTime = TFMODELS.getCurrentTimeString();
+                  } else {
+                    ckk.finTime = "";
+                  }
+                }
+              });
+              taskToUpdate = tsk;
+            }
+          });
+          let qts = TFMODELS.getQueueTaskModel("update");
+          qts.object = taskToUpdate;
+          
+          document.querySelector("#item_" + tasknum).classList.add("tf-temp-updated-card");
+          document.querySelector("#item_" + tasknum).setAttribute('draggable', false);
 
+          let targetCell = task.closest(".col-item");
+          qts.params = {
+            'temp_id' : tasknum, 
+            'target_cell_id' : targetCell.id
+          }
+          TaskQueue.push(qts);
+        }
+       })
 
     }
 
@@ -637,8 +689,10 @@ getCardVisualState(raw_id){
       return 0;
     } else if (element.classList.contains("tsm-vis-middle")){
       return 1;
-    } else {
+    } else if (element.classList.contains("tsm-vis-cheddle")){
       return 2;
+    } else {
+      return 3;
     }
   }
   return 0;
@@ -796,7 +850,7 @@ updateTaskState(task, sourceCell, targetCell){
     qts.object.condition_intel    = tmp.task_condition_intel ;
     // qts.object.steplist      = task_steplist      ;
     // qts.object.solution_list = task_solution_list ;
-    // qts.object.checklist     = task_checklist     ;
+    qts.object.checklist          = tmp.task_checklist;
     TaskQueue.push(qts);
     console.log(qts);
     UIkit.modal("#tf_modal_task_editor").hide();
@@ -848,7 +902,7 @@ updateTaskState(task, sourceCell, targetCell){
     let hours   = this.task_hours.value    ;
     let minutes = this.task_minutes.value  ;
     obj.task_duration_planned = (days * 24 * 60 * 60 * 1000) + (hours * 60 * 60 * 1000) + (minutes * 60 * 1000);
-    console.log("OBJECT IS ", obj);
+    console.log("harvestTasModalData ", obj);
     return obj;
   }
   
@@ -892,7 +946,7 @@ updateTaskState(task, sourceCell, targetCell){
   }
 
   fillEditorInputs(obj){
-    console.log("filleditorinputs", obj);
+   // console.log("filleditorinputs", obj);
     this.task_name.value        = obj.name;
     this.task_description.value = obj.description;
     this.task_result.value      = obj.result;
@@ -907,6 +961,14 @@ updateTaskState(task, sourceCell, targetCell){
     this.task_steplist.innerHTML = "";
     this.task_solution_list.innerHTML = "";
     this.task_checklist.innerHTML = "";
+    console.log("YOU CALL filleditorinputs: ", obj);
+    if (obj.checklist != null && obj.checklist.length > 0){
+      obj.checklist.forEach((item) => {
+        let templ = TFTEMPLATE.getTaskListTableCheckListTableRow(item);
+        this.task_checklist.insertAdjacentHTML("beforeend", templ);
+      });
+    }
+    this.checkListReload();
     this.task_duration_planned.value = obj.duration_planned;
     let m = 0;
     let h = 0;
@@ -1006,8 +1068,7 @@ updateTaskState(task, sourceCell, targetCell){
               task.object.id = id;
               let element = document.querySelector("#" + task.params.target_cell_id);
               element.insertAdjacentHTML('beforeend', 
-              TFTEMPLATE.getTaskCardInCalendar(id, 0, task.object.name, task.object.description,
-                 task.object.result));
+              TFTEMPLATE.getTaskCardInCalendar(task.object));
               this.cardReload();
               // Insert object into global task collection
               TaskCollection.push(task.object);
@@ -1060,9 +1121,7 @@ updateTaskState(task, sourceCell, targetCell){
 
               let sesscount = this.getSessionCount(task.object.steps);
               element.insertAdjacentHTML('beforeend', 
-              TFTEMPLATE.getTaskCardInCalendar(task.object.id, task.object.visual_state, 
-                task.object.name, task.object.description, task.object.result, 
-                task.object.duration_real, sesscount));
+              TFTEMPLATE.getTaskCardInCalendar(task.object, sesscount));
               this.cardReload();
               // Insert object into global task collection
               //TaskCollection.push(task.object);
@@ -1168,10 +1227,7 @@ updateTaskState(task, sourceCell, targetCell){
                     let set_cell = set_row.querySelectorAll("." + this.getStateClass(taskobj.status));
                     if (set_cell.length > 0){
                       let sesscount = this.getSessionCount(JSON.parse(taskobj.steps));
-                      set_cell[0].insertAdjacentHTML("beforeend", 
-                      TFTEMPLATE.getTaskCardInCalendar(taskobj.id, taskobj.visual_state, taskobj.name,
-                         taskobj.description, taskobj.result, taskobj.duration_real, sesscount));
-
+                      
                       let newobject = TFMODELS.getTaskCardModel(taskobj.date_set, taskobj.status);
                       newobject.id                 = taskobj.id        ;
                       newobject.name               = taskobj.name          ;
@@ -1192,11 +1248,15 @@ updateTaskState(task, sourceCell, targetCell){
                       newobject.executor           = taskobj.executor      ;
                       newobject.condition_phys     = taskobj.condition_phys  ;
                       newobject.condition_emo      = taskobj.condition_emo   ;
+                      newobject.visual_state       = taskobj.visual_state ;
                       newobject.condition_intel    = taskobj.condition_intel ;
-                      newobject.steps              = JSON.parse(taskobj.steps)   ;
+                      newobject.steps              = JSON.parse(taskobj.steps);
+                      newobject.checklist          = JSON.parse(taskobj.checklist);
                       // qts.object.solution_list = task_solution_list ;
                       // qts.object.checklist     = task_checklist     ;
                       // console.log(taskobj.steps);
+                      set_cell[0].insertAdjacentHTML("beforeend", 
+                      TFTEMPLATE.getTaskCardInCalendar(newobject, sesscount));
                       TaskCollection.push(newobject);
                     }
                     //TFTEMPLATE.

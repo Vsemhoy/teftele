@@ -62,7 +62,6 @@ class DataBaseController
             array_push($boards, $fil->clean($object->boards, 'int'));
         }
         $boards = DB::table(self::TB_TASKS)->where('user', $user->id)->whereDate('date_set', '>=', $startDate)->whereDate('date_set', '<=', $finDate)->whereIn('board_id',  $boards )->get();
-
         $object->boards = $boards;
         return $object;
     }

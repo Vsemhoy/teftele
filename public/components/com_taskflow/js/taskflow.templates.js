@@ -110,14 +110,34 @@ let result = `  <tr id='${id}' class='tf-t-checklist-item ${finClass}'>
       return encodedOutput;
     }
 
-    getTaskCardInCalendar(id, visual_state, name, description, result_text, duration = 0, countSessions = 0){
+    getTaskCardInCalendar(obj, countSessions = 0){
+      let id = obj.id;
+      let visual_state = obj.visual_state;
+      let name = obj.name;
+      let description = obj.description;
+      let result_text = obj.result;
+      let duration = obj.duration_real;
+      let checkButtonClass = "tsm-card-button-disabled";
+      if (obj.checklist.length > 0){
+        checkButtonClass = "tf_card_event_checkifycard";
+      }
+
+      let infoButtonClass = "tsm-card-button-disabled";
+      if (obj.description.length > 0 || obj.result.length > 0){
+        infoButtonClass = "tf_card_event_midifycard";
+      }
+
+      console.log(obj.checklist.length , " CHecklist length", obj.checklist);
+
         id = "item_" + id;
         let visClass = "";
         if (visual_state == 0){
           visClass = "tsm-vis-hidden";
         } else if (visual_state == 1){
           visClass = "tsm-vis-middle";
-        };
+        } else if (visual_state == 2){
+          visClass = "tsm-vis-cheddle";
+        }
         let sessions = "";
         if (countSessions > 0){
           sessions = countSessions + " steps";
@@ -143,8 +163,8 @@ let result = `  <tr id='${id}' class='tf-t-checklist-item ${finClass}'>
         </div>
         <div class='tsm-card-topbuttons'>
             <div class='tsm-card-button tf_card_event_minifycard' title='hide all'>_</div>
-            <div class='tsm-card-button tf_card_event_midifycard' title='toggle content'>=</div>
-            <div class='tsm-card-button tf_card_event_checkified' title='toggle content'>C</div>
+            <div class='tsm-card-button ${infoButtonClass}' title='toggle content'>=</div>
+            <div class='tsm-card-button ${checkButtonClass}' title='toggle checklist'>C</div>
             <div class='tsm-card-button tf_card_event_expandcard' title='toggle events'>E</div>
         </div>
     </div>
@@ -152,7 +172,7 @@ let result = `  <tr id='${id}' class='tf-t-checklist-item ${finClass}'>
 
 if (description != ""){
 result += `
-<div class='tsm-card-row '>
+<div class='tsm-card-row tsm-content-row'>
     <div class='tsm-card-pre-body hide-m'>
         <div class='tsm-card-padding'>
             <div title='description'><i class='bi-box-arrow-in-down'></i></div>
@@ -171,7 +191,7 @@ result += `
 };
 if (result_text != ""){
   result += `
-  <div class='tsm-card-row '>
+  <div class='tsm-card-row tsm-content-row'>
       <div class='tsm-card-pre-body hide-m'>
           <div class='tsm-card-padding'>
               <div title='result'><i class='bi-box-arrow-up'></i></div>
@@ -188,6 +208,36 @@ if (result_text != ""){
       </div>
   </div>`;    
   };
+
+if (obj.checklist.length > 0){
+  obj.checklist.forEach((item) => {
+    let checkicon = "<div class='tsm-check-selector' title='' check-id='" + item.id + "'><i class='bi-app'></i></div>";
+    let rowClass = "";
+    if (item.checked == 1){
+      checkicon = "<div class='tsm-check-selector' title='done' check-id='" + item.id + "'><i class='bi-check2-square'></i></div>";
+      rowClass = "tsm-checked";
+    }
+    result += `
+    <div class='tsm-card-row tsm-check-row ${rowClass}'>
+        <div class='tsm-card-pre-body hide-m'>
+            <div class='tsm-card-padding'>
+                ${checkicon}
+            </div>
+            <div></div>
+        </div>
+    
+        <div class='tsm-card-body hide-m'>
+            <div class='tsm-card-padding tsm-card-content'>
+                <div class='uk-text'>
+                  ${item.text}
+                </div>
+            </div>
+        </div>
+    </div>`;    
+    });
+  };
+
+
 result += `
 <div class='tsm-card-row tsm-mid-mark'>
     <div class='tsm-card-padding'>

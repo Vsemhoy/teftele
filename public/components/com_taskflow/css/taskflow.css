@@ -522,11 +522,30 @@
 .tsm-vis-middle .tsm-mid-mark {
   display: none;
 }
+.tsm-vis-middle .tsm-check-row {
+  display: none;
+}
+.tsm-vis-cheddle .tsm-check-row {
+  display: grid;
+}
+.tsm-vis-cheddle .tsm-mid-mark {
+  display: none;
+}
+.tsm-vis-cheddle .tsm-content-row {
+  display: none;
+}
 
 .lilo {
   background: #cc0680;
   color: white;
 }
+.tsm-check-selector {
+  cursor: pointer;
+}
+.tsm-checked {
+  color: #2990c9;
+}
+
 
 .tsm-card .tf_card_event_expandcard {
   background-color: #03a9f41f;
@@ -542,6 +561,12 @@
 }
 .tsm-card.tsm-vis-middle  .tf_card_event_expandcard  {
   background-color: transparent;
+}
+.tsm-card.tsm-vis-cheddle .tf_card_event_expandcard, .tsm-card.tsm-vis-cheddle .tf_card_event_midifycard , .tsm-card.tsm-vis-cheddle .tf_card_event_minifycard {
+  background-color: transparent;
+}
+.tsm-card.tsm-vis-cheddle .tf_card_event_checkifycard {
+  background-color: #03a9f41f;
 }
 
 .tf-temp-card {
@@ -601,6 +626,13 @@
   border-radius: 12px;
   box-shadow: 0px 1px 14px #ff0e0ea1;
   backdrop-filter: blur(10px);
+}
+.tsm-card-button-disabled {
+  opacity: 0.5;
+}
+.tsm-card-button-disabled:hover {
+  background: transparent !important;
+  cursor: default;
 }
  
 @keyframes AnimateBG { 
