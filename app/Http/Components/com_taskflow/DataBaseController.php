@@ -62,6 +62,10 @@ class DataBaseController
             array_push($boards, $fil->clean($object->boards, 'int'));
         }
         $boards = DB::table(self::TB_TASKS)->where('user', $user->id)->whereDate('date_set', '>=', $startDate)->whereDate('date_set', '<=', $finDate)->whereIn('board_id',  $boards )->get();
+        // foreach ($boards AS $bor)
+        // {
+        //     $bor->checklist = json_decode($bor->checklist);
+        // }
         $object->boards = $boards;
         return $object;
     }
@@ -112,7 +116,9 @@ class DataBaseController
         if (is_array($schedule)){ $schedule = json_encode($schedule);} else {$schedule = "[]";};
         //if (is_array($steps)){ $steps = json_encode($steps);} else {$steps = "[]";};
         if (is_array($solutions)){ $solutions = json_encode($solutions);} else {$solutions = "[]";};
-        if (is_array($checklist)){ $checklist = json_encode($checklist);} else {$checklist = "[]";};
+        if (is_array($checklist)){ 
+            $checklist = json_encode($checklist, JSON_UNESCAPED_UNICODE);
+        } else {$checklist = "[]";};
 
         $newDate = self::normalizeDate($object->date_set);
         $dsr = null;
@@ -142,7 +148,7 @@ class DataBaseController
             'schedule'          => stripcslashes($schedule),
             'steps'             => json_encode($steps),
             'solutions'         => stripcslashes($solutions),
-            'checklist'         => stripcslashes($checklist),
+            'checklist'         => $checklist,
   //          'duration_real'     => $fil->clean($object->duration_real, 'int'),
             'checks_total'      => $fil->clean($object->checks_total, 'int'),
             'checks_checked'    => $fil->clean($object->checks_checked, 'int'),
@@ -168,7 +174,9 @@ class DataBaseController
         if (is_array($schedule)){ $schedule = json_encode($schedule);} else {$schedule = "[]";};
         if (!is_array($steps)){$steps = "";} else { $steps = json_encode($steps);};
         if (is_array($solutions)){ $solutions = json_encode($solutions);} else {$solutions = "[]";};
-        if (is_array($checklist)){ $checklist = json_encode($checklist);} else {$checklist = "[]";};
+        if (is_array($checklist)){ 
+            $checklist = json_encode($checklist, JSON_UNESCAPED_UNICODE);
+        } else {$checklist = "[]";};
 
         $newDate = self::normalizeDate($object->date_set);
         $dsr = null;
@@ -197,7 +205,7 @@ class DataBaseController
             'schedule'          => stripcslashes($schedule),
             'steps'             => $steps,
             'solutions'         => stripcslashes($solutions),
-            'checklist'         => stripcslashes($checklist),
+            'checklist'         => $checklist,
   //          'duration_real'     => $fil->clean($object->duration_real, 'int'),
             'checks_total'      => $fil->clean($object->checks_total, 'int'),
             'checks_checked'    => $fil->clean($object->checks_checked, 'int'),

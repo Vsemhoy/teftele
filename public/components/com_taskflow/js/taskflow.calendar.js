@@ -1093,7 +1093,12 @@ updateTaskState(task, sourceCell, targetCell){
   async t_UpdateTask(task){
     let code = 400;
     let anchorList = [];
-
+    // var xtext = document.createElement("TEXTAREA");
+    // task.object.checklist.forEach((chk) => {
+    //   xtext.innerHTML = chk.text;
+    //   chk.text = xtext.value;
+    // })
+    // xtext.remove();
     let response = await fetch(path + code, {
     method: 'POST',
     credentials: 'same-origin',
@@ -1255,6 +1260,10 @@ updateTaskState(task, sourceCell, targetCell){
                       // qts.object.solution_list = task_solution_list ;
                       // qts.object.checklist     = task_checklist     ;
                       // console.log(taskobj.steps);
+                      // newobject.checklist.forEach((chk) => {
+                      //   chk.text = JSON.parse(chk.text);
+                      // });
+
                       set_cell[0].insertAdjacentHTML("beforeend", 
                       TFTEMPLATE.getTaskCardInCalendar(newobject, sesscount));
                       TaskCollection.push(newobject);
