@@ -274,12 +274,13 @@ class flowCalendarVisual
                       this.datetime = this.futDate;
                       let lastRestrictDate = this.futDate;
                       lastRestrictDate.setTime(lastRestrictDate.getTime() + ((1) * this.day));
-                      let lastLoadedDate = this.futDate;
+                      let lastLoadedDate = this.futDate.setTime(this.datetime.getTime() - ((1) * this.day));
                       for (let i = 0 ; i < 14; i++){
-                      var additionalDate = new Date();
-                      var msr = document.querySelector("#master-row"); // This is a Top header row
-                      additionalDate.setTime(this.datetime.getTime() + ((1 + i) * this.day));
-                      this.futDate = additionalDate;
+                        var additionalDate = new Date();
+                        var msr = document.querySelector("#master-row"); // This is a Top header row
+                        additionalDate.setTime(this.datetime.getTime() + ((1 + i) * this.day));
+                        this.futDate = additionalDate;
+                        console.log(" this futdate = " + this.datetime + " this adddate = " + additionalDate);
                         // get last day of the month and if it is first date, draw separator
                         const firstDayOfNextMonth = new Date(additionalDate.getYear(), additionalDate.getMonth() + 1, 1);
                         const lastDayOfMonth = new Date(firstDayOfNextMonth - 1);

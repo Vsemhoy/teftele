@@ -296,4 +296,34 @@ return result;
 
     }
 
+
+
+    getBoardManagerBoardCard(board, route) {
+      const result = `
+        <li>
+            <div class='grad uk-padding-small'>
+                <div class='uk-card uk-card-default '>
+                    <div class='uk-card-header uk-padding-small'>
+                        <div class='uk-grid-small uk-flex-middle' uk-grid>
+                            <div class='uk-width-auto'>
+                                <span class='uk-sortable-handle uk-margin-small-right uk-text-center' uk-icon='icon: table'></span>
+                            </div>
+                            <div class='uk-width-expand'>
+                                <h3 class='uk-card-title uk-margin-remove-bottom'>${board.name}</h3>
+                                <p class='uk-text-meta uk-margin-remove-top'><time datetime='2016-04-01T19:00'>April 01, 2016</time> <span>200 tasks</span></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class='uk-card-body  uk-padding-small'>
+                        <p>${board.description}</p>
+                    </div>
+                    <div class='uk-card-footer  uk-padding-small'>
+                        <a href='${route}calendar/${board.id}' class='uk-button uk-button-text'>Go to board</a>
+                    </div>
+                </div>
+            </div>
+        </li>
+      `;
+      return result;
+    }
 }

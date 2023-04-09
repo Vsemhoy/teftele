@@ -11,6 +11,7 @@
     <!-- template assets -->
     <link rel="stylesheet" href="{{ asset('/public/vendor/uikit/3.16.3/css/uikit.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('/public/vendor/uikit/css/custom.css') }}" />
+    <link rel="stylesheet" href="{{ asset('/public/vendor/uikit/css/teftele.main.css') }}" />
     <script src="{{ asset('/public/vendor/uikit/3.16.3/js/uikit.min.js')}}"></script>
     <script src="{{ asset('/public/vendor/uikit/3.16.3/js/uikit-icons.min.js')}}"></script>
     <!-- end template assets -->

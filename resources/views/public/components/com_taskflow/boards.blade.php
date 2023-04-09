@@ -33,17 +33,20 @@
 
 @section('component-page-content')
 <style>
-.grad {
-    /* Created with https://www.css-gradient.com */
-background: #FF7676;
-background: -webkit-linear-gradient(top left, #FF7676, #8B0B5D);
-background: -moz-linear-gradient(top left, #FF7676, #8B0B5D);
-background: linear-gradient(to bottom right, #FF7676, #8B0B5D);
-border: 2px solid white;
-    box-shadow: 1px 1px 12px #00000036;
-}
+
+
+
 </style>
 <div class='uk-container uk-container-xlarge uk-margin-top'>
+
+<div class='tf-board-header uk-margin-bottom'>
+    <div class='tef-control-group tef-control-rounded'>
+        <div class='tef-button tef-button-color-rose'>Create board</div>
+        <div class='tef-button tef-button-color-rose'>Hello</div>
+    </div>
+    <div class='tef-button tef-button-color-rose'>Hello</div>
+    <div class='tef-button tef-button-color-rose'>Hello</div>
+</div>
 
 <ul class='uk-grid-small uk-child-width-1-1 uk-child-width-1-2@s  uk-child-width-1-3@l uk-child-width-1-5@xl' id='my-sortable'  uk-sortable='handle: .uk-sortable-handle' uk-grid>
     <?php 
@@ -100,5 +103,8 @@ endforeach;
     console.log(`Item ${item} was moved!`);
     // your code here
   }
+
+
+
 </script>
 @endsection
